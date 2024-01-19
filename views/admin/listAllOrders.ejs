@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi" />
+    <title>eDiGi</title>
+    <link rel="icon" type="image/png" href="images/logo.jpeg">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/spacing.css">
+    <link rel="stylesheet" href="css/slick.css">
+    <link rel="stylesheet" href="css/nice-select.css">
+    <link rel="stylesheet" href="css/venobox.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/jquery.exzoom.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- <link rel="stylesheet" href="css/rtl.css"> -->
+</head>
+
+<body>
+
+    <!--=============================
+        TOPBAR START
+    ==============================-->
+    <section class="fp__topbar">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-md-8">
+                    <ul class="fp__topbar_info d-flex flex-wrap">
+                        <li><a href="mailto:example@gmail.com"><i class="fas fa-envelope"></i> edigi@gmail.com</a>
+                        </li>
+                        <li><a href="callto:123456789"><i class="fas fa-phone-alt"></i> +(415) 555‑0132</a></li>
+                    </ul>
+                </div>
+                <div class="col-xl-6 col-md-4 d-none d-md-block">
+                    <ul class="topbar_icon d-flex flex-wrap">
+                        <li><a href="#"><i class="fab fa-facebook-f"></i></a> </li>
+                        <li><a href="#"><i class="fab fa-twitter"></i></a> </li>
+                        <li><a href="#"><i class="fab fa-linkedin-in"></i></a> </li>
+                      
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--=============================
+        TOPBAR END
+    ==============================-->
+
+
+    <!--=============================
+        MENU START
+    ==============================-->
+    <nav class="navbar navbar-expand-lg main_menu">
+        <div class="container">
+            <a class="navbar-brand" href="">
+                <img src="images/logo.jpeg" alt="edigi" class="img-fluid">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="far fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav m-auto">
+                    
+                </ul>
+                <ul class="menu_icon d-flex flex-wrap">
+                    
+                    <li>
+                        <a href=""><i class="fas fa-user"></i></a>
+                    </li>
+                    <li>
+                        <a class="common_btn" href="/admin/logout" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+<br><br>
+<section class="fp__dashboard mt_120 xs_mt_90 mb_100 xs_mb_70">
+    <div class="container">
+        <div class="fp__dashboard_area">
+            <div class="row">
+                            <div class="" id="v-pills-profile" role="tabpanel"
+                                aria-labelledby="v-pills-profile-tab">
+                                <div class="fp_dashboard_body">
+                                    <h3 style="justify-content: center; margin-top: 10px;">order list</h3>
+                                    <%orders.forEach(order =>{%>
+                                        <div class="fp__invoice_header">
+                                            
+                                            <div class="header_address">
+                                                
+                                                <h4>invoice to</h4>
+                                                <p>Address : <%=order.address%></p>
+                                                <p>Payment Method :<%=order.payment%> </p>
+                                                <%if(order.orderStatus === 'Cancelled') {%>
+                                                    <button disabled class="btn btn-danger">Cancel Order</button>
+                                                <%} else {%>
+                                               <a href="/cancelOrder?id=<%=order._id%>"><button onclick="return confirm('Are you sure you want to cancel the order')" class="btn btn-danger">Cancel Order</button></a>
+                                                 <%}%>
+                                            </div>
+                                            <div class="header_address">
+                                                <p><b>invoice no: </b><span>001</span></p>
+                                                <p><b>Order ID:</b> <span><%=order._id%></span></p>
+                                                <p><b>date:</b> <span><%=order.orderDate%></span></p>
+                                            </div>
+                                    <%})%>
+                                        </div>
+                                        <div class="fp__invoice_body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped">
+                                                    <tbody>
+                                                        <tr class="border_none">
+                                                            
+                                                            <th class="package">item description</th>
+                                                            <th class="fp__pro_img">image</th>
+                                                            <th class="price">Price</th>
+                                                            <th class="qnty">Quantity</th>
+                                                            <th class="total">Total</th>
+                                                            <th class="view_invoice">Action</th>
+                                                        </tr>
+                                                        <%orders.forEach(order =>{%>
+                                                            <%order.items.forEach((product,index)=>{%>
+                                                        <tr>
+                                                            
+                                                            <td class="package">
+                                                                <p>Product :<%=product.cartItems[0].
+                                                                    productName%></p>
+                                                                <span class="size">Brand : <%=product.cartItems[0].brand%></span>
+                                                                <span class="coca_cola"></span>
+                                                                <span class="coca_cola2"></span>
+                                                            </td>
+                                                            <td style="height: 120px ; width: 150px; margin-right: 30px;" class="fp__pro_img"><img src="/product-Images/<%=product.cartItems[0].image[0]%>" alt="product"
+                                                                class="img-fluid w-100">
+                                                        </td>
+                                                            <td class="price">
+                                                                <b>rs.<%=product.cartItems[0].price%></b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b><%=product.quantity%></b>
+                                                            </td>
+                                                            
+                                                            <td class="total"> 
+                                                                
+                                                                    <b><%=productTotal[index].total%></b>
+                                                                     
+                                                            </td>
+                                                            <%orders.forEach(order =>{%>
+                                                                <%if(order.items.length>1) {%>
+                                                            <td><button onclick="deleteOrder('<%=product.cartItems[0]._id%>', '<%=productTotal[index]._id%>')" class="btn btn-primary">Delete</button></td>
+                                                            <%}%>
+                                                            <%})%>
+                                                        </tr>
+                                                       <%})%>
+                                                       <%})%>
+                                                    
+                                                    </tbody>
+                                                    <%orders.forEach(order =>{%>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td class="package" colspan="3">
+                                                                <b>sub total</b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
+                                                            </td>
+                                                            
+                                                            <td class="total">
+                                                                <b>Rs.<%=order.totalPrice%></b>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="package coupon" colspan="3">
+                                                                <b>(-) Discount coupon</b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
+                                                            </td>
+                                                            
+                                                            <td class="total coupon">
+                                                                <b>$0.00</b>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="package coast" colspan="3">
+                                                                <b>(+) Shipping Cost</b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
+                                                            </td>
+                                                           
+                                                            <td class="total coast">
+                                                                <b>Rs.00.00</b>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="package" colspan="3">
+                                                                <b>Total Paid</b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
+                                                            </td>
+                                                            
+                                                            <td class="total">
+                                                                <b>Rs.<%=order.totalPrice%></b>
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
+                                                    <%})%>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- <a class="print_btn common_btn" href="#"><i class="far fa-print"></i> print
+                                            PDF</a> -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function deleteOrder(id ,orderId){
+        console.log(id);
+        console.log(orderId);
+          fetch("/deleteInOrder" , {
+            method:"post",
+                headers:{
+                    "Content-Type" :"application/json"
+                },
+                body:JSON.stringify({
+                    proId:id,
+                    orderId:orderId
+                    
+                    
+                })
+              })
+              .then((res) => res.json)
+              .then((res) => window.location.reload())
+              .catch((error)=>console.error(error))
+              
+    }
+</script>
+
+<%- include("../layouts/footer.ejs") %>
+
+<!--=========================
+    DASHBOARD END 
+==========================-->

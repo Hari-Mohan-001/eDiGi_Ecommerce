@@ -1,0 +1,166 @@
+
+<%- include("../layouts/header.ejs") %>
+ <!--============================
+        CHECK OUT PAGE START
+    ==============================-->
+    <section class="fp__cart_view mt_125 xs_mt_95 mb_100 xs_mb_70">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-7 wow fadeInUp" data-wow-duration="1s">  
+                  <form action="" method="post">
+                    <div class="fp__checkout_form">
+                        <div class="fp__check_form">
+                            <h5>select address <a href="/addNewAddress"  data-bs-toggle="" data-bs-target=""><i
+                                        class="far fa-plus"></i> add address</a></h5>
+                            
+                            <%if(address.length>0){%>
+                                <%for(let i=0;i<address.length;i++){%>
+                            <div class="row" style="display: flex;flex-direction: column;">
+                                <div class="col-md-6">
+                                    <div class="fp__checkout_single_address">
+                                        
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="selectedAddress"
+                                                id="selectedAddress" value="<%=address[i].fullName%>,
+                                                <%=address[i].house%>,
+                                                <%=address[i].city%>,
+                                                <%=address[i].state%>,
+                                                <%=address[i].number%>,
+                                                <%=address[i].pincode%>">
+                                            <label class="form-check-label" for="home">
+                                                <span class="icon"><i class="fas fa-home"></i>Address :<%=i+1%></span>
+                                                <span class="address"><%=address[i].fullName%>
+                                                    <span>House No:<%=address[i].house%></span>
+                                                                    <span class="address">City:<%=address[i].city%></span>
+                                                                    <span>State:<%=address[i].state%></span>
+                                                                    <span class="address">Mobile:<%=address[i].number%></span>
+                                                                    <span>PIN:<%=address[i].pincode%></span>
+                                                    </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>   
+                                
+                            </div>
+                            <%}%>
+                            <%}else{%>
+                                <p>Address not found</p>
+                                <%}%>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                    <div id="sticky_sidebar" class="fp__cart_list_footer_button">
+                        <h6>total cart</h6>
+                        <%if(cartTotal && cartTotal.length>0) {%>
+                        <p>subtotal: <span>Rs.<%=cartTotal[0].total%></span></p>
+                        <p>delivery: <span>$00.00</span></p>
+                        <%if(findCart.isCouponApplied) {%>
+                        <p>discount: <span><%=discount%></span></p>
+                        <p class="total"><span>total:</span> <span id="totalVal" data-totalprice="<%=cartTotal[0].total %>" ><%=totalAfterDiscount%></span></p>
+                          <%} else {%>
+                            <p>discount:Rs<span>0</span></p>
+                        <p class="total"><span>total:</span> <span id="totalVal" data-totalprice="<%=cartTotal[0].total %>" ><%=cartTotal[0].total%></span></p>
+                        <%}%>
+                        <%}%>
+                       
+                        <br>
+                        <div style="display: flex;flex-direction: row;" >
+                            <div>
+                            <label for="">Cash On Delivery</label>
+                            <input type="radio" name="payment" value="Cash on delivery" id="payment">
+                            <span id="paymentError"></span>
+                           </div>
+                          <div>
+                            <label for="">Online</label>
+                            <input type="radio" name="payment" value="online" id="payment">
+                          </div>   
+
+                            <% if(typeof message !== "undefined") { %>
+                                <p style="color: rgba(238, 16, 35, 0.336);"><%=message%></p>
+                              <% } %>
+                        </div>
+                        
+                        <button id="checkout" style="margin-top: 100px;" type="submit" class="common_btn" >Place Order</button>
+                    </form>
+
+                   <div style="margin-top: 30px; display: flex;">
+                    <input style="margin-top: 40px;" type="text" placeholder="Coupon Code" id="couponCode">
+                        <button style="margin-top: 177px;" onclick="applyCoupon('<%=findCart._id%>')" >Apply</button>
+                    </div>
+             </div>
+                
+            </div>
+        </div> 
+    </div>
+ </section>
+    <!--============================
+        CHECK OUT PAGE END
+    ==============================-->
+
+    <script>
+
+       const applyCoupon = (cartid)=>{
+               const couponCode = document.getElementById("couponCode").value
+               const total = document.getElementById("totalVal").textContent
+
+               console.log(total);
+               fetch("/applyCoupon" ,{
+                method:"post",
+                headers:{
+                   "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    cartId:cartid,
+                    couponName:couponCode,
+                    totalPrice:total
+                })
+                
+               })
+               .then(res => res.json())
+               .then((res)=>{
+                console.log(res);
+                if(res === 'success'){
+                    Swal.fire({
+                        title:'Coupon applied',
+                        text:'Coupon succesfully applied',
+                        icon:'success'
+                    }).then(()=>{
+                        window.location.reload()
+                    })
+                }else if(res ==='User already used the coupon'){
+                    Swal.fire({
+                        title:'Coupon error',
+                        text:'User already used the coupon',
+                        icon:'error'
+                    })
+                }else if(res ==='Coupon expired'){
+                    Swal.fire({
+                        title:'Coupon error',
+                        text:'Coupon expired',
+                        icon:'error'
+                    })
+                }else if(res ==='Invalid Coupon'){
+                    Swal.fire({
+                        title:'Coupon error',
+                        text:'Invalid Coupon',
+                        icon:'error'
+                    })
+                }else if(res.message){
+                    Swal.fire({
+                        title:'Coupon error',
+                        text:res.message,
+                        icon:'error'
+                    })
+               }
+            })
+               .catch((error)=>console.log(error))
+       } 
+
+
+        
+    </script>
+
+    <%- include("../layouts/footer.ejs") %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.3/dist/sweetalert2.all.min.js"></script>

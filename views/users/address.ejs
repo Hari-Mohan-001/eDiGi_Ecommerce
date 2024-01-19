@@ -1,0 +1,57 @@
+<%- include("../layouts/header.ejs") %>
+ <br><br><br>
+ <section class="fp__dashboard mt_120 xs_mt_90 mb_100 xs_mb_70" >
+    <div class="container" >
+        <div class="fp__dashboard_area" >
+            <div class="row" >
+                        <div id="v-pills-address" role="tabpanel"
+                                    aria-labelledby="v-pills-address-tab">
+                                    <div class="fp_dashboard_body address_body">
+                                        <h3>address <a href="/addNewAddress" class="dash_add_new_address"><i class="far fa-plus"></i> add new
+                                            </a>
+                                        </h3>
+                                        <div class="fp_dashboard_address">
+                                            <div class="fp_dashboard_existing_address">
+                                                <%if(address.length>0) {%>
+                                                    <%for(let i=0;i<address.length;i++){%>
+                                                <div class="row" >
+                                                    <div class="col-md-12" > 
+                                                        <div class="fp__checkout_single_address">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <span class="icon"><i class="fas fa-home"></i>
+                                                                        Address - <%=i+1%></span>
+                                                                    <span class="address"><%=address[i].fullName%></span>
+                                                                    <span>House No:<%=address[i].house%></span>
+                                                                    <span class="address">City:<%=address[i].city%></span>
+                                                                    <span>State:<%=address[i].state%></span>
+                                                                    <span class="address">Mobile:<%=address[i].number%></span>
+                                                                    <span>PIN:<%=address[i].pincode%></span>
+                                                                </label>
+                                                            </div>
+                                                            <ul>
+                                                                <li><a href="/editAddress?id=<%=address[i]._id%>" class="dash_edit_btn"><i
+                                                                            class="far fa-edit"></i></a></li>
+                                                                <li><a href="/deleteAddress?id=<%=address[i]._id%>" class="dash_del_icon"><i
+                                                                            class="fas fa-trash-alt"></i></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                   
+                                                    </div>
+                                                </div>
+                                                <%}%>
+                                                <%}else{%>
+                                                    <p>Address not found</p>
+                                                <%}%>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                                <%- include("../layouts/footer.ejs") %>
