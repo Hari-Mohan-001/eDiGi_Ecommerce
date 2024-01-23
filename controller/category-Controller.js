@@ -1,5 +1,6 @@
 const category = require("../model/categoryModel");
 const product = require("../model/productModel");
+const{decode}= require("jsonwebtoken")
 
 
 const loadEditCategory = async(req,res)=>{
@@ -18,7 +19,7 @@ const loadEditCategory = async(req,res)=>{
 }
 
 const editCategory = async(req,res)=>{
-    try {
+    try { 
         const categoryName = req.body.categoryName
         const categoryId = req.body.categoryId
         const Category = await category.findById({_id:categoryId}) 

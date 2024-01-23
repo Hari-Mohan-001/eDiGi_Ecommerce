@@ -1,0 +1,84 @@
+<%- include("../layouts/header.ejs") %>
+<br><br>
+
+<section class="fp__dashboard mt_120 xs_mt_90 mb_100 xs_mb_70">
+    <div class="container">
+        <div class="fp__dashboard_area">
+            <div class="row">
+                            <div class="" id="v-pills-profile" role="tabpanel"
+                                aria-labelledby="v-pills-profile-tab">
+                                <div class="fp_dashboard_body">
+                                    <h3 style="align-items: center;">Wishlist</h3>
+                                    <br>
+                                    <div class="fp_dashboard_order">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr class="t_header">
+                                                        <th>Product Name</th>
+                                                        <th>Image</th>
+                                                        <th>Price</th>
+                                                        <th>AddToCart</th>
+                                                        <th>Remove</th>
+                                                    </tr>
+                                                    <%products.forEach(product=>{%>
+                                                    <tr>
+                                                        <td>
+                                                            <h5><%=product.productName%></h5>
+                                                        </td>
+                                                        <td>
+                                                            <img style="max-width: 100px;height: auto;" src="/product-Images/<%=product.image[0]%>" alt="menu" class="">
+                                                        </td>
+                                                        <td>
+                                                            <h5><%=product.price%></h5>
+                                                        </td>
+                                                      
+                                                            
+                                                            
+                                                        <td><a onclick="addToCart('<%=product._id%>')">Addtocart</a></td>
+
+                                                        
+                                                        <td><a href="">Remove</a></td>
+                                                    </tr>
+                                                 <%})%>
+
+                                                   
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const addToCart =(proId)=>{
+        fetch("/addToCart", {
+            method:"post",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                productid:proId
+            })
+        })
+        .then((res)=>res.json())
+        .then((res)=>{
+            window.location.reload()
+        })
+        .catch((error)=>console.log(error))
+    }
+</script>
+
+
+
+
+
+
+
+<%- include("../layouts/footer.ejs") %>

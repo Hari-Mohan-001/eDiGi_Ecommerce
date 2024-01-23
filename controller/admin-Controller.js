@@ -2,6 +2,8 @@ const admin = require("../model/userModel");
 const category = require("../model/categoryModel");
 const product = require("../model/productModel");
 const adminJwt = require("jsonwebtoken");
+const order = require("../model/orderModel")
+const moment = require("moment")
 
 const adminEmail = process.env.ADMIN_EMAIL;
 const adminPassword = process.env.ADMIN_PASSWORD;
@@ -34,7 +36,7 @@ const verifyLogin = async (req, res) => {
       const token = createToken(email);
       res.cookie("adminjwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
 
-      res.redirect("/admin/adminDashboard");
+      res.redirect("/admin/dashboard");
     } else {
       res.render("adminLogin", { message: "Invalid Credentials" });
     }
@@ -209,7 +211,7 @@ const loadUpdateProduct = async (req, res) => {
       console.log("product data");
       res.render("updateProducts", { products: productData });
     } else {
-      res.redirect("/admin/admindashboard");
+      res.redirect("/admin/dashboard");
     }
   } catch (error) {
     console.log(error.message);
@@ -246,6 +248,33 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const loadSalesReport = async(req,res)=>{ 
+  try {
+    let Order
+    if(req.query.startDate && req.query.endDate){
+      console.log(req.query.startDate);
+         const startDate = new Date(req.query.startDate)
+         const endDate = new Date(req.query.endDate)
+         console.log(startDate);
+
+         Order = await order.find({orderedAt:{$gte:startDate , $lte:endDate},
+          orderStatus:{$in:['Shipped', 'Delivered']}
+        }).populate("costumer")
+    }else{
+      Order = await order.find({orderStatus:{$in:['Shipped' , 'Delivered']}}).populate("costumer")
+    }
+
+    const totalValue = Order.reduce((total ,value)=> total+value.totalPrice , 0)
+    Order = Order.map(Order =>({
+      ...Order.toObject(),
+      orderDate: moment(Order.orderedAt).format('DD/MM/YYYY')
+    }))
+    res.render("salesReport", {orders:Order , totalValue , moment})
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const adminLogout = async (re, res) => {
   try {
     res.cookie("adminjwt", "", { maxAge: 1 });
@@ -273,5 +302,6 @@ module.exports = {
   loadUpdateProduct,
   updateProduct,
   adminLogout,
+  loadSalesReport
 
 };

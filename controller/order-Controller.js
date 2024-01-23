@@ -92,7 +92,9 @@ const adminOrderList = async(req,res)=>{
 const adminAllOrders = async(req,res)=>{
     try {
         const orderId = req.query.id
+        console.log("one"+orderId);
         const {productTotal, findProducts}= await productHelpers.orderPipeline(req,orderId )
+        console.log(productTotal);
         console.log(orderId);
         let orders = await order.find({_id:orderId})
             console.log(orders);

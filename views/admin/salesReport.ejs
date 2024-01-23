@@ -18,6 +18,9 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+
+    
+    <link href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/sp-2.1.2/datatables.min.css" rel="stylesheet"/>
     <!-- <link rel="stylesheet" href="css/rtl.css"> -->
 </head>
 
@@ -133,9 +136,9 @@
                                             class="fas fa-user-lock"></i></span>Coupon</button>
 
                                             <button class="nav-link" id="sales-tab" data-bs-toggle="pill"
-                                            type="button" role="tab"
-                          aria-controls="v-pills-settings" aria-selected="false"><span><i
-                                  class="fas fa-user-lock"></i></span>Sales Report</button>
+                                                      type="button" role="tab"
+                                    aria-controls="v-pills-settings" aria-selected="false"><span><i
+                                            class="fas fa-user-lock"></i></span>Sales Report</button>
 
                             <button class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
                                 </span> Logout</button>
@@ -150,21 +153,38 @@
                                 aria-labelledby="v-pills-home-tab">
 
     <div class="fp_dashboard_body">
-        <h3 style="justify-content: center;">Order list</h3>
+        <h3 style="justify-content: center;">Sales Report</h3>
+        <form action="" method="get" style="width: 250px;">
+            <div>
+                <label for="start">Start Date</label>
+                <input type="date" name="startDate" id="startDate">
+            </div>
+            <div>
+                <label for="endDate">End Date</label>
+                <input type="date" name="endDate" id="endDate" oninput="compareDate()" >
+                <span style="color: red;" id="dateError"></span>
+            </div>
+            <div>
+                <button style="margin-left: 180px; margin-top: 15px;margin-bottom: 15px;" class="btn btn-success" type="submit">Go</button>
+            </div>
+        </form>
             <div class="fp_dashboard_order">
                 <div class="table-responsive">
-        <table class="table">
-            <tbody>
+        <table class="table" id="sales">
+            <thead>
+            
                 <tr class="t_header">
                     
                     <th>Name</th>
                     <th>Order Date</th>
                     <th>Address</th>
                     <th>Total Price</th>
-                    <th>Status</th>
+                    <th>Payment</th>
                     <th>View Details</th>
 
                 </tr>
+            </thead>
+                <tbody>
           <%if(orders.length>0){ %>
               <% for(let i=0;i<orders.length;i++){ %>
             
@@ -183,27 +203,20 @@
                         <h5><%=orders[i].totalPrice%></h5>
                         </td>
                         <td>
-                            <%if(orders[i].orderStatus ==='Shipped' ||orders[i].orderStatus ==='Returned' ||orders[i].orderStatus ==='Cancelled') {%>
-                            <h5><%=orders[i].orderStatus%></h5>
-                            <%} else {%>
-                                <select name="orderStatus" id="orderStatus" onchange="updateStatus('<%=orders[i]._id%>', this.value)">
-                                    <option value="<%=orders[i].orderStatus%>"><%=orders[i].orderStatus%></option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Shipped">Shipped</option>
-                                    <option value="Delivered">Delivered</option>
-                                    <option value="Cancelled">Cancelled</option>
-                                </select>
-                                <%}%> 
+                           
+                            <h5><%=orders[i].payment%></h5>      
                             </td>
-                            <td><a class="view_invoice" href="/admin/listAllOrders?id=<%=orders[i]._id%>">View details</a></td>
+                            <td><a class="view_invoice" href="">View details</a></td>
                            
                 </tr>
                 <%}%>
                 <%}%>
                                                         
-                    </tbody>
-                    </table>
+         </tbody>
+        </table>
+        <div>
+            <span style="font-weight: bolder;">Total Value :<%=totalValue%> </span>
+        </div>
                 </div>
              </div>
 
@@ -218,26 +231,7 @@
 </section>
 
 
-
-
-
         <script>
-            function updateStatus(orderId,status){
-              fetch('/admin/updateOrderStatus',{
-                method:"POST",
-                headers:{
-                  "Content-Type":"application/json"
-                },
-                body:JSON.stringify({
-                  orderId:orderId,
-                  orderStatus:status
-                })
-              })
-              .then(res=>res.json)
-              .then((res)=>window.location.reload())
-              .catch(error=>console.error(error))
-            }
-
 
             document.getElementById("users-tab").addEventListener("click" , (event)=>{
         window.location.href = "/admin/usersList"
@@ -263,6 +257,30 @@
 
     })
  </script>
+
+ <script>
+    const compareDate = ()=>{
+        const startDate = document.getElementById("startDate").value
+        const endDate = document.getElementById("endDate").value
+        if(startDate>=endDate){
+         document.getElementById("dateError").textContent = "Start date should be greater than end date" 
+         document.getElementById("endDate").value=""    
+        }else{
+            document.getElementById("dateError").textContent = ""
+        }
+    }
+ </script>
+
+    
+<script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/sp-2.1.2/datatables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+    $('#sales').DataTable();
+});
+</script>
+
+
             
      </body>
 

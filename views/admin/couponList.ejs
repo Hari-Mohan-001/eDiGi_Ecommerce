@@ -76,7 +76,7 @@
                 <ul class="menu_icon d-flex flex-wrap">
                     
                     <li>
-                        <a href="/admin/adminDashboard" ><i class="fas fa-user"></i></a>
+                        <a href="/admin/dashboard" ><i class="fas fa-user"></i></a>
                     </li>
                     <li>
                         <a class="common_btn" href="/admin/logout" data-bs-toggle="modal"
@@ -135,6 +135,11 @@
                                     aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span>Coupon</button>
 
+                                            <button class="nav-link" id="sales-tab" data-bs-toggle="pill"
+                                                      type="button" role="tab"
+                                    aria-controls="v-pills-settings" aria-selected="false"><span><i
+                                            class="fas fa-user-lock"></i></span>Sales Report</button>
+
                                 <button class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
                                     </span> Logout</button>
                             </div>
@@ -160,9 +165,10 @@
                             <th>Coupon Name</th>
                             <th>Precentage</th>
                             <th>Minimum Purcahse</th>
-                            <th>Maximum Discount</th>
+                            
                             <th>Expiry Date</th>
                             <th>IsActive</th>
+                            <th>Delete</th>
                         </tr>
                           <%for(let i=0;i<coupons.length;i++){%> 
                         <tr>
@@ -180,7 +186,7 @@
                             <h5><%=coupons[i].minimum%></h5>
                           </td>
                          
-                          <td><h5><%=coupons[i].maximum%></h5></td>
+                         
 
                           <td><h5><%=coupons[i].expDate%></h5></td>
 
@@ -189,6 +195,7 @@
                            <%} else {%>
                             <td><a style="background-color:red;" class="view_invoice"  onclick="" >InActive</a></td> 
                            <%}%>
+                           <td><a  class="view_invoice"  onclick="deleteCoupon('<%=coupons[i]._id%>')" >Delete</a></td>
                         </tr>
                         <%}%>
                             
@@ -231,7 +238,31 @@
     })
     document.getElementById("coupon-tab").addEventListener("click" , (event)=>{
         window.location.href = "/admin/couponList"})
+
+        document.getElementById("sales-tab").addEventListener("click" , (event)=>{
+        window.location.href = "/admin/salesReport"})
     
+</script>
+
+<script>
+    const deleteCoupon = (coupon)=>{
+                 fetch("/admin/deleteCoupon", {
+                    method:"post",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify({
+                        couponId:coupon
+                    })
+
+                 })
+                 .then((res)=> res.json())
+                 .then((res)=>{
+                    if(res === "success")
+                    window.location.reload()
+                 })
+                 .catch((err)=>console.log(err))
+    }
 </script>
 
 

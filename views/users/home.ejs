@@ -106,7 +106,11 @@
                         <!-- <a class="common_btn" href="/login" >Login</a> -->
                     </li>
                     <li>
-                        <a class="common_btn" href="/login" >Login</a>
+                        <%if(count){%>
+                        <a class="common_btn" href="" >Logout</a>
+                        <%} else {%>
+                            <a class="common_btn" href="/login" >Login</a>
+                            <%}%>
                     </li>
                 </ul>
             </div>

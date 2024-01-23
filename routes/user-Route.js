@@ -19,7 +19,12 @@ const { laodCart, addToCart, removeCartItem, quantityUpdation } = require("../co
 const { loadCheckout, createOrder, orderSuccess } = require("../controller/checkout-Controller")
 
 const{viewOrders, orderDetails, cancelOrder, deleteInOrder} =require("../controller/order-Controller")
-const { applyCoupon } = require("../controller/coupon-Controller")
+
+const { applyCoupon, removeCoupon } = require("../controller/coupon-Controller")
+
+const { generateRazorpay, razorpayVerifyOrder, sample } = require("../helpers/razorpay")
+const { addToWishlist, loadWishlist } = require("../controller/wishlistController")
+
 const userRoute = express.Router()
 
 userRoute.use((req, res, next) => {
@@ -66,6 +71,9 @@ userRoute.get("/products" ,loadProducts)
 
 userRoute.get("/singleProduct", loadSingleProduct)
 
+userRoute.get("/wishlist" , tokenVerify , loadWishlist)
+userRoute.post("/addToWishlist", addToWishlist)
+
 userRoute.get("/myCart",tokenVerify,isBlocked, laodCart)
 userRoute.post("/addToCart",tokenVerify ,addToCart)
 userRoute.post("/quantityUpdate" , quantityUpdation) 
@@ -81,6 +89,11 @@ userRoute.get("/cancelOrder" , cancelOrder)
 userRoute.post("/deleteInOrder" , deleteInOrder)
 
 userRoute.post("/applyCoupon" , applyCoupon)
+userRoute.post("/removeCoupon" , removeCoupon)
+
+userRoute.post("/create/orderId" , generateRazorpay)
+userRoute.post("/api/payment/verify" , razorpayVerifyOrder)
+userRoute.get("/sample" , sample)
 
 module.exports =  userRoute   
  

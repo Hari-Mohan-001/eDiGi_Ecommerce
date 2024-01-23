@@ -33,7 +33,6 @@ const addCoupon = async(req,res)=>{
         console.log(req.body.couponName);
         console.log(req.body.percentage);
         console.log(req.body.minimumPurchase);
-        console.log(req.body.maximumDiscount);
         console.log(req.body.expiryDate);
         
         const expiryDate = moment(req.body.expiryDate).toISOString() 
@@ -136,9 +135,50 @@ const applyCoupon = async(req,res)=>{
     }
 }
 
+const removeCoupon = async(req,res)=>{
+    try {
+        const userid = decode(req.cookies.jwt).id
+        const findCart = await cart.findOne({_id:req.body.cartId})
+        const removeId = await coupon.findOneAndUpdate({_id:findCart.couponId},
+            {
+                $pull:{
+                    userId:userid
+                }
+            }
+            )
+            const updateCart = await cart.findOneAndUpdate({_id:req.body.cartId}, 
+                {
+                    isCouponApplied:false,
+                    $unset:{
+                        couponId:findCart.couponId
+                    }
+                }
+                )
+                if(removeId && updateCart){
+                    res.json("success")
+                }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const deleteCoupon = async(req,res)=>{
+    try {
+        const{couponId}= req.body
+        const findCoupon = await coupon.findByIdAndDelete({_id:couponId})
+        if(findCoupon){
+            res.json("success")
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports ={ 
     loadcouponList,
     loadAddCoupon,
     addCoupon,
-    applyCoupon
+    applyCoupon,
+    removeCoupon,
+    deleteCoupon
 }

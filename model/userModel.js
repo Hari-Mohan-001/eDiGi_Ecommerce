@@ -52,6 +52,10 @@ const userShema = new mongoose.Schema({
             }
 
         }],
+        wishlist:[{
+             type:mongoose.Schema.Types.ObjectId,
+             ref:"product"
+        }],
         blocked:{
             type:Boolean,
             default:false

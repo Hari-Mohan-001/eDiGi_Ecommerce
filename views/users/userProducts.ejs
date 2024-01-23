@@ -29,7 +29,7 @@
                             <ul class="d-flex flex-wrap justify-content-center">
                                 <li><a href=""><i onclick="addToCart('<%= products[i]._id%>')"
                                             class="fas fa-shopping-basket"></i></a></li>
-                                <li><a href=""><i class="fal fa-heart"></i></a></li>
+                                <li><a href=""><i onclick="addTowishlist('<%=products[i]._id%>')" class="fal fa-heart"></i></a></li>
                                 <li><a href="#"><i class="far fa-eye"></i></a></li>
                             </ul>
                         </div>
@@ -76,6 +76,25 @@
             .then((res)=>window.location.reload)
             .catch((error) =>console.log(error))
 
+        }
+    </script>
+
+    <script>
+        const addTowishlist = (proId)=>{
+                   fetch("/addToWishlist" , {
+                    method:"post",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify({
+                        productId:proId
+                    })
+                   })
+                   .then((res)=> res.json())
+                   .then((res) =>{
+                    if(res==='success')
+                    window.location.reload()
+                   })
         }
     </script>
 

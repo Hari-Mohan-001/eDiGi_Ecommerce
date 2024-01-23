@@ -137,6 +137,11 @@
                                     aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span>Coupon</button>
 
+                                            <button class="nav-link" id="sales-tab" data-bs-toggle="pill"
+                                                      type="button" role="tab"
+                                    aria-controls="v-pills-settings" aria-selected="false"><span><i
+                                            class="fas fa-user-lock"></i></span>Sales Report</button>
+
                                 <button class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
                                     </span> Logout</button>
                             </div>
@@ -237,7 +242,10 @@
         window.location.href = "/admin/couponList"
 
     })
-    
+    document.getElementById("sales-tab").addEventListener("click" , (event)=>{
+        window.location.href = "/admin/salesReport"
+
+    })
 </script>
 
 

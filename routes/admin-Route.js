@@ -1,13 +1,13 @@
 const express = require("express")
 const { getAllUsers, getSingleUser, loadAdminLogin, verifyLogin, loadAdminDashboard, loadCategoryList, loadAddCategory,
    addNewCategory, blockUser, loadProductList, loadAddProduct, unblockUser, addNewProduct, loadUpdateProduct, 
-   updateProduct, logout, adminLogout, } = require("../controller/admin-Controller")
+   updateProduct, logout, adminLogout, loadSalesReport, } = require("../controller/admin-Controller")
 const {tokenVerify,isLogout} =require("../middleware/adminAuth") 
 const upload = require("../middleware/multer")
 const { adminOrderList, updateOrderStatus, adminAllOrders } = require("../controller/order-Controller")
 const { loadEditCategory, editCategory, blockCategory } = require("../controller/category-Controller")
 const { deleteProductImage, blockProduct } = require("../controller/product-Controller")
-const { loadcouponList, loadAddCoupon, addCoupon } = require("../controller/coupon-Controller")
+const { loadcouponList, loadAddCoupon, addCoupon, deleteCoupon } = require("../controller/coupon-Controller")
 const adminRoute = express.Router()
 
 adminRoute.use(express.static("public"))
@@ -21,7 +21,7 @@ adminRoute.use((req, res, next) => {
 
 adminRoute.get("/login" , isLogout,loadAdminLogin)
 adminRoute.post("/login" , verifyLogin)
-adminRoute.get("/adminDashboard" ,tokenVerify, loadAdminDashboard)
+adminRoute.get("/dashboard" ,tokenVerify, loadAdminDashboard)
 adminRoute.get("/usersList" ,tokenVerify, getAllUsers)
 adminRoute.get("/blockUser" , blockUser)
 adminRoute.get("/unBlockUser" , unblockUser)
@@ -45,9 +45,12 @@ adminRoute.get("/orderList" , tokenVerify,adminOrderList)
 adminRoute.get("/listAllOrders", tokenVerify,adminAllOrders)
 adminRoute.post("/updateOrderStatus" , updateOrderStatus)
 
-adminRoute.get("/couponList" , loadcouponList)
-adminRoute.get("/addCoupon" ,loadAddCoupon)
+adminRoute.get("/couponList" ,tokenVerify, loadcouponList)
+adminRoute.get("/addCoupon" ,tokenVerify,loadAddCoupon)
 adminRoute.post("/addCoupon" ,addCoupon)
+adminRoute.post("/deleteCoupon" , deleteCoupon)
+
+adminRoute.get("/salesReport", tokenVerify,loadSalesReport)
 
 adminRoute.get("/logout" , adminLogout)
 

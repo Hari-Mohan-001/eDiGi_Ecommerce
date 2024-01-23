@@ -40,11 +40,14 @@
                             <i class="far fa-star"></i>
                             <span>(201)</span>
                         </p>
-                        <h3 class="price">Rs <%=product.price%> <del>Rs 35000.00</del> </h3>
+                        <h3 class="price">Rs <%=product.price%> <del>Rs 95000.00</del> </h3>
                         <p class="short_description"><%=product.description%></p>
-                        <p class="short_description">Instock - <%=product.stock%></p>
-                            
-                        <div class="details_size">
+                        <%if(product.stock<=0){%>
+                         <p class="short_description" style="color: red;">Out of stock</p>
+                         <%} else{%>
+                        <p class="short_description" style="color: rgb(32, 238, 32); font-weight: bolder;">Instock - <%=product.stock%></p>
+                            <%}%>
+                        <!-- <div class="details_size">
                             <h5>select Color</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="large" checked>
@@ -64,9 +67,9 @@
                                     Blue <span>+ $150</span>
                                 </label>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="details_extra_item">
+                        <!-- <div class="details_extra_item">
                             <h5>select option <span>(optional)</span></h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="coca-cola">
@@ -80,7 +83,7 @@
                                     Bluetooth<span>+ $15</span>
                                 </label>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="details_quentity">
                             <h5>select quantity</h5>
@@ -96,7 +99,11 @@
                         <ul class="details_button_area d-flex flex-wrap">
                             <form action="/addToCart" method="post">
                             <input type="hidden" value="<%= product._id%>" name="productId">
+                            <%if(product.stock<=0){%> 
+                            <button disabled><a class="common_btn">add to cart</a></button>
+                            <%} else {%>
                             <button><a class="common_btn">add to cart</a></button>
+                            <%}%>
                         </form>
                             <li><a class="wishlist" href="#"><i class="far fa-heart"></i></a></li>
                         </ul>

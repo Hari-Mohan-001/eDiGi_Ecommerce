@@ -40,8 +40,9 @@
                                                             <th class="price">Price</th>
                                                             <th class="qnty">Quantity</th>
                                                             <th class="total">Total</th>
+                                                           
                                                             <th class="view_invoice">Action</th>
-                                                        </tr>
+                                                            
                                                         <%orders.forEach(order =>{%>
                                                             <%order.items.forEach((product,index)=>{%>
                                                         <tr>
@@ -87,12 +88,13 @@
                                                             <td class="qnty">
                                                                 <b></b>
                                                             </td>
-                                                            <td class="qnty">
-                                                                <b></b>
-                                                            </td>
+                        
                                                             
                                                             <td class="total">
                                                                 <b>Rs.<%=order.totalPrice%></b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -102,12 +104,13 @@
                                                             <td class="qnty">
                                                                 <b></b>
                                                             </td>
-                                                            <td class="qnty">
-                                                                <b></b>
-                                                            </td>
+                                                           
                                                             
                                                             <td class="total coupon">
-                                                                <b>$0.00</b>
+                                                                <b>Rs. <%=order.discount%></b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -117,12 +120,13 @@
                                                             <td class="qnty">
                                                                 <b></b>
                                                             </td>
-                                                            <td class="qnty">
-                                                                <b></b>
-                                                            </td>
+                                                            
                                                            
                                                             <td class="total coast">
                                                                 <b>Rs.00.00</b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -132,12 +136,13 @@
                                                             <td class="qnty">
                                                                 <b></b>
                                                             </td>
-                                                            <td class="qnty">
-                                                                <b></b>
-                                                            </td>
+                                                           
                                                             
                                                             <td class="total">
                                                                 <b>Rs.<%=order.totalPrice%></b>
+                                                            </td>
+                                                            <td class="qnty">
+                                                                <b></b>
                                                             </td>
                                                         </tr>
                                                     </tfoot>

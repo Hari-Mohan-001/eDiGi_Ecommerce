@@ -1,5 +1,6 @@
 
 <%- include("../layouts/header.ejs") %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
  <!--============================
         CHECK OUT PAGE START
     ==============================-->
@@ -31,10 +32,10 @@
                                                 <span class="icon"><i class="fas fa-home"></i>Address :<%=i+1%></span>
                                                 <span class="address"><%=address[i].fullName%>
                                                     <span>House No:<%=address[i].house%></span>
-                                                                    <span class="address">City:<%=address[i].city%></span>
-                                                                    <span>State:<%=address[i].state%></span>
-                                                                    <span class="address">Mobile:<%=address[i].number%></span>
-                                                                    <span>PIN:<%=address[i].pincode%></span>
+                                                     <span class="address">City:<%=address[i].city%></span>
+                                                     <span>State:<%=address[i].state%></span>
+                                                     <span class="address">Mobile:<%=address[i].number%></span>
+                                                     <span>PIN:<%=address[i].pincode%></span>
                                                     </span>
                                             </label>
                                         </div>
@@ -58,10 +59,11 @@
                         <p>delivery: <span>$00.00</span></p>
                         <%if(findCart.isCouponApplied) {%>
                         <p>discount: <span><%=discount%></span></p>
-                        <p class="total"><span>total:</span> <span id="totalVal" data-totalprice="<%=cartTotal[0].total %>" ><%=totalAfterDiscount%></span></p>
+                        
+                        <p class="total"><span>Total:Rs</span> <span id="totalValue" data-totalprice="<%=cartTotal[0].total %>" ><%=totalAfterDiscount%></span></p>
                           <%} else {%>
                             <p>discount:Rs<span>0</span></p>
-                        <p class="total"><span>total:</span> <span id="totalVal" data-totalprice="<%=cartTotal[0].total %>" ><%=cartTotal[0].total%></span></p>
+                        <p class="total"><span>Total:Rs</span> <span id="totalValue" data-totalprice="<%=cartTotal[0].total %>" ><%=cartTotal[0].total%></span></p>
                         <%}%>
                         <%}%>
                        
@@ -69,12 +71,12 @@
                         <div style="display: flex;flex-direction: row;" >
                             <div>
                             <label for="">Cash On Delivery</label>
-                            <input type="radio" name="payment" value="Cash on delivery" id="payment">
+                            <input type="radio" name="payment" value="Cash on delivery" id="cod" required>
                             <span id="paymentError"></span>
                            </div>
                           <div>
                             <label for="">Online</label>
-                            <input type="radio" name="payment" value="online" id="payment">
+                            <input type="radio" name="payment" value="online" id="online" required>
                           </div>   
 
                             <% if(typeof message !== "undefined") { %>
@@ -82,28 +84,59 @@
                               <% } %>
                         </div>
                         
-                        <button id="checkout" style="margin-top: 100px;" type="submit" class="common_btn" >Place Order</button>
+                        <button id="orderButton" style="margin-top: 100px;" type="submit" class="common_btn" >Place Order</button>
                     </form>
 
-                   <div style="margin-top: 30px; display: flex;">
-                    <input style="margin-top: 40px;" type="text" placeholder="Coupon Code" id="couponCode">
-                        <button style="margin-top: 177px;" onclick="applyCoupon('<%=findCart._id%>')" >Apply</button>
+                   <div style="margin-top: 40px; display: flex;">
+                   
+                    <%if(!findCart.isCouponApplied) {%>
+                        <input style="margin-top: 40px;" type="text" placeholder="Coupon Code" id="couponCode">
+                        <button style="margin-top: 177px; position: fixed;" onclick="applyCoupon('<%=findCart._id%>')" >Apply</button>
+                        <%} else {%>
+                            <input style="margin-top: 90px;" type="text" placeholder="Coupon Code" id="couponCode">
+                        <button style="margin-top: 193px;" onclick="removeCoupon('<%=findCart._id%>')" >Remove</button>  
                     </div>
+                    <div>
+                        <span style="color: green;"> Coupon Applied</span>
+                    </div>
+                    <%}%>    
+                    
              </div>
                 
             </div>
-        </div> 
+        </div>
+        <div>
+            <table class="table table-success table-striped col-lg-4" style="width: 358px; float: right; ">
+                <thead>
+                    <th>Name</th>
+                    <th>Percentage Discount</th>
+                    <th>Minimum Purchase</th>
+                    <th>Expiry Date</th>
+                </thead>
+                <%coupons.forEach(coupon=> {%>
+                <tbody>
+                    <td><%=coupon.name%></td>
+                    <td><%=coupon.percentage%></td>
+                    <td><%=coupon.minimum%></td>
+                    <td><%=coupon.expiryDate%></td>
+                </tbody>
+                <%})%>
+             </table>
+        </div>
+        
     </div>
  </section>
+ 
     <!--============================
         CHECK OUT PAGE END
     ==============================-->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
 
        const applyCoupon = (cartid)=>{
                const couponCode = document.getElementById("couponCode").value
-               const total = document.getElementById("totalVal").textContent
+               const total = document.getElementById("totalValue").textContent
 
                console.log(total);
                fetch("/applyCoupon" ,{
@@ -128,6 +161,7 @@
                         icon:'success'
                     }).then(()=>{
                         window.location.reload()
+                        document.getElementById("couponCode").value = "Coupon Applied"
                     })
                 }else if(res ==='User already used the coupon'){
                     Swal.fire({
@@ -157,8 +191,157 @@
             })
                .catch((error)=>console.log(error))
        } 
+    
+    </script>
+
+    <script>
+        const removeCoupon = (cartid)=>{
+            console.log('remove copn');
+            const total = document.getElementById("totalValue").textContent
+            fetch("/removeCoupon" ,{
+                method:"post",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({
+                    cartId:cartid,
+                    finalPrice:total
+                })
+            })
+            .then((res) => res.json())
+            .then((res) =>{
+                     if(res==="success"){
+                        window.location.reload()
+                     }
+            })
+        }
+    </script>
+
+    <script>
+        const radioButtonPayment = document.getElementsByName("payment")
+         let orderId
+         const totalValue = document.getElementById("totalValue").textContent
+         const updatedTotal = parseFloat(totalValue)
+        radioButtonPayment.forEach(radioButton=> {
+            radioButton.addEventListener("change" ,(event)=>{
+                if(event.target.value === "Cash on delivery"){
+                    orderId = null
+                    console.log("cashon");
+                }else{
+                    if(event.target.value === "online"){
+
+                        var settings = {
+                        url: "/create/orderId",
+                        method: "POST",
+                        timeout: 0,
+                        headers: {
+                        "Content-Type": "application/json"
+                      },
+                       data: JSON.stringify({
+                       amount: updatedTotal*100
+                     }),
+                  };
+                        //creates new orderId everytime
+                      $.ajax(settings).done(function (response) {
+
+                      orderId=response.orderId;
+                      console.log(orderId);
+                      
+                   });                     
+
+              }
+              document.getElementById("orderButton").onclick =(e)=>{
+                if(orderId!= null){
+                    console.log("start");
+var options = {
+    key: "rzp_test_HFhaGNiwxiBeds", // Enter the Key ID generated from the Dashboard
+    amount: updatedTotal*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    currency: "INR",
+    name: "eDiGi",
+    description: "e Store",
+    image: "",
+    order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    handler: function (response){
+        console.log("handler");
+        var settings = {
+                        url: "/api/payment/verify",
+                        method: "POST",
+                        timeout: 0,
+                        headers: {
+                        "Content-Type": "application/json"
+                      },
+                       data: JSON.stringify({response}),
+                  };
+                  console.log("before ajasx");
+                  console.log(response);
+                  $.ajax(settings).done(function (response) {
+                    console.log('afterajx');
+                    console.log(response);
+                    placeOrder(orderId)
+              });
+    },
+    
+    theme: {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        
+});
+    rzp1.open();
+    e.preventDefault();
 
 
+                }
+              }
+
+
+         }
+      })
+ });
+
+ const placeOrder = async (orderId)=>{
+    let cashOnDelivery = document.getElementById("cod")
+    let onlinePayment = document.getElementById("online")
+
+   let selectedPayment
+   if(cashOnDelivery.checked){
+    selectedPayment = cashOnDelivery.value
+   }else if(onlinePayment.checked){
+    selectedPayment = onlinePayment.value
+   }
+    console.log(selectedPayment);
+   let addressRadio = document.getElementsByName("selectedAddress")
+   let newSelectedAddress = ""
+   for(let i=0;i<addressRadio.length;i++){
+    if(addressRadio[i].checked){
+        newSelectedAddress = addressRadio[i].value
+        break;
+    }
+   }
+
+    fetch("/checkout" , {
+    method:"post",
+    headers:{
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        address:newSelectedAddress,
+        payment:selectedPayment,
+        paymentId:orderId
+    })
+   })
+   
+   .then((res)=> res.json())
+   .then((res) =>{
+    
+        console.log(res);
+        window.location.href = "/orderSuccess"
+   
+   })
+   .catch((error) => console.log('hioo'+error))
+ }
         
     </script>
 
