@@ -54,29 +54,10 @@ const orderDetails = async(req,res)=>{
     }
 }
 
-const cancelOrder = async(req,res)=>{
-    try {
-        const orderId = req.query.id
-        console.log(orderId);
-        const findOrder = await order.findOneAndUpdate({_id:orderId},
-            {
-               $set:{
-                orderStatus:"Cancelled"
-               } 
-            },
-            {new:true} 
-            )
-            console.log(findOrder);
-
-        res.redirect("/orders")
-    } catch (error) {
-        console.log(error.message);
-    }
-}
 
 const adminOrderList = async(req,res)=>{
     try {
-       let orders = await order.find().populate('costumer')
+       let orders = await order.find().sort({_id:-1}).populate('costumer')
             console.log(orders);
             orders = orders.map(orders =>({
                 ...orders.toObject(),
@@ -96,7 +77,7 @@ const adminAllOrders = async(req,res)=>{
         const {productTotal, findProducts}= await productHelpers.orderPipeline(req,orderId )
         console.log(productTotal);
         console.log(orderId);
-        let orders = await order.find({_id:orderId})
+        let orders = await order.find({_id:orderId}) 
             console.log(orders);
             orders = orders.map(orders =>({
                 ...orders.toObject(),
@@ -125,6 +106,58 @@ const updateOrderStatus = async(req,res)=>{
             )
             res.json('success')
             
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const cancelOrder = async(req,res)=>{ 
+    try {
+        const userId = decode(req.cookies.jwt).id
+        const{orderId , orderValue} = req.body
+        console.log(orderId);
+        const cancelledOrder = await order.findOneAndUpdate({_id:orderId},
+            {
+               $set:{
+                orderStatus:"Cancelled"
+               } 
+            },
+            {new:true} 
+            )
+
+            if(cancelledOrder){
+                res.json(cancelledOrder)
+                const orderItems = cancelledOrder.items
+                console.log(orderItems);
+                orderItems.forEach(async(item)=>{
+                    const{Product:Product , quantity} = item
+                    console.log('cancel');
+                    await product.updateOne({_id:Product},
+                        {
+                            $inc:{
+                                stock:quantity
+                            }
+                        },
+                        {new:true}
+                        )
+                })
+
+                if(cancelledOrder.payment !== 'Cash on delivery'){
+                    await user.updateOne({_id:userId},
+                        {
+                            $inc:{
+                                wallet:orderValue
+                            }
+                        },
+                        {new:true},
+                        )
+                }
+            }else{
+                res.json("Cancelled Failed")
+            }
+
+
+        
     } catch (error) {
         console.log(error.message);
     }
@@ -162,11 +195,59 @@ const deleteInOrder = async(req,res)=>{
         console.log(error.message);
     }
 }
+
+const returnOrder = async(req,res)=>{
+    try {
+        console.log('return');
+        const userId = decode(req.cookies.jwt).id
+        const{orderId , orderValue} = req.body
+        console.log(orderValue);
+        const orderReturn = await order.findByIdAndUpdate({_id:orderId},
+            {
+                $set:{
+                    orderStatus:"Returned"
+                }
+            },
+            {new:true},
+            )
+            if(orderReturn){
+                console.log(orderReturn);
+                res.json(orderReturn)
+                console.log('retorer json'); 
+                const orderItems = orderReturn.items
+                console.log(orderItems);
+                orderItems.forEach(async(item) => {
+                    const{ Product:Product, quantity} = item
+                    console.log(product);
+                    await product.updateOne({_id:Product},
+                        {
+                            $inc:{
+                                stock:quantity  
+                            }
+                        }
+                        )
+                })
+                
+                await user.updateOne({_id:userId},
+                    {
+                        $inc:{
+                            wallet:orderValue
+                        }
+                    }
+                    )
+            }else{
+                res.json("Not returned")
+            }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
  
 module.exports ={
     viewOrders,
     orderDetails,
     cancelOrder,
+    returnOrder,
     adminOrderList,
     updateOrderStatus, 
     deleteInOrder,

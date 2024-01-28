@@ -45,7 +45,30 @@ const addToWishlist = async(req,res)=>{
     }
 }
 
+const removeFromWishlist = async(req,res)=>{
+        try {
+            const{productId} = req.body
+            const UserId= decode(req.cookies.jwt).id
+            const User = await user.findOne({_id:UserId})
+            const removeProduct = await user.findByIdAndUpdate({_id:UserId},
+                {
+                    $pull:{
+                        wishlist:productId
+                    }
+                },
+                {new:true},
+                )
+
+                if(removeProduct){
+                    res.json("success")
+                }
+        } catch (error) {
+            console.log(error.message);
+        }
+}
+
 module.exports = {
 loadWishlist,
-addToWishlist
+addToWishlist,
+removeFromWishlist
 }

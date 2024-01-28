@@ -16,11 +16,21 @@
                                                 <h4>invoice to</h4>
                                                 <p>Address : <%=order.address%></p>
                                                 <p>Payment Method :<%=order.payment%> </p>
-                                                <%if(order.orderStatus === 'Cancelled') {%>
-                                                    <button disabled class="btn btn-danger">Cancel Order</button>
-                                                <%} else {%>
-                                               <a href="/cancelOrder?id=<%=order._id%>"><button onclick="return confirm('Are you sure you want to cancel the order')" class="btn btn-danger">Cancel Order</button></a>
+                                                <%if(order.orderStatus === 'Shipped'|| order.orderStatus === 'Pending'||order.orderStatus === 'Processing'||order.orderStatus === 'Placed') {%>
+                    
+                                               <button id="returnButton" onclick="cancelOrder('<%=order._id%>' ,'<%=order.totalPrice%>' )" class="btn btn-danger">Cancel Order</button>
+                                               <h5 id="cancelOrdermessage"></h5>
                                                  <%}%>
+
+                                                 <%if(order.orderStatus === 'Delivered'){%>
+                                                    <button onclick="returnOrder('<%=order._id%>' ,'<%=order.totalPrice%>' )" class="btn btn-danger">Return Order</button>
+                                                    
+                                                    <%}%>
+                                                           <%if(order.orderStatus==='Cancelled'||order.orderStatus==='Returned'){%>
+                                                    <h5 style="color: red;" id="returnOrdermessage">OrderStatus: <%=order.orderStatus%></h5>
+                                                    <%}else{%>
+                                                        <h6 style="color: rgb(25, 0, 255);" id="returnOrdermessage">OrderStatus: <%=order.orderStatus%></h6>
+                                                        <%}%>
                                             </div>
                                             <div class="header_address">
                                                 <p><b>invoice no: </b><span>001</span></p>
@@ -194,7 +204,103 @@ const confirmed = confirm("Are you sure , you want to delete")
     }
 </script>
 
+<script>
+    const returnOrder =(orderid, amount)=>{
+                
+        Swal.fire({
+      title:'Are you sure you want Return the Order?',
+      icon:'warning',
+      showCancelButton:true,
+      confirmButtonColor:'#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!',      
+    })
+    .then((result)=>{
+              if(result.isConfirmed){
+                console.log('enter');
+               fetch("/returnOrder",{
+                method:"post",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    orderId:orderid,
+                    orderValue:amount
+                })
+               })
+               .then((res)=> res.json())
+               .then((data)=>{
+                    console.log(data);
+                  document.getElementById('returnOrdermessage').textContent = data.orderStatus
+
+                  Swal.fire({
+              title: 'Order Returned',
+              icon: 'success',
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'OK'
+            })
+            .then(()=>{
+                window.location.reload()
+                document.getElementById('returnButton').style.display='none'
+                
+            })
+
+          })
+               .catch((error)=> console.log(error))
+            }
+            })
+    }
+
+    const cancelOrder =(orderid, amount)=>{
+           
+        Swal.fire({
+      title:'Are you sure you want Cancel the Order?',
+      icon:'warning',
+      showCancelButton:true,
+      confirmButtonColor:'#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!',      
+    })
+    .then((result)=>{
+              if(result.isConfirmed){
+                console.log('enter');
+               fetch("/cancelOrder",{
+                method:"post",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    orderId:orderid,
+                    orderValue:amount
+                })
+               })
+               .then((res)=> res.json())
+               .then((data)=>{
+                    console.log(data);
+                  
+
+                  Swal.fire({
+              title: 'Order Cancelled',
+              icon: 'success',
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'OK'
+            })
+            .then(()=>{
+                window.location.reload()
+                document.getElementById('returnButton').style.display='none'
+                
+            })
+
+          })
+               .catch((error)=> console.log(error))
+            }
+            })
+
+    }
+</script>
 <%- include("../layouts/footer.ejs") %>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
 
 <!--=========================
     DASHBOARD END 

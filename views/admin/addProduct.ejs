@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <!-- <link rel="stylesheet" href="css/rtl.css"> -->
 </head>
 
@@ -94,7 +95,7 @@
                         <div class="fp__login_area">
                             <h2>Add Product</h2>
                             <p>Enter the credentials</p>
-                            <form action="/admin/addProduct" method="post" enctype="multipart/form-data">
+                            <form action="/admin/addProduct" method="post" enctype="multipart/form-data" id="form">
                                 <div class="row">
                                     <div class="col-xl-12">
                                         <div class="fp__login_imput">
@@ -106,10 +107,10 @@
                                     <div class="col-xl-12">
                                         <div class="fp__login_imput">
                                             <label> Category Name</label>
-                                            <select name="categoryName" id="">
-                                            <option value="selected">Select Category</option>
+                                            <select name="categoryName" id="categoryName" required>
+                                            <option  value="selected">Select Category</option>
                                             <% for(let i=0;i<categories.length;i++) {%>
-                                            <option value="<%=categories[i]._id%>"><%=categories[i].name%></option>
+                                            <option  value="<%=categories[i]._id%>"><%=categories[i].name%></option>
                                             
                                             <%}%>
                                         </select>
@@ -141,6 +142,13 @@
                                        <span style="color: red;"  id="productImageError"></span>
                                         </div>
                                     </div>
+                                      <input type="hidden" name="croppedImageData" id="croppedImageData">
+                                    <div class="col-xl-12 d-none" id="cropperContainer" >
+                                        
+                            
+                                        
+                                    </div>
+                                    
                                     <div class="col-xl-12">
                                         <div class="fp__login_imput">
                                             <label> Price</label>
@@ -180,6 +188,9 @@
             </div>
         </div>
     </section>
+
+   
+
 
       <script>
 
@@ -240,6 +251,8 @@
         productPrice.addEventListener("input" , productPriceFunction)
         productStock.addEventListener("input" , productStockFunction)
 
+        let cropper
+
         productImage.addEventListener("change" , ()=>{
             
             const imagefiles = productImage.files
@@ -257,6 +270,55 @@
             }else{
                 
                 productImageError.textContent = ""
+                
+               const cropperContainer = document.getElementById("cropperContainer")
+               console.log(cropperContainer);
+              
+               cropperContainer.innerHTML = `<img id="cropperImage" src="${URL.createObjectURL(firstFile)}" alt="image">
+                                             <label>Image Crop</label>
+                                            <button type="button" class="common_btn" id="cropAndSubmit" >Crop and Submit</button>`;
+               const cropperImage = document.getElementById("cropperImage")
+                cropper = new Cropper(cropperImage,{
+                    aspectRatio:0,
+                    viewMode:1,
+                })
+                cropperContainer.classList.remove("d-none")
+                  console.log('to cprper');
+                
+                  
+                        // Function to handle cropping and displaying the cropped image
+    const handleCropAndDisplay = () => {
+        const croppedCanvas = cropper.getCroppedCanvas();
+        const croppedDataURL = croppedCanvas.toDataURL("image/jpeg");
+
+        // Display the cropped image
+        const croppedImage = document.createElement("img");
+        croppedImage.src = croppedDataURL;
+        document.getElementById("imageView").innerHTML = "";
+        document.getElementById("imageView").appendChild(croppedImage);
+       
+        imagesArray.pop(); // Remove the last original image
+        imagesArray.push(croppedDataURL);
+
+        // Add the cropped image to the form data
+        const cropBlob = dataURLtoBlob(croppedDataURL);
+        const formData = new FormData(document.getElementById("form"));
+        formData.append("croppedImage", cropBlob, "croppedImage.jpg");
+
+        // formData.delete("images");
+    };
+
+
+                document.getElementById("cropAndSubmit").addEventListener("click", ()=>{
+                   
+
+                    handleCropAndDisplay()
+                   const croppedDta = 
+                    cropper.destroy();
+                    cropper = null;
+                    cropperContainer.classList.add("d-none");
+                  })
+
                 for(let i =0;i<imagefiles.length;i++){
                     imagesArray.push(imagefiles[i])
                     displayImages()
@@ -283,6 +345,7 @@
 
         let isFormValid = false
         const formFunctions =[productNameFunction,productPriceFunction,productStockFunction]
+        const form = document.getElementById("form")
         document.getElementById("addProduct").addEventListener("click" , (event)=>{
             if(formFunctions.every((fun)=>fun())){
                 isFormValid = true
@@ -295,9 +358,29 @@
             }
         })
 
-        
+        function dataURLtoBlob(dataURL) {
+        // Split the Data URL to obtain the data part
+        const parts = dataURL.split(',');
+        const data = parts[1];
 
-      </script>    
+        // Get the MIME type from the first part of the Data URL
+        const mimeString = parts[0].split(':')[1].split(';')[0];
+
+        // Convert the base64-encoded data to a Blob
+        const byteString = atob(data);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+              console.log('inblob');
+        return new Blob([ab], { type: mimeString });
+    }
+
+      </script> 
+      
+      <script defer src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
         
 </body>
     

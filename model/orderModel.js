@@ -22,6 +22,13 @@ const orderSchema = mongoose.Schema({
         type:Number,
         default:0
     },
+    balanceAmount:{
+        type:Number
+    },
+    isWalletApplied:{
+        type:Boolean,
+        default:false
+    },
     orderStatus:{
          type:String,
          enum:['Pending' ,'Shipped' , 'Cancelled' , 'Processing' , 'Delivered' , 'Returned' ],

@@ -1,9 +1,9 @@
-const admin = require("../model/userModel");
+const user = require("../model/userModel");
 const category = require("../model/categoryModel");
 const product = require("../model/productModel");
 const adminJwt = require("jsonwebtoken");
-const order = require("../model/orderModel")
-const moment = require("moment")
+const order = require("../model/orderModel");
+const moment = require("moment");
 
 const adminEmail = process.env.ADMIN_EMAIL;
 const adminPassword = process.env.ADMIN_PASSWORD;
@@ -26,8 +26,8 @@ const loadAdminLogin = async (req, res) => {
 const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const findAdmin = await admin.findOne({ email });
-    console.log(findAdmin);
+    // const findAdmin = await admin.findOne({ email });
+    // console.log(findAdmin);
     const adminData = {
       email: adminEmail,
       password: adminPassword,
@@ -45,17 +45,9 @@ const verifyLogin = async (req, res) => {
   }
 };
 
-const loadAdminDashboard = async (req, res) => {
-  try {
-    res.render("adminDashboard");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
 const getAllUsers = async (req, res) => {
   try {
-    const users = await admin.find();
+    const users = await user.find();
     res.render("usersList", { users: users });
   } catch (error) {
     console.log(error.message);
@@ -66,7 +58,7 @@ const blockUser = async (req, res) => {
   try {
     console.log("block");
     const id = req.query.id;
-    const blockuser = await admin.findByIdAndUpdate(
+    const blockuser = await user.findByIdAndUpdate(
       { _id: id },
       { $set: { blocked: true } }
     );
@@ -79,7 +71,7 @@ const blockUser = async (req, res) => {
 const unblockUser = async (req, res) => {
   try {
     const id = req.query.id;
-    const unblockuser = await admin.findByIdAndUpdate(
+    const unblockuser = await user.findByIdAndUpdate(
       { _id: id },
       { $set: { blocked: false } }
     );
@@ -120,12 +112,16 @@ const loadAddCategory = async (req, res) => {
 const addNewCategory = async (req, res) => {
   try {
     const categoryName = req.body.categoryName;
-    const findCategory = await category.find({name:{$regex: new RegExp("^"+categoryName+"$","i")} });
+    const findCategory = await category.find({
+      name: { $regex: new RegExp("^" + categoryName + "$", "i") },
+    });
     // const findCategory = await category.find({name:categoryName})
     console.log(findCategory);
     console.log("found");
     if (findCategory.length > 0) {
-      res.render("addCategory", { message: `This Category - ${categoryName} already exist, No dupilcate category allowed` });
+      res.render("addCategory", {
+        message: `This Category - ${categoryName} already exist, No dupilcate category allowed`,
+      });
     } else {
       console.log("not found");
       const Category = new category({
@@ -147,14 +143,13 @@ const addNewCategory = async (req, res) => {
   }
 };
 
-const loadProductList = async (req, res) => { 
+const loadProductList = async (req, res) => {
   try {
-    
-    const categories = await category.find()
-    const Product = await product.find().populate("categoryname")
+    const categories = await category.find();
+    const Product = await product.find().populate("categoryname");
     // const Category = await category.find();
-    console.log("product list");  
-    res.render("productList", { products: Product }); 
+    console.log("product list");
+    res.render("productList", { products: Product });
   } catch (error) {
     console.log(error.message);
   }
@@ -162,7 +157,7 @@ const loadProductList = async (req, res) => {
 
 const loadAddProduct = async (req, res) => {
   try {
-    const Category = await category.find({isBlocked:false});
+    const Category = await category.find({ isBlocked: false });
     res.render("addProduct", { categories: Category });
   } catch (error) {
     console.log(error.message);
@@ -171,33 +166,41 @@ const loadAddProduct = async (req, res) => {
 
 const addNewProduct = async (req, res) => {
   try {
-    const Category = await category.find({isBlocked:false});
-   
-    const newprice = parseFloat(req.body.price)
-    const newStock = parseFloat(req.body.stock)
+    const Category = await category.find({ isBlocked: false });
 
-     if(newprice<=0 || newStock<=0){
-      res.render("addProduct", {categories: Category, message:"Price & stock should be greater than zero"}); 
-     }else{
+    const newprice = parseFloat(req.body.price);
+    const newStock = parseFloat(req.body.stock);
 
+    if (newprice <= 0 || newStock <= 0) {
+      res.render("addProduct", {
+        categories: Category,
+        message: "Price & stock should be greater than zero",
+      });
+    } else {
       const images = req.files.map((file)=>{
         return file.filename
       })
 
-    console.log("product route");
-    const Product = new product({
-      productName: req.body.productName,
-      categoryname: req.body.categoryName,
-      description: req.body.description,
-      brand: req.body.brand,
-      image:images,
-      price: newprice,
-      stock:req.body.stock
-    });
-    const newProduct = await Product.save(); 
-    console.log(newProduct);
-    res.redirect("/admin/addProduct");
-  }
+      // const files = req.files;
+
+      // const listOfImageNames = Object.entries(files).map(
+      //   (arr) => arr[1][0].filename
+      // );
+
+      console.log("product route");
+      const Product = new product({
+        productName: req.body.productName,
+        categoryname: req.body.categoryName,
+        description: req.body.description,
+        brand: req.body.brand,
+        image:images,
+        price: newprice,
+        stock: req.body.stock,
+      });
+      const newProduct = await Product.save();
+      console.log(newProduct);
+      res.redirect("/admin/addProduct");
+    }
   } catch (error) {
     console.log(error.message);
   }
@@ -220,27 +223,27 @@ const loadUpdateProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-     const images = req.files.map((file)=>{
-      return file.filename
-     })
+    const images = req.files.map((file) => {
+      return file.filename;
+    });
 
-     const dataUpdate = {
+    const dataUpdate = {
       $set: {
         productName: req.body.productName,
         description: req.body.description,
         brand: req.body.brand,
         price: req.body.price,
-        stock:req.body.stock
+        stock: req.body.stock,
       },
+    };
 
-     }
-
-     if(images.length>0){
-      dataUpdate.$push = {image:{$each:images}}
-     }
+    if (images.length > 0) {
+      dataUpdate.$push = { image: { $each: images } };
+    }
 
     const productDataUpdate = await product.findByIdAndUpdate(
-      { _id: req.body.id },dataUpdate  
+      { _id: req.body.id },
+      dataUpdate
     );
     res.redirect("/admin/productList");
   } catch (error) {
@@ -248,32 +251,233 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const loadSalesReport = async(req,res)=>{ 
+const loadAdminDashboard = async (req, res) => {
   try {
-    let Order
-    if(req.query.startDate && req.query.endDate){
-      console.log(req.query.startDate);
-         const startDate = new Date(req.query.startDate)
-         const endDate = new Date(req.query.endDate)
-         console.log(startDate);
+    const products = await product.countDocuments({ isBlocked: false }).exec();
+    console.log("countproducts" + products);
 
-         Order = await order.find({orderedAt:{$gte:startDate , $lte:endDate},
-          orderStatus:{$in:['Shipped', 'Delivered']}
-        }).populate("costumer")
-    }else{
-      Order = await order.find({orderStatus:{$in:['Shipped' , 'Delivered']}}).populate("costumer")
+    const pipeLine = [
+      {
+        $match: {
+          orderStatus: {
+            $in: ["Delivered" , "Placed"],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+          totalRevenue: { $sum: "$totalPrice" },
+        },
+      },
+    ];
+    const orders = await order.aggregate(pipeLine);
+    console.log(orders);
+    const orderCount = orders[0].count;
+    const revenue = orders[0].totalRevenue;
+
+    const users = await user.countDocuments();
+    console.log(orders);
+    res.render("adminDashboard", { products, orderCount, revenue, users });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const chartData = async (req, res) => {
+  try {
+    let timeBaseForSalesChart = req.query.salesChart;
+    let timeBaseForOrderNoChart = req.query.orderChart;
+
+    function getDatesAndQueryData(timeBaseForChart, chartType) {
+      let startDate, endDate;
+      let groupingQuery, sortQuery;
+
+      if (timeBaseForChart === "yearly") {
+        startDate = new Date(new Date().getFullYear(), 0, 1);
+        endDate = new Date(new Date().getFullYear(), 11, 31, 23, 59, 59, 999);
+
+        groupingQuery = {
+          _id: {
+            month: { $month: { $toDate: "$orderedAt" } },
+            year: { $year: { $toDate: "$orderedAt" } },
+          },
+          totalSales: { $sum: "$totalPrice" },
+          totalOrder: { $sum: 1 },
+        };
+
+        sortQuery = { "_id.year": 1, "_id.month": 1 };
+      }
+
+      if (timeBaseForChart === "weekly") {
+        startDate = new Date();
+
+        endDate = new Date();
+
+        const timezoneOffset = startDate.getTimezoneOffset();
+
+        startDate.setDate(startDate.getDate() - 6);
+
+        startDate.setUTCHours(0, 0, 0, 0);
+
+        startDate.setUTCMinutes(startDate.getUTCMinutes() + timezoneOffset);
+
+        endDate.setUTCHours(0, 0, 0, 0);
+
+        endDate.setDate(endDate.getDate() + 1);
+
+        endDate.setUTCMinutes(endDate.getUTCMinutes() + timezoneOffset);
+
+        groupingQuery = {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$orderedAt" },
+          },
+          totalSales: { $sum: "$totalPrice" },
+          totalOrder: { $sum: 1 },
+        };
+
+        sortQuery = { _id: 1 };
+      }
+
+      if (timeBaseForChart === "daily") {
+        startDate = new Date();
+        endDate = new Date();
+
+        const timezoneOffset = startDate.getTimezoneOffset();
+
+        startDate.setUTCHours(0, 0, 0, 0);
+
+        endDate.setUTCHours(0, 0, 0, 0);
+
+        endDate.setDate(endDate.getDate() + 1);
+
+        startDate.setUTCMinutes(startDate.getUTCMinutes() + timezoneOffset);
+
+        endDate.setUTCMinutes(endDate.getUTCMinutes() + timezoneOffset);
+
+        groupingQuery = {
+          _id: { $hour: "$orderedAt" },
+          totalSales: { $sum: "$totalPrice" },
+          totalOrder: { $sum: 1 },
+        };
+
+        sortQuery = { "_id.hour": 1 };
+      }
+
+      if (chartType === "sales") {
+        return { groupingQuery, sortQuery, startDate, endDate };
+      } else if (chartType === "orderNoChart") {
+        return { groupingQuery, sortQuery, startDate, endDate };
+      }
     }
 
-    const totalValue = Order.reduce((total ,value)=> total+value.totalPrice , 0)
-    Order = Order.map(Order =>({
+    const salesChartInfo = getDatesAndQueryData(timeBaseForSalesChart, "sales");
+    const orderNoChartInfo = getDatesAndQueryData( timeBaseForOrderNoChart,"orderNoChart");
+
+    let salesChartData = await order
+      .aggregate([
+        {
+          $match: {
+            $and: [
+              {
+                orderedAt: {
+                  $gte: salesChartInfo.startDate,
+                  $lte: salesChartInfo.endDate,
+                },
+                orderStatus: {
+                  $nin: ["cancelled"],
+                },
+              },
+            ],
+          },
+        },
+
+        {
+          $group: salesChartInfo.groupingQuery,
+        },
+        {
+          $sort: salesChartInfo.sortQuery,
+        },
+      ])
+      .exec();
+
+    let orderNoChartData = await order
+      .aggregate([
+        {
+          $match: {
+            $and: [
+              {
+                orderedAt: {
+                  $gte: orderNoChartInfo.startDate,
+                  $lte: orderNoChartInfo.endDate,
+                },
+                orderStatus: {
+                  $nin: ["cancelled"],
+                },
+              },
+            ],
+          },
+        },
+
+        {
+          $group: orderNoChartInfo.groupingQuery,
+        },
+        {
+          $sort: orderNoChartInfo.sortQuery,
+        },
+      ])
+      .exec();
+
+    let saleChartInfo = {
+      timeBasis: timeBaseForSalesChart,
+      data: salesChartData,
+    };
+    let orderQuantityChartInfo = {
+      timeBasis: timeBaseForOrderNoChart,
+      data: orderNoChartData,
+    };
+
+    return res.status(200).json({ saleChartInfo, orderQuantityChartInfo });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const loadSalesReport = async (req, res) => {
+  try {
+    let Order;
+    if (req.query.startDate && req.query.endDate) {
+      console.log(req.query.startDate);
+      const startDate = new Date(req.query.startDate);
+      const endDate = new Date(req.query.endDate);
+      console.log(startDate);
+
+      Order = await order
+        .find({
+          orderedAt: { $gte: startDate, $lte: endDate },
+          orderStatus: { $in: ["Shipped", "Delivered"] },
+        })
+        .populate("costumer");
+    } else {
+      Order = await order
+        .find({ orderStatus: { $in: ["Shipped", "Delivered"] } })
+        .populate("costumer");
+    }
+
+    const totalValue = Order.reduce(
+      (total, value) => total + value.totalPrice,
+      0
+    );
+    Order = Order.map((Order) => ({
       ...Order.toObject(),
-      orderDate: moment(Order.orderedAt).format('DD/MM/YYYY')
-    }))
-    res.render("salesReport", {orders:Order , totalValue , moment})
+      orderDate: moment(Order.orderedAt).format("DD/MM/YYYY"),
+    }));
+    res.render("salesReport", { orders: Order, totalValue, moment });
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const adminLogout = async (re, res) => {
   try {
@@ -284,9 +488,7 @@ const adminLogout = async (re, res) => {
   }
 };
 
-
-
-module.exports = { 
+module.exports = {
   loadAdminLogin,
   verifyLogin,
   loadAdminDashboard,
@@ -302,6 +504,6 @@ module.exports = {
   loadUpdateProduct,
   updateProduct,
   adminLogout,
-  loadSalesReport
-
+  loadSalesReport,
+  chartData,
 };

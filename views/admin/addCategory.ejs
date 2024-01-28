@@ -18,6 +18,8 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <!-- <link rel="stylesheet" href="css/rtl.css"> -->
 </head>
 
@@ -105,14 +107,15 @@
                                             <span id="categoryNameError" style="color: red;"></span>
                                         </div>
                                     </div>
-                                    <div class="col-xl-12">
+                                    <div class="col-xl-12" >
                                         <div class="fp__login_imput">
                                             <label>Image</label>
-                                            <div class="img">
-                                                <img style="max-width: 50%; height: auto;" class="img-fluid w-100" src="" id="imageView" alt="Selected Image">
+                                            <div class="img" style="display: none;">
+                                                <img style="max-width: 100%; height: auto;" class="img-fluid w-100" src="" id="imageView" alt="Selected Image">
+                                                <button class="common_btn" id="cropButton" >crop</button>
                                                 </div>
             
-                                                <input type="file" placeholder="Password" name="image" id="categoryImage" onchange="changeImage(event)" accept="image/*">
+                                                <input type="file" placeholder="Password" name="image" id="categoryImage" accept="image/*" required>
                                             <span id="categoryImageError" style="color: red;"></span>
                                         </div>
                                     </div>
@@ -141,13 +144,15 @@
             </div>
         </div>
     </section>
-
+    
      <script>
          const categoryName = document.getElementById("categoryName")
         const categoryImage = document.getElementById("categoryImage")
         const categoryNameError = document.getElementById("categoryNameError")
         const categoryImageError = document.getElementById("categoryImageError")
         const categoryNamePatern = /^[A-Z][a-z]+(\s[A-Z][a-z]{0,25}){0,1}$/
+        const newImage = document.getElementById("imageView")
+        const cropButton = document.getElementById("cropButton")
 
         const categoryNameFunc= ()=>{
             if(!categoryNamePatern.test(categoryName.value)){
@@ -158,19 +163,47 @@
                 return true
             }
         }
-
         categoryName.addEventListener("input" , categoryNameFunc)
+
+
 
         categoryImage.addEventListener("change" , ()=>{
             const file = categoryImage.files[0]
+            
             if(!file.type.startsWith("image/")){
                 categoryImageError.textContent = "Select an image file"
                 return false
             }else{
                 categoryImageError.textContent = ""
-                return true
+               console.log('before crop');
+               document.getElementById("imageView").onload =()=>{
+                    console.log('in crop');
+                    const cropper = new Cropper(newImage, {
+                                     aspectRatio: 0,
+                                     viewMode:0,
+                                    crop(event) {
+                                   console.log(event.detail.x);
+   
+                                  },
+                               });
+                               cropButton.addEventListener("click" , ()=>{
+                    let newCroppedImage = cropper.getCroppedCanvas().todataURL()
+                  })      
+                               
+                         }
+                        
+                 document.getElementById("imageView").src = URL.createObjectURL(event.target.files[0])
+                return true 
             }
         })
+
+
+        // function changeImage(event){
+        //     console.log('change');
+            
+
+        // }
+
 
         let isFormValid = false
         const formFunctions =[categoryNameFunc ]
@@ -180,17 +213,13 @@
             }
             if(isFormValid === false){
                 event.preventDefault()
-                alert("Please enter the relevent details to proceed")
+                
             }else{
                 form.submit()
             }
-        })
-            
-        function changeImage(event){
-            document.getElementById("imageView").src = URL.createObjectURL(event.target.files[0])
-
-        }
+        })    
 
      </script>    
-        
+   
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 </body>

@@ -25,11 +25,19 @@
                                 <span>10</span>
                             </p>
                             <a class="title" href="/SingleProduct?id=<%=products[i]._id%>"><%= products[i].productName%></a>
-                            <h5 class="price"> RS.<%= products[i].price%></h5>
+                            <%if(products[i].isOfferApplied===true){%>
+                            <h5 class="price"> RS.<%= products[i].price%><del style="color: red;"><%=products[i].oldPrice%></del></h5>
+                            <%} else{%>
+                                <h5 class="price"> RS.<%= products[i].price%></h5>
+                                <%}%>
+                                <!-- <%if(products[i].stock===0){%>
+                                <p style="color: red;">Out of Stock</p>
+                                <%}%> -->
                             <ul class="d-flex flex-wrap justify-content-center">
-                                <li><a href=""><i onclick="addToCart('<%= products[i]._id%>')"
+                                <li><a><i onclick="addToCart('<%= products[i]._id%>')"
                                             class="fas fa-shopping-basket"></i></a></li>
-                                <li><a href=""><i onclick="addTowishlist('<%=products[i]._id%>')" class="fal fa-heart"></i></a></li>
+
+                                <li><a ><i onclick="addTowishlist('<%=products[i]._id%>')" class="fal fa-heart"></i></a></li>
                                 <li><a href="#"><i class="far fa-eye"></i></a></li>
                             </ul>
                         </div>
@@ -38,7 +46,7 @@
                <%}%>
                  
             </div>
-            <div class="fp__pagination mt_35">
+            <!-- <div class="fp__pagination mt_35">
                 <div class="row">
                     <div class="col-12">
                         <nav aria-label="...">
@@ -56,7 +64,7 @@
                         </nav>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </section>
 

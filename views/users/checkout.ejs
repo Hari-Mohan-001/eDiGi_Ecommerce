@@ -1,132 +1,207 @@
-
 <%- include("../layouts/header.ejs") %>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
- <!--============================
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <!--============================
         CHECK OUT PAGE START
     ==============================-->
     <section class="fp__cart_view mt_125 xs_mt_95 mb_100 xs_mb_70">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-lg-7 wow fadeInUp" data-wow-duration="1s">  
-                  <form action="" method="post">
-                    <div class="fp__checkout_form">
-                        <div class="fp__check_form">
-                            <h5>select address <a href="/addNewAddress"  data-bs-toggle="" data-bs-target=""><i
-                                        class="far fa-plus"></i> add address</a></h5>
-                            
-                            <%if(address.length>0){%>
-                                <%for(let i=0;i<address.length;i++){%>
-                            <div class="row" style="display: flex;flex-direction: column;">
-                                <div class="col-md-6">
-                                    <div class="fp__checkout_single_address">
-                                        
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="selectedAddress"
-                                                id="selectedAddress" value="<%=address[i].fullName%>,
+                <div class="col-lg-6  wow fadeInUp" data-wow-duration="1s">
+                    <form action="" method="post">
+                        <div class="fp__checkout_form">
+                            <div class="fp__check_form">
+                                <h5>select address <a href="/addNewAddress" data-bs-toggle="" data-bs-target=""><i
+                                            class="far fa-plus"></i> add address</a></h5>
+
+                                <%if(address.length>0){%>
+                                    <%for(let i=0;i<address.length;i++){%>
+                                        <div class="row" style="display: flex;flex-direction: column;">
+                                            <div class="col-md-6">
+                                                <div class="fp__checkout_single_address">
+
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="selectedAddress" id="selectedAddress" value="<%=address[i].fullName%>,
                                                 <%=address[i].house%>,
                                                 <%=address[i].city%>,
                                                 <%=address[i].state%>,
                                                 <%=address[i].number%>,
-                                                <%=address[i].pincode%>">
-                                            <label class="form-check-label" for="home">
-                                                <span class="icon"><i class="fas fa-home"></i>Address :<%=i+1%></span>
-                                                <span class="address"><%=address[i].fullName%>
-                                                    <span>House No:<%=address[i].house%></span>
-                                                     <span class="address">City:<%=address[i].city%></span>
-                                                     <span>State:<%=address[i].state%></span>
-                                                     <span class="address">Mobile:<%=address[i].number%></span>
-                                                     <span>PIN:<%=address[i].pincode%></span>
-                                                    </span>
-                                            </label>
+                                                <%=address[i].pincode%>"  <% if(i === 0) { %>checked<% } %>                      
+                                                required>
+                                                        <label class="form-check-label" for="home">
+                                                            <span class="icon"><i class="fas fa-home"></i>Address :
+                                                                <%=i+1%></span>
+                                                            <span class="address">
+                                                                <%=address[i].fullName%>
+                                                                    <span>House No:<%=address[i].house%></span>
+                                                                    <span class="address">City:<%=address[i].city%>
+                                                                            </span>
+                                                                    <span>State:<%=address[i].state%></span>
+                                                                    <span class="address">Mobile:<%=address[i].number%>
+                                                                            </span>
+                                                                    <span>PIN:<%=address[i].pincode%></span>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
-                                    </div>
-                                </div>   
-                                
+                                        <%}%>
+                                            <%}else{%>
+                                                <p>Address not found</p>
+                                                <%}%>
                             </div>
-                            <%}%>
-                            <%}else{%>
-                                <p>Address not found</p>
-                                <%}%>
                         </div>
-                    </div>
                 </div>
 
-                <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                <div class="col-lg-6 wow fadeInUp" data-wow-duration="1s">
                     <div id="sticky_sidebar" class="fp__cart_list_footer_button">
                         <h6>total cart</h6>
                         <%if(cartTotal && cartTotal.length>0) {%>
-                        <p>subtotal: <span>Rs.<%=cartTotal[0].total%></span></p>
-                        <p>delivery: <span>$00.00</span></p>
-                        <%if(findCart.isCouponApplied) {%>
-                        <p>discount: <span><%=discount%></span></p>
-                        
-                        <p class="total"><span>Total:Rs</span> <span id="totalValue" data-totalprice="<%=cartTotal[0].total %>" ><%=totalAfterDiscount%></span></p>
-                          <%} else {%>
-                            <p>discount:Rs<span>0</span></p>
-                        <p class="total"><span>Total:Rs</span> <span id="totalValue" data-totalprice="<%=cartTotal[0].total %>" ><%=cartTotal[0].total%></span></p>
-                        <%}%>
-                        <%}%>
-                       
-                        <br>
-                        <div style="display: flex;flex-direction: row;" >
-                            <div>
-                            <label for="">Cash On Delivery</label>
-                            <input type="radio" name="payment" value="Cash on delivery" id="cod" required>
-                            <span id="paymentError"></span>
-                           </div>
-                          <div>
-                            <label for="">Online</label>
-                            <input type="radio" name="payment" value="online" id="online" required>
-                          </div>   
+                            <p>subtotal: <span>Rs.<%=cartTotal[0].total%></span></p>
+                            <p>delivery: <span>00.00</span></p>
+                            <%if(findCart.isCouponApplied) {%>
+                                <p>discount: <span>
+                                        <%=discount%>
+                                    </span></p>
 
-                            <% if(typeof message !== "undefined") { %>
-                                <p style="color: rgba(238, 16, 35, 0.336);"><%=message%></p>
-                              <% } %>
-                        </div>
-                        
-                        <button id="orderButton" style="margin-top: 100px;" type="submit" class="common_btn" >Place Order</button>
-                    </form>
+                                <p class="total"><span>Total:Rs</span> <span id="totalValue"
+                                        data-totalprice="<%=cartTotal[0].total %>">
+                                        <%=totalAfterDiscount%>
+                                    </span></p>
+                                <%} else {%>
+                                    <p>discount:Rs<span>0</span></p>
+                                    <p class="total"><span>Total:Rs</span> <span id="totalValue"
+                                            data-totalprice="<%=cartTotal[0].total %>">
+                                            <%=cartTotal[0].total%>
+                                        </span></p>
+                                    <%}%>
+                                        <%}%>
 
-                   <div style="margin-top: 40px; display: flex;">
-                   
-                    <%if(!findCart.isCouponApplied) {%>
-                        <input style="margin-top: 40px;" type="text" placeholder="Coupon Code" id="couponCode">
-                        <button style="margin-top: 177px; position: fixed;" onclick="applyCoupon('<%=findCart._id%>')" >Apply</button>
-                        <%} else {%>
-                            <input style="margin-top: 90px;" type="text" placeholder="Coupon Code" id="couponCode">
-                        <button style="margin-top: 193px;" onclick="removeCoupon('<%=findCart._id%>')" >Remove</button>  
+                                            <br>
+
+
+                                              <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <%if(User.wallet>0) {%>
+                                                    <%if(findCart.isCouponApplied) {%>
+                                                    <div style="display: flex; align-items: center; margin-right: 10px;">
+                                                        <h5 style="margin-right: 10px;">Wallet</h5>
+                                                     <input style="color: green;" type="checkbox" name="wallet" id="wallet-Checkbox" onclick="clickWallet('<%=totalAfterDiscount%>')">
+                                                     
+                                                    </div>
+                                                    <div>
+                                                        <h5> Rs.<%=User.wallet%></h5>
+                                                    </div>
+                                                     <%}else{%>
+                                                        <div style="margin-right: 10px; display:flex; align-items: center;" >
+                                                          <h5 style="margin-right: 10px;">Wallet</h5>
+                                                        <input style="color: green;"  type="checkbox" name="wallet" id="wallet-Checkbox" onclick="clickWallet('<%=cartTotal[0].total%>')">
+                                                         
+                                                    </div>
+                                                    <div>
+                                                        <h6> Rs.<%=User.wallet%></h6>
+                                                    </div>
+                                                        <%}%>
+                                                      <input type="hidden" id="walletCheckbox" name="walletCheckbox" value="0">
+                                                   <input type="hidden" id="wallet-amount" name="walletAmount" value="<%=User.wallet%>">
+                                                   
+                                                   <%}%>
+                                              </div>
+                                              <div id="walletApplyContainer" style="display: none;">
+                                                <p style="color: green;">Wallet Applied</p>
+                                                <%if(findCart.isCouponApplied){%>
+                                                    <input type="hidden" id="total" value="<%=totalAfterDiscount%>">
+                                                    <p class="total"><span>New Total:Rs</span> <span id="total-value">
+                                                        <%=totalAfterDiscount%>
+                                                    </span></p>
+                                                    <!-- <p id="total-value">Total:<%=totalAfterDiscount%></p> -->
+                                                    <%} else {%>
+                                                        <input type="hidden" id="total" value="<%=cartTotal[0].total%>">
+                                                        <p class="total"><span>New Total:Rs</span> <span id="total-value">
+                                                            <%=cartTotal[0].total%>
+                                                        </span></p>
+                                                        <!-- <p id="total-value">Total111:<%=cartTotal[0].total%></p>   -->
+                                                        <%}%>
+                                              </div>
+
+                                               <br><br>           
+                                            <div style="display: flex;flex-direction: row;">
+                                                <div>
+                                                    <label for="">Cash On Delivery</label>
+                                                    <input type="radio" name="payment" value="Cash on delivery" id="cod"
+                                                        required>
+                                                    <span id="paymentError"></span>
+                                                </div>
+                                                <div>
+                                                    <label for="">Online</label>
+                                                    <input type="radio" name="payment" value="online" id="online"
+                                                        required>
+                                                </div>
+
+                                                <% if(typeof message !=="undefined" ) { %>
+                                                    <p style="color: rgba(238, 16, 35, 0.336);">
+                                                        <%=message%>
+                                                    </p>
+                                                    <% } %>
+                                            </div>
+
+                                            <button id="orderButton" style="margin-top: 100px;" type="submit"
+                                                class="common_btn">Place Order</button>
+                                            </form>
+
+                                            <div style="margin-top: 40px; display: flex;">
+
+                                                <%if(!findCart.isCouponApplied) {%>
+                                                    <input style="margin-top: 40px;" type="text"
+                                                        placeholder="Coupon Code" id="couponCode">
+                                                    <button style="margin-top: 177px; position: fixed;"
+                                                        onclick="applyCoupon('<%=findCart._id%>')">Apply</button>
+                                                    <%} else {%>
+                                                        <input style="margin-top: 90px;" type="text"
+                                                            placeholder="Coupon Code" id="couponCode">
+                                                        <button style="margin-top: 193px;"
+                                                            onclick="removeCoupon('<%=findCart._id%>')">Remove</button>
+                                            </div>
+                                            <div>
+                                                <span style="color: green;"> Coupon Applied</span>
+                                            </div>
+                                            <%}%>
+
                     </div>
-                    <div>
-                        <span style="color: green;"> Coupon Applied</span>
-                    </div>
-                    <%}%>    
-                    
-             </div>
-                
+
+                </div>
             </div>
+            <div>
+                <table class="table table-success table-striped col-lg-4" style="width: 358px; float: right; ">
+                    <thead>
+                        <th>Name</th>
+                        <th>Percentage Discount</th>
+                        <th>Minimum Purchase</th>
+                        <th>Expiry Date</th>
+                    </thead>
+                    <%coupons.forEach(coupon=> {%>
+                        <tbody>
+                            <td>
+                                <%=coupon.name%>
+                            </td>
+                            <td>
+                                <%=coupon.percentage%>
+                            </td>
+                            <td>
+                                <%=coupon.minimum%>
+                            </td>
+                            <td>
+                                <%=coupon.expiryDate%>
+                            </td>
+                        </tbody>
+                        <%})%>
+                </table>
+            </div>
+
         </div>
-        <div>
-            <table class="table table-success table-striped col-lg-4" style="width: 358px; float: right; ">
-                <thead>
-                    <th>Name</th>
-                    <th>Percentage Discount</th>
-                    <th>Minimum Purchase</th>
-                    <th>Expiry Date</th>
-                </thead>
-                <%coupons.forEach(coupon=> {%>
-                <tbody>
-                    <td><%=coupon.name%></td>
-                    <td><%=coupon.percentage%></td>
-                    <td><%=coupon.minimum%></td>
-                    <td><%=coupon.expiryDate%></td>
-                </tbody>
-                <%})%>
-             </table>
-        </div>
-        
-    </div>
- </section>
- 
+    </section>
+
     <!--============================
         CHECK OUT PAGE END
     ==============================-->
@@ -134,216 +209,282 @@
 
     <script>
 
-       const applyCoupon = (cartid)=>{
-               const couponCode = document.getElementById("couponCode").value
-               const total = document.getElementById("totalValue").textContent
+        const applyCoupon = (cartid) => {
+            const couponCode = document.getElementById("couponCode").value
+            const total = document.getElementById("totalValue").textContent
 
-               console.log(total);
-               fetch("/applyCoupon" ,{
-                method:"post",
-                headers:{
-                   "Content-Type": "application/json"
+            console.log(total);
+            fetch("/applyCoupon", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    cartId:cartid,
-                    couponName:couponCode,
-                    totalPrice:total
+                    cartId: cartid,
+                    couponName: couponCode,
+                    totalPrice: total
                 })
-                
-               })
-               .then(res => res.json())
-               .then((res)=>{
-                console.log(res);
-                if(res === 'success'){
-                    Swal.fire({
-                        title:'Coupon applied',
-                        text:'Coupon succesfully applied',
-                        icon:'success'
-                    }).then(()=>{
-                        window.location.reload()
-                        document.getElementById("couponCode").value = "Coupon Applied"
-                    })
-                }else if(res ==='User already used the coupon'){
-                    Swal.fire({
-                        title:'Coupon error',
-                        text:'User already used the coupon',
-                        icon:'error'
-                    })
-                }else if(res ==='Coupon expired'){
-                    Swal.fire({
-                        title:'Coupon error',
-                        text:'Coupon expired',
-                        icon:'error'
-                    })
-                }else if(res ==='Invalid Coupon'){
-                    Swal.fire({
-                        title:'Coupon error',
-                        text:'Invalid Coupon',
-                        icon:'error'
-                    })
-                }else if(res.message){
-                    Swal.fire({
-                        title:'Coupon error',
-                        text:res.message,
-                        icon:'error'
-                    })
-               }
+
             })
-               .catch((error)=>console.log(error))
-       } 
-    
+                .then(res => res.json())
+                .then((res) => {
+                    console.log(res);
+                    if (res === 'success') {
+                        Swal.fire({
+                            title: 'Coupon applied',
+                            text: 'Coupon succesfully applied',
+                            icon: 'success'
+                        }).then(() => {
+                            window.location.reload()
+                            document.getElementById("couponCode").value = "Coupon Applied"
+                        })
+                    } else if (res === 'User already used the coupon') {
+                        Swal.fire({
+                            title: 'Coupon error',
+                            text: 'User already used the coupon',
+                            icon: 'error'
+                        })
+                    } else if (res === 'Coupon expired') {
+                        Swal.fire({
+                            title: 'Coupon error',
+                            text: 'Coupon expired',
+                            icon: 'error'
+                        })
+                    } else if (res === 'Invalid Coupon') {
+                        Swal.fire({
+                            title: 'Coupon error',
+                            text: 'Invalid Coupon',
+                            icon: 'error'
+                        })
+                    } else if (res.message) {
+                        Swal.fire({
+                            title: 'Coupon error',
+                            text: res.message,
+                            icon: 'error'
+                        })
+                    }
+                })
+                .catch((error) => console.log(error))
+        }
+
     </script>
 
     <script>
-        const removeCoupon = (cartid)=>{
+        const removeCoupon = (cartid) => {
             console.log('remove copn');
             const total = document.getElementById("totalValue").textContent
-            fetch("/removeCoupon" ,{
-                method:"post",
-                headers:{
-                    "Content-Type":"application/json"
+            fetch("/removeCoupon", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    cartId:cartid,
-                    finalPrice:total
+                    cartId: cartid,
+                    finalPrice: total
                 })
             })
-            .then((res) => res.json())
-            .then((res) =>{
-                     if(res==="success"){
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res === "success") {
                         window.location.reload()
-                     }
-            })
+                    }
+                })
         }
     </script>
 
     <script>
+         const walletCheckbox = document.getElementById("wallet-Checkbox")
+         const totalvalue = document.getElementById("total-value")
+         const totalInput = document.getElementById("total")
+        const walletAmountInput = document.getElementById("wallet-amount")
+        
+        let walletCheckboxInput = document.getElementById("walletCheckbox")
+
+        let walletCheckboxValue = 0
+        let walletAmount =0
+        if(walletCheckbox){
+            walletAmount = parseFloat(walletAmountInput.value)
+        }
+
+        function updateTotal(){
+            const totalPrice = parseFloat(totalInput.value)
+            console.log('infunctot'+totalPrice);
+            if(walletAmount>=totalPrice){
+                totalvalue.innerText= 'Rs:0'
+                totalInput.value = 0
+                document.getElementsByName('payment')[0].removeAttribute("required")
+                document.getElementsByName('payment')[1].removeAttribute("required")
+            }else{
+                const newTotal = totalPrice - walletAmount
+                totalvalue.innerText = `Rs. ${newTotal}`
+                totalInput.value = newTotal
+            }
+        }
+
+        let orderId = null
+        let updatedTotalAmount = totalInput.value
+
+        function clickWallet(totalPrice){
+              if(walletCheckbox.checked){
+                document.getElementById('walletApplyContainer').style.display=""
+             walletCheckboxInput.value ='1'
+             console.log(walletCheckboxInput.value);
+             updateTotal()
+             updatedTotalAmount = parseFloat(totalInput.value)
+             walletCheckboxValue = walletCheckboxInput.value
+             let radio = document.getElementsByName("payment");
+             for(let i = 0; i < radio.length; i++){
+                console.log('infor check');
+                     radio[i].checked = false;
+                    }
+         }else{ 
+            document.getElementById('walletApplyContainer').style.display='none'     
+      walletCheckboxInput.value = '0' 
+      console.log(walletCheckboxInput.value);
+      totalvalue.innerText =`Rs. ${totalPrice}`;
+      totalInput.value = totalPrice;    
+      updatedTotalAmount = parseFloat(totalInput.value);   
+      walletCheckboxValue = walletCheckboxInput.value;      
+      let radio = document.getElementsByName("payment");
+      for(let i = 0; i < radio.length; i++){
+        
+        radio[i].checked = false;
+      }
+      orderId=null;
+    }    
+  }
+    
+
+
         const radioButtonPayment = document.getElementsByName("payment")
-         let orderId
-         const totalValue = document.getElementById("totalValue").textContent
-         const updatedTotal = parseFloat(totalValue)
-        radioButtonPayment.forEach(radioButton=> {
-            radioButton.addEventListener("change" ,(event)=>{
-                if(event.target.value === "Cash on delivery"){
+         orderId
+        const totalValue = document.getElementById("totalValue").textContent
+        const updatedTotal = parseFloat(totalValue)
+        radioButtonPayment.forEach(radioButton => {
+            radioButton.addEventListener("change", (event) => {
+                if (event.target.value === "Cash on delivery") {
                     orderId = null
                     console.log("cashon");
-                }else{
-                    if(event.target.value === "online"){
+                } else {
+                    if (event.target.value === "online") {
 
                         var settings = {
-                        url: "/create/orderId",
-                        method: "POST",
-                        timeout: 0,
-                        headers: {
-                        "Content-Type": "application/json"
-                      },
-                       data: JSON.stringify({
-                       amount: updatedTotal*100
-                     }),
-                  };
+                            url: "/create/orderId",
+                            method: "POST",
+                            timeout: 0,
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            data: JSON.stringify({
+                                amount: updatedTotalAmount * 100
+                            }),
+                        };
                         //creates new orderId everytime
-                      $.ajax(settings).done(function (response) {
+                        $.ajax(settings).done(function (response) {
 
-                      orderId=response.orderId;
-                      console.log(orderId);
-                      
-                   });                     
+                            orderId = response.orderId;
+                            console.log(orderId);
 
-              }
-              document.getElementById("orderButton").onclick =(e)=>{
-                if(orderId!= null){
-                    console.log("start");
-var options = {
-    key: "rzp_test_HFhaGNiwxiBeds", // Enter the Key ID generated from the Dashboard
-    amount: updatedTotal*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    currency: "INR",
-    name: "eDiGi",
-    description: "e Store",
-    image: "",
-    order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    handler: function (response){
-        console.log("handler");
-        var settings = {
-                        url: "/api/payment/verify",
-                        method: "POST",
-                        timeout: 0,
-                        headers: {
-                        "Content-Type": "application/json"
-                      },
-                       data: JSON.stringify({response}),
-                  };
-                  console.log("before ajasx");
-                  console.log(response);
-                  $.ajax(settings).done(function (response) {
-                    console.log('afterajx');
-                    console.log(response);
-                    placeOrder(orderId)
-              });
-    },
-    
-    theme: {
-        "color": "#3399cc"
-    }
-};
-var rzp1 = new Razorpay(options);
-rzp1.on('payment.failed', function (response){
-        
-});
-    rzp1.open();
-    e.preventDefault();
+                        });
+
+                    }
+                    document.getElementById("orderButton").onclick = (e) => {
+                        if (orderId != null) {
+                            console.log("start");
+                            var options = {
+                                key: "rzp_test_HFhaGNiwxiBeds", // Enter the Key ID generated from the Dashboard
+                                amount: updatedTotal * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                currency: "INR",
+                                name: "eDiGi",
+                                description: "e Store",
+                                image: "",
+                                order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                handler: function (response) {
+                                    console.log("handler");
+                                    var settings = {
+                                        url: "/api/payment/verify",
+                                        method: "POST",
+                                        timeout: 0,
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        data: JSON.stringify({ response }),
+                                    };
+                                    console.log("before ajasx");
+                                    console.log(response);
+                                    $.ajax(settings).done(function (response) {
+                                        console.log('afterajx');
+                                        console.log(response);
+                                        placeOrder(orderId)
+                                    });
+                                },
+
+                                theme: {
+                                    "color": "#3399cc"
+                                }
+                            };
+                            var rzp1 = new Razorpay(options);
+                            rzp1.on('payment.failed', function (response) {
+
+                            });
+                            rzp1.open();
+                            e.preventDefault();
+
+
+                        }
+                    }
 
 
                 }
-              }
+            })
+        });
 
+        const placeOrder = async (orderId) => {
+            let cashOnDelivery = document.getElementById("cod")
+            let onlinePayment = document.getElementById("online")
+            let checkboxInput = walletCheckboxInput.value
+            console.log(checkboxInput);
 
-         }
-      })
- });
+            let selectedPayment
+            if (cashOnDelivery.checked) {
+                selectedPayment = cashOnDelivery.value
+            } else if (onlinePayment.checked) {
+                selectedPayment = onlinePayment.value
+            }
+            console.log(selectedPayment);
+            let addressRadio = document.getElementsByName("selectedAddress")
+            let newSelectedAddress = ""
+            for (let i = 0; i < addressRadio.length; i++) {
+                if (addressRadio[i].checked) {
+                    newSelectedAddress = addressRadio[i].value
+                    break;
+                }
+            }
 
- const placeOrder = async (orderId)=>{
-    let cashOnDelivery = document.getElementById("cod")
-    let onlinePayment = document.getElementById("online")
+            fetch("/checkout", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    address: newSelectedAddress,
+                    payment: selectedPayment,
+                    paymentId: orderId,
+                    walletCheckbox: checkboxInput
+                })
+            })
 
-   let selectedPayment
-   if(cashOnDelivery.checked){
-    selectedPayment = cashOnDelivery.value
-   }else if(onlinePayment.checked){
-    selectedPayment = onlinePayment.value
-   }
-    console.log(selectedPayment);
-   let addressRadio = document.getElementsByName("selectedAddress")
-   let newSelectedAddress = ""
-   for(let i=0;i<addressRadio.length;i++){
-    if(addressRadio[i].checked){
-        newSelectedAddress = addressRadio[i].value
-        break;
-    }
-   }
+                .then((res) => res.json()) 
+                .then((res) => {
 
-    fetch("/checkout" , {
-    method:"post",
-    headers:{
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        address:newSelectedAddress,
-        payment:selectedPayment,
-        paymentId:orderId
-    })
-   })
-   
-   .then((res)=> res.json())
-   .then((res) =>{
-    
-        console.log(res);
-        window.location.href = "/orderSuccess"
-   
-   })
-   .catch((error) => console.log('hioo'+error))
- }
-        
+                    console.log(res);
+                    window.location.href = "/orderSuccess"
+
+                })
+                .catch((error) => console.log('hioo' + error))
+        }
+
     </script>
 
     <%- include("../layouts/footer.ejs") %>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.3/dist/sweetalert2.all.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.3/dist/sweetalert2.all.min.js"></script>

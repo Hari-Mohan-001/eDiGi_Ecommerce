@@ -18,12 +18,12 @@ const { laodCart, addToCart, removeCartItem, quantityUpdation } = require("../co
 
 const { loadCheckout, createOrder, orderSuccess } = require("../controller/checkout-Controller")
 
-const{viewOrders, orderDetails, cancelOrder, deleteInOrder} =require("../controller/order-Controller")
+const{viewOrders, orderDetails, cancelOrder, deleteInOrder, returnOrder} =require("../controller/order-Controller")
 
 const { applyCoupon, removeCoupon } = require("../controller/coupon-Controller")
 
 const { generateRazorpay, razorpayVerifyOrder, sample } = require("../helpers/razorpay")
-const { addToWishlist, loadWishlist } = require("../controller/wishlistController")
+const { addToWishlist, loadWishlist, removeFromWishlist } = require("../controller/wishlistController")
 
 const userRoute = express.Router()
 
@@ -73,6 +73,7 @@ userRoute.get("/singleProduct", loadSingleProduct)
 
 userRoute.get("/wishlist" , tokenVerify , loadWishlist)
 userRoute.post("/addToWishlist", addToWishlist)
+userRoute.post("/removeFromWishlist", tokenVerify,removeFromWishlist)
 
 userRoute.get("/myCart",tokenVerify,isBlocked, laodCart)
 userRoute.post("/addToCart",tokenVerify ,addToCart)
@@ -85,7 +86,8 @@ userRoute.get("/orderSuccess" ,tokenVerify,isBlocked, orderSuccess)
 
 userRoute.get("/orders" , tokenVerify,isBlocked,viewOrders)
 userRoute.get("/orderDetails" ,tokenVerify,isBlocked, orderDetails)
-userRoute.get("/cancelOrder" , cancelOrder)
+userRoute.post("/cancelOrder" , cancelOrder)
+userRoute.post("/returnOrder", tokenVerify, returnOrder)
 userRoute.post("/deleteInOrder" , deleteInOrder)
 
 userRoute.post("/applyCoupon" , applyCoupon)

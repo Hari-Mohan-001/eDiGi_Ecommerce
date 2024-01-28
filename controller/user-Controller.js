@@ -14,7 +14,7 @@ const generateOtp = () => {
   for (let i = 0; i < 5; i++) {
     otp += digits[Math.floor(Math.random() * 10)];
   }
-  console.log(otp);
+  console.log('reg otp'+otp);
   return otp;
 };
 
@@ -26,7 +26,11 @@ const createToken = (id) => {
 
 
 const loadRegister = async (req, res) => {
-  res.render("registration");
+  let count = null  
+  if(req.cookies.jwt){
+   count = await  cartCount(decode(req.cookies.jwt).id)
+  }
+  res.render("registration",{count});
 };
 
 const sendOTP = async (req, res) => {

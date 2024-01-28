@@ -41,7 +41,7 @@
                         <li><a href="#"><i class="fab fa-facebook-f"></i></a> </li>
                         <li><a href="#"><i class="fab fa-twitter"></i></a> </li>
                         <li><a href="#"><i class="fab fa-linkedin-in"></i></a> </li>
-                      
+
                     </ul>
                 </div>
             </div>
@@ -66,10 +66,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav m-auto">
-                    
+
                 </ul>
                 <ul class="menu_icon d-flex flex-wrap">
-                    
+
                     <li>
                         <a href=""><i class="fas fa-user"></i></a>
                     </li>
@@ -86,14 +86,14 @@
     <!--=============================
         BREADCRUMB START
     ==============================-->
-    <section  class="fp__breadcrumb" style="background:cornflowerblue">
+    <section class="fp__breadcrumb" style="background:cornflowerblue">
         <div style="height: 230px;" class="fp__breadcrumb_overlay">
             <div class="container">
                 <div class="fp__breadcrumb_text">
                     <h1>Admin dashboard</h1>
                     <ul>
-                        <li><a href="/admin/adminDashboard">dashboard</a></li>
-                        
+                        <li><a href="/admin/dashboard">dashboard</a></li>
+
                     </ul>
                 </div>
             </div>
@@ -123,39 +123,39 @@
                             </div>
                             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
                                 aria-orientation="vertical">
-                                <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill"
+                                <button class="nav-link active" id="dashboard-tab" data-bs-toggle="pill"
                                     data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home"
-                                    aria-selected="true"><span><i class="fas fa-user"></i></span> Personal Info</button>
+                                    aria-selected="true"><span><i class="fas fa-user"></i></span>Dashboard</button>
 
-                               <button class="nav-link"  id="users-tab" data-bs-toggle="pill"
+                                <button class="nav-link" id="users-tab" data-bs-toggle="pill"
                                     data-bs-target="#v-pills-address" type="button" role="tab"
                                     aria-controls="v-pills-address" aria-selected="true"><span><i
                                             class="fas fa-user"></i></span>Users List</button>
 
-                                <button class="nav-link" id="orders-tab" data-bs-toggle="pill"
-                                                      type="button" role="tab"
+                                <button class="nav-link" id="orders-tab" data-bs-toggle="pill" type="button" role="tab"
                                     aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span> Orders </button>
 
-                                <button class="nav-link" id="products-tab" data-bs-toggle="pill"
-                                                      type="button" role="tab"
-                                    aria-controls="v-pills-settings" aria-selected="false"><span><i
+                                <button class="nav-link" id="products-tab" data-bs-toggle="pill" type="button"
+                                    role="tab" aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span>Products</button>
 
-                                <button class="nav-link" id="category-tab" data-bs-toggle="pill"
-                                                      type="button" role="tab"
-                                    aria-controls="v-pills-settings" aria-selected="false"><span><i
+                                <button class="nav-link" id="category-tab" data-bs-toggle="pill" type="button"
+                                    role="tab" aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span>Category</button>
 
-                                            <button class="nav-link" id="coupon-tab" data-bs-toggle="pill"
-                                                      type="button" role="tab"
+                                <button class="nav-link" id="coupon-tab" data-bs-toggle="pill" type="button" role="tab"
                                     aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span>Coupon</button>
 
-                                            <button class="nav-link" id="sales-tab" data-bs-toggle="pill"
-                                                      type="button" role="tab"
+                                <button class="nav-link" id="sales-tab" data-bs-toggle="pill" type="button" role="tab"
                                     aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span>Sales Report</button>
+
+                                            <button class="nav-link" id="productOffers-tab" data-bs-toggle="pill" type="button" role="tab"
+                                    aria-controls="v-pills-settings" aria-selected="false"><span><i
+                                            class="fas fa-user-lock"></i></span>Product Offers</button>
+                                            
 
                                 <button class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
                                     </span> Logout</button>
@@ -169,47 +169,88 @@
                                 <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                                     aria-labelledby="v-pills-home-tab">
                                     <div class="fp_dashboard_body">
-                                        <h3>Welcome to Admin Profile</h3>
+                                        <h3>Welcome to Admin Dashboard</h3>
 
                                         <div class="fp__dsahboard_overview">
                                             <div class="row">
-                                                <div class="col-xl-4 col-sm-6 col-md-4">
-                                                    <div class="fp__dsahboard_overview_item">
-                                                        <span class="icon"><i class="far fa-shopping-basket"></i></span>
-                                                        <h4>total order <span>(76)</span></h4>
+                                                <div class="col-xl-3 col-sm-6 col-md-3">
+                                                    <div class="fp__dsahboard_overview_item orange">
+                                                        <span class="icon"><i class="fa fa-mobile"></i></span>
+                                                        <h4>Total Products <span>(<%=products%>)</span></h4>
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-4 col-sm-6 col-md-4">
+
+                                                <div class="col-xl-3 col-sm-6 col-md-3">
                                                     <div class="fp__dsahboard_overview_item green">
-                                                        <span class="icon"><i class="far fa-shopping-basket"></i></span>
-                                                        <h4>Completed <span>(71)</span></h4>
+                                                        <span class="icon"><i class="fa fa-users"></i></span>
+                                                        <h4>Total Users <span>(<%=users%>)</span></h4>
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-4 col-sm-6 col-md-4">
-                                                    <div class="fp__dsahboard_overview_item red">
-                                                        <span class="icon"><i class="far fa-shopping-basket"></i></span>
-                                                        <h4>cancel <span>(05)</span></h4>
+                                                <div class="col-xl-3 col-sm-6 col-md-3">
+                                                    <div class="fp__dsahboard_overview_item">
+                                                        <span class="icon"><i class="fa fa-shopping-basket"></i></span>
+                                                        <h4>Total order <span>(<%=orderCount%>)</span></h4>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-3 col-sm-6 col-md-3">
+                                                    <div class="fp__dsahboard_overview_item green">
+                                                        <span class="icon"><i class="fa fa-credit-card"></i></span>
+                                                        <h4> Revenue <span>(<%=revenue%>)</span></h4>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="fp_dash_personal_info">
-                                            <h4>Personal Information
-                                                <a class="dash_info_btn">
-                                                    <!-- <span class="edit">edit</span> -->
-                                                    <span class="cancel">cancel</span>
-                                                </a>
-                                            </h4>
+                                        <div
+                                            class=" d-flex flex-column align-items-center justify-content-center m-lg-5">
 
-                                            <div class="personal_info_text">
-                                                <p><span>Name:</span> Admin</p>
-                                                <p><span>Email:</span> admin@gmail.com</p>
-                                                <p><span>Phone:</span> 023 434 54354</p>
-                                                <p><span>Address:</span> 7232 Broadway Suite 308, Jackson Heights,
-                                                    11372, NY, United States </p>
+                                            <h2 class="text-center font-weight-bold m-5"> Total Sales Revenue Chart
+                                            </h2>
+
+                                            <div class="col-lg-10">
+                                                <canvas class="w-100 h-auto" id="revenueChart"></canvas>
                                             </div>
+
+                                            <div class="mt-5 d-flex font-weight-bold">
+                                                <button class=" salesChart  ml-4 nav-link "
+                                                    style="background-color: black; color: rgb(240, 255, 254) ; width: 65px;"
+                                                    data="yearly">Yearly</button>
+                                                <button class=" salesChart ml-4 nav-link py-1 px-2"
+                                                    style="background-color: black; color: aliceblue ; width: 70px;"
+                                                    data="weekly">Weekly</button>
+                                                <button class=" salesChart ml-4 nav-link py-1 px-2"
+                                                    style="background-color: black; color: aliceblue ; width: 70px;"
+                                                    data="daily">Daily</button>
+                                            </div>
+
                                         </div>
+                                        <div
+                                            class=" d-flex flex-column align-items-center justify-content-center m-lg-5">
+
+                                            <h2 class="text-center font-weight-bold m-5"> Total Orders Placed Chart
+                                            </h2>
+
+                                            <div class="col-lg-10">
+                                                <canvas class="w-100 h-auto" id="ordersChart"></canvas>
+                                            </div>
+
+                                            <div class="mt-5 d-flex font-weight-bold">
+                                                <button class="ordersChart ml-4 nav-link py-1 px-2"
+                                                    style="background-color: rgb(45, 6, 71); color: rgb(228, 17, 17) ; width: 70px; border-radius: 10px;"
+                                                    data="yearly">Yearly</button>
+                                                <button class="ordersChart ml-4 nav-link py-1 px-2"
+                                                    style="background-color: rgb(45, 6, 71); color: rgb(3, 24, 43) ; width: 70px;border-radius: 10px; "
+                                                    data="weekly">Weekly</button>
+                                                <button class="ordersChart ml-4 nav-link py-1 px-2"
+                                                    style="background-color: rgb(45, 6, 71); color: aliceblue ; width: 70px;border-radius: 10px; "
+                                                    data="daily">Daily</button>
+                                            </div>
+
+                                        </div>
+
+
+
                                     </div>
                                 </div>
                             </div>
@@ -220,41 +261,282 @@
             </div>
         </div>
 
- </section>
+    </section>
 
-                            <script>
-                                document.getElementById("users-tab").addEventListener("click" , (event)=>{
-                                    window.location.href = "/admin/usersList"
-                                })
-                                    document.getElementById("orders-tab").addEventListener("click" , (event)=>{
-                                    window.location.href = "/admin/orderList"
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-                                })
-                                document.getElementById("products-tab").addEventListener("click" , (event)=>{
-                                    window.location.href = "/admin/productList"
+    <script>
+        document.getElementById("dashboard-tab").addEventListener("click", (event) => {
+            window.location.href = "/admin/dashboard"
+        })
+        document.getElementById("users-tab").addEventListener("click", (event) => {
+            window.location.href = "/admin/usersList"
+        })
+        document.getElementById("orders-tab").addEventListener("click", (event) => {
+            window.location.href = "/admin/orderList"
 
-                                })
-                                document.getElementById("category-tab").addEventListener("click" , (event)=>{
-                                    window.location.href = "/admin/categoryList"
+        })
+        document.getElementById("products-tab").addEventListener("click", (event) => {
+            window.location.href = "/admin/productList"
 
-                                })
-                                document.getElementById("coupon-tab").addEventListener("click" , (event)=>{
-                                    window.location.href = "/admin/couponList"
+        })
+        document.getElementById("category-tab").addEventListener("click", (event) => {
+            window.location.href = "/admin/categoryList"
 
-                                })
-                                document.getElementById("sales-tab").addEventListener("click" , (event)=>{
-                                    window.location.href = "/admin/salesReport"
-                                })
-                            </script>
-                            
-                            
-                                
-                </body>
+        })
+        document.getElementById("coupon-tab").addEventListener("click", (event) => {
+            window.location.href = "/admin/couponList"
 
-
-
-                                           
-    
+        })
+        document.getElementById("sales-tab").addEventListener("click", (event) => {
+            window.location.href = "/admin/salesReport"
+        })
+        document.getElementById("productOffers-tab").addEventListener("click", (event) => {
+            window.location.href = "/admin/productOffers"
+        })
 
 
-   
+        const ctx = document.getElementById('revenueChart')
+        const ctxOrder = document.getElementById('ordersChart')
+
+        let salesTimeBase = 'yearly';
+        let orderChartTimeBase = 'yearly';
+
+        let salesButtons = document.querySelectorAll(".salesChart")
+
+        salesButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                let value = btn.getAttribute('data')
+                salesTimeBase = value
+                updateData()
+            })
+        })
+
+        let orderButtons = document.querySelectorAll(".ordersChart")
+
+        orderButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                let value = btn.getAttribute('data')
+                orderChartTimeBase = value
+                updateData()
+            })
+        })
+
+
+
+        let salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['loading'],
+                datasets: [
+                    {
+                        label: 'Sales (rs)',
+                        data: [0],
+                        backgroundColor: 'rgba(14, 125, 244, 0.377)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    },
+
+                ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+
+                    }
+                }
+            }
+        });
+
+        let OrderChart = new Chart(ctxOrder, {
+            type: 'bar',
+            data: {
+                labels: ['loading'],
+                datasets: [
+                    {
+                        label: 'Orders',
+                        data: [0],
+                        backgroundColor: 'rgba(128, 0, 128, 0.377)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    },
+
+                ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+
+                    }
+                }
+            }
+        });
+
+        function updateData() {
+            fetch(`/admin/charts?salesChart=${salesTimeBase}&orderChart=${orderChartTimeBase}`, {
+
+                method: "get"
+            })
+                .then((res) => res.json())
+                .then((Data) => {
+
+                    let { saleChartInfo, orderQuantityChartInfo } = Data
+                    console.log('sales \n \n', saleChartInfo, '\n\n\n')
+                    console.log('order \n \n', orderQuantityChartInfo, '\n\n\n')
+
+                    let salesChartLabel;
+
+                    let totalSalesValData;
+
+                    if (saleChartInfo.timeBasis === 'yearly') {
+                        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+
+                        salesChartLabel = saleChartInfo.data.map((data) => {
+                            return months[data._id.month - 1]
+                        });
+
+
+                        totalSalesValData = saleChartInfo.data.map((data) => {
+                            return data.totalSales
+                        })
+                    } else if (saleChartInfo.timeBasis === 'weekly') {
+
+                        salesChartLabel = saleChartInfo.data.map((data) => {
+                            return data._id
+                        });
+
+                        totalSalesValData = saleChartInfo.data.map((data) => {
+                            return data.totalSales
+                        })
+
+                    }
+
+                    else if (saleChartInfo.timeBasis === 'daily') {
+
+
+                        salesChartLabel = saleChartInfo.data.map((data) => {
+
+                            const hr = data._id;
+
+                            return `${hr}:00 - ${hr + 1}:00 UTC`
+                        });
+
+                        totalSalesValData = saleChartInfo.data.map((data) => {
+                            return data.totalSales
+                        })
+                    }
+
+                    console.log(salesChartLabel);
+                    console.log(totalSalesValData)
+
+                    salesChart.data.labels = salesChartLabel;
+                    salesChart.data.datasets[0].data = totalSalesValData;
+
+                    // Call the update method to refresh the chart
+                    salesChart.update();
+
+
+                    let OrderQuantityChartLabels;
+
+                    let OrderQuantityChartData;
+
+
+                    if (orderQuantityChartInfo.timeBasis === 'yearly') {
+
+
+                        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+
+                        OrderQuantityChartLabels = orderQuantityChartInfo.data.map((data) => {
+                            return months[data._id.month - 1]
+                        });
+
+
+                        OrderQuantityChartData = orderQuantityChartInfo.data.map((data) => {
+                            return data.totalOrder
+                        })
+
+
+                    } else if (orderQuantityChartInfo.timeBasis === 'weekly') {
+
+                      
+
+                        OrderQuantityChartLabels = orderQuantityChartInfo.data.map((data) => {
+                            return data._id
+                        });
+
+                        OrderQuantityChartData = orderQuantityChartInfo.data.map((data) => {
+                            return data.totalOrder
+                        })
+
+                    }
+
+                    else if (orderQuantityChartInfo.timeBasis === 'daily') {
+
+
+                        OrderQuantityChartLabels = orderQuantityChartInfo.data.map((data) => {
+
+                            const hr = data._id;
+
+                            return `${hr}:00 - ${hr + 1}:00 UTC`
+                        });
+
+                        OrderQuantityChartData = orderQuantityChartInfo.data.map((data) => {
+                            return data.totalOrder
+                        })
+                    }
+
+                    console.log(OrderQuantityChartLabels);
+                    console.log(OrderQuantityChartData);
+
+
+                    OrderChart.data.labels = OrderQuantityChartLabels;
+                    OrderChart.data.datasets[0].data = OrderQuantityChartData;
+
+                    // Call the update method to refresh the chart
+                    OrderChart.update();
+
+
+                    salesButtons.forEach((btn) => {
+
+                        if (btn.getAttribute('data') === salesTimeBase) {
+
+                            btn.style.color = 'rgb(138, 240, 240)';
+                        } else {
+                            btn.style.color = 'white'
+                        }
+                    })
+
+
+                    orderButtons.forEach((btn) => {
+
+                        if (btn.getAttribute('data') === orderChartTimeBase) {
+
+                            btn.style.color = 'rgb(228, 17, 17)';
+                        } else {
+                            btn.style.color = 'white'
+                        }
+                    })
+
+                })
+        }
+
+
+   window.onload = updateData()
+
+
+
+
+
+    </script>
+
+
+
+
+
+</body>

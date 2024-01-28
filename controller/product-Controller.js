@@ -116,11 +116,75 @@ const home = async (req, res) => {
   res.render("home" ,{products:Product , count});
 };
 
+const productOffers = async(req,res)=>{
+  try {
+    const products = await product.find({isBlocked:false}).populate("categoryname");
+    res.render("productOffer" ,{products})
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const createProductOffer = async(req,res)=>{
+  try {
+    const{productId , discount}= req.body
+     console.log(productId , discount);
+    const Product = await product.findById({_id:productId})
+    console.log('ofrprdct'+Product);
+    let oldPrice = Product.price
+     let discountedPrice = Math.round(Product.price*discount/100) 
+     let newPrice = Product.price-discountedPrice
+   const offerProduct =  await product.findByIdAndUpdate({_id:productId},
+      {
+        $set:{
+          price:newPrice,
+          oldPrice:oldPrice,
+          isOfferApplied:true
+        }
+      },
+      {new:true},
+      )
+      if(offerProduct){
+        console.log('success');
+        res.json("success")
+      }
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const deactivateProductOffer = async(req,res)=>{
+  try {
+    const{productId}= req.body
+    const Product = await product.findById({_id:productId})
+    let oldPrice = Product.oldPrice
+    const deactivateOffer = await product.findByIdAndUpdate({_id:productId},
+      {
+        $set:{
+          price:oldPrice,
+          isOfferApplied:false
+        }
+      },
+      {new:true},
+      )
+
+      if(deactivateOffer){
+        res.json("success")
+      }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   loadCategories,
   loadProducts,
   loadSingleProduct,
   deleteProductImage,
   blockProduct,
+  productOffers,
+  createProductOffer,
+  deactivateProductOffer,
    home
 };

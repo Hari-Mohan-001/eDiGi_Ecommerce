@@ -31,7 +31,7 @@ module.exports={
 
         const findProducts =  await cart.aggregate(pipeLine)
         console.log("fndprdcts");
-        console.log(findProducts);
+       
         // if(findProducts.length<=0){
         //       return false
         // }
@@ -72,7 +72,7 @@ module.exports={
         console.log(orderId);
         const userId = new ObjectId(decode(req.cookies.jwt).id)
         const newOrderId = new ObjectId(orderId)
-        console.log(userId);
+        
         const pipeLine =[
             {$match:{_id:newOrderId}},
             {$unwind:"$items"},
@@ -94,7 +94,7 @@ module.exports={
 
         const findProducts =  await order.aggregate(pipeLine)
         console.log("ordfndprdcts");
-        console.log(findProducts);
+       
         
         const totalPipeline =[
             ...pipeLine,
@@ -125,7 +125,7 @@ module.exports={
     
         const orderTotal = await order.aggregate(orderTotalPipeline)
     
-        console.log(orderTotal[0].total); 
+        
         return {orderTotal , findProducts , productTotal}
      
    

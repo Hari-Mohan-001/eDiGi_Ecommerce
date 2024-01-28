@@ -34,6 +34,14 @@ const productSchema = mongoose.Schema({
     isBlocked:{
         type:Boolean,
         default:false
+    },
+    isOfferApplied:{
+        type:Boolean,
+        default:false
+    },
+    oldPrice:{
+        type:Number,
+        default:0
     }
     
 },{

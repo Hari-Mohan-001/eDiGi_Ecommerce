@@ -40,7 +40,11 @@
                             <i class="far fa-star"></i>
                             <span>(201)</span>
                         </p>
-                        <h3 class="price">Rs <%=product.price%> <del>Rs 95000.00</del> </h3>
+                        <%if(product.isOfferApplied=== true){%>
+                        <h3 class="price">Rs <%=product.price%><del style="color: red;">Rs <%=product.oldPrice%></del> </h3>
+                             <%} else{%>
+                                <h3 class="price">Rs <%=product.price%></h3>  
+                                <%}%>   
                         <p class="short_description"><%=product.description%></p>
                         <%if(product.stock<=0){%>
                          <p class="short_description" style="color: red;">Out of stock</p>
