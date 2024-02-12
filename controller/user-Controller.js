@@ -201,6 +201,7 @@ const changePassword = async(req,res)=>{
 
 const loadforgetPassword = async(req,res)=>{
   try {
+    console.log('forget');
     let count = null  
     if(req.cookies.jwt){
      count = await  cartCount(decode(req.cookies.jwt).id)
@@ -250,7 +251,7 @@ const loadResetPassword = async(req,res)=>{
     const token = req.query.token
     const tokenVerify = await user.findOne({token:token})
     if(tokenVerify){
-          res.render("resetPassword", {userId:tokenVerify._id})
+          res.render("resetPassword", {userId:tokenVerify._id , count})
     }else{
       res.render("404", {message:"Token Invalid" , count})
     }

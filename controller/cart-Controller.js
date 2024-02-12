@@ -78,7 +78,7 @@ const laodCart = async(req,res)=>{
 const addToCart = async(req,res)=>{
     try {
         const userId = decode(req.cookies.jwt).id
-        console.log(" add cart route");
+        
         const{productid} = req.body
         const productIds = req.body.productId
         const productId = productIds||productid
@@ -89,7 +89,7 @@ const addToCart = async(req,res)=>{
 
         if(findProduct.stock>0){
             if(!findCart){ 
-                console.log("stock");
+               
                 const newCart = new cart({   
                     userid:userId,
                     products:[ 
@@ -145,7 +145,7 @@ const addToCart = async(req,res)=>{
 const quantityUpdation = async(req,res)=>{
     try {
         const userId = decode(req.cookies.jwt).id
-        console.log("cart route");
+        
         // const productId = req.body.productId
         const{productId} = req.body
 
@@ -155,7 +155,7 @@ const quantityUpdation = async(req,res)=>{
 
         if(findProduct.stock>0){
             if(!findCart){ 
-                console.log("stock");
+                
                 const newCart = new cart({  
                     userid:userId,
                     products:[ 
@@ -202,9 +202,9 @@ const quantityUpdation = async(req,res)=>{
 
 const removeCartItem = async(req,res)=>{
     try {
-        console.log('removing');
+        
         const {productid} = req.body
-               console.log('remove');
+               
         const userId = decode(req.cookies.jwt).id
         const Cart = await cart.findOne({userid:userId})  
         console.log(Cart);
@@ -230,20 +230,20 @@ const getCartTotal = async(req,res,next)=>{
         const userCart = await cart.findOne({userid:userId})
         console.log(userCart);
         if(userCart.products.length>0){
-            console.log('in cart tot');
+            
         
         const {cartTotal , productTotal} =await productHelpers.totalPrice(req ,userId)
         const total = Math.round(cartTotal[0].total)
         console.log(cartTotal);
         if(cartTotal){
-            console.log('incarttotal');
+           
             return res.json({'success':true, 'message':`${total}` })              
         }else{
-            console.log('no total');
+           
             return res.json({'success':false , 'message':'failed to get total'})       
         }        
     }else{
-         console.log('no cert');
+        
         return res.json({'success':false})
     }
 

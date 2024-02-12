@@ -10,8 +10,10 @@
                                 <div class="fp_dashboard_body">
                                     <h3 style="align-items: center;">Wishlist</h3>
                                     <br>
+                                    <%if(products.length>0){%>
                                     <div class="fp_dashboard_order">
                                         <div class="table-responsive">
+                                            
                                             <table class="table">
                                                 <tbody>
                                                     <tr class="t_header">
@@ -45,9 +47,12 @@
                                                    
                                                 </tbody>
                                             </table>
+                                            
                                         </div>
                                     </div>
-
+                                    <%} else {%>
+                                        <h4>You have no items in wishlist</h4>
+                                        <%}%>
                         </div>
                     </div>
                 </div>

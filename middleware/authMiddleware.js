@@ -30,6 +30,7 @@ const isLogout = async(req,res,next)=>{
     try {                                  
         const token = req.cookies.jwt
         if(!token){
+           
             return next()
         }else{
             jwt.verify(token , process.env.JWT_SECRET , (err , decoded)=>{

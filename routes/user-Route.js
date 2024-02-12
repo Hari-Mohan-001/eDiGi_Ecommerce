@@ -49,10 +49,10 @@ userRoute.get("/logout" , logout)
 userRoute.get("/changePassword" , tokenVerify ,isBlocked, loadChangePassword)
 userRoute.post("/changePassword" ,tokenVerify, changePassword) 
 
-userRoute.get("/forgetPassword" ,isLogout,isBlocked, loadforgetPassword)
-userRoute.post("/forgetPassword" ,sendPasswordResetMail)
-userRoute.get("/resetPassword",isLogout,isBlocked, loadResetPassword )
-userRoute.post("/resetPassword",resetPassword)
+userRoute.get("/forgetPassword" ,isLogout, loadforgetPassword)
+userRoute.post("/forgetPassword" ,isLogout, sendPasswordResetMail)
+userRoute.get("/resetPassword",isLogout, loadResetPassword )
+userRoute.post("/resetPassword",isLogout, resetPassword)
 
 
 userRoute.get("/notFound", notFound)
@@ -70,7 +70,7 @@ userRoute.post("/editProfile",tokenVerify,editProfile)
 
 userRoute.get("/categories" , loadCategories)
 userRoute.get("/products" ,loadProducts)
-userRoute.get("/allProducts",tokenVerify, isBlocked, getAllProducts)
+userRoute.get("/allProducts", getAllProducts)
 
 userRoute.get("/singleProduct", loadSingleProduct)
 
