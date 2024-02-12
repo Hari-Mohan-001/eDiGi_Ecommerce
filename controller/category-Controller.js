@@ -92,8 +92,113 @@ const blockCategory = async(req,res)=>{
     }
 }
 
+const activateCategoryOffer = async(req,res)=>{
+    try {
+        const{categoryId, discount} =req.body
+        const parsedDiscount = parseInt(discount)
+
+        const categories = await category.findById({_id:categoryId, isBlocked:false})
+        const updatedCategory = await category.findByIdAndUpdate({_id:categoryId},
+            {
+                $set:{
+                    isOfferApplied:true
+                },
+                
+            }
+            )
+
+        const products = await product.updateMany({categoryname:categoryId , isBlocked:false ,isOfferApplied:false},
+            [
+                {
+                    $set: {
+                        discountedPrice: {
+                            $multiply: [
+                                { $toDouble: '$price' },
+                                { $subtract: [1, { $divide: [parsedDiscount, 100] }] },
+                            ],
+                        },
+                    },
+                },
+                {
+                    $set: {
+                        oldPrice:'$price',
+                        price: '$discountedPrice',
+                        isOfferApplied: true,
+                        offerType: 'Category Offer',
+
+                    },
+                },
+            ]
+            
+            )
+            
+            if(products){
+                res.json("success")
+            }else{
+                res.json("failed")
+            }
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const removeCategoryOffer = async(req,res)=>{
+    try {
+        const{categoryId} = req.body
+
+        const categories = await category.findById({_id:categoryId, isBlocked:false , isOfferApplied:true})
+        const updatedCategory = await category.findByIdAndUpdate({_id:categoryId},
+            {
+                $set:{
+                    isOfferApplied:false,
+                    
+                },
+                
+            }
+            )
+
+            const products = await product.updateMany({categoryname:categoryId , isBlocked:false ,isOfferApplied:true},
+                [
+                    {
+                        $addFields: {
+                            convertedPrice: {
+                                $multiply: [
+                                    { $toDouble: '$oldPrice' },
+                                    1, // Ensure 1 is multiplied to avoid the Cast to Number failed error
+                                ],
+                            },
+                        },
+                    },
+                    {
+                        $set: {
+                            isOfferApplied: false,
+                            offerType: null,
+                            oldPrice: null,
+                            price: '$convertedPrice',
+                            convertedPrice: null,
+                        },
+                    },
+                ]
+            );
+
+                if(products){
+                    res.json("success")
+                }else{
+                    res.json("failed")
+                }
+
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports ={
     loadEditCategory,
     editCategory,
-    blockCategory
+    blockCategory,
+    activateCategoryOffer,
+    removeCategoryOffer
 }

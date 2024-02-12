@@ -142,7 +142,12 @@
                                     aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span>Sales Report</button>
 
-                                <button class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
+                                            <button class="nav-link" id="productOffer-tab" data-bs-toggle="pill"
+                                                      type="button" role="tab"
+                                    aria-controls="v-pills-settings" aria-selected="false"><span><i
+                                            class="fas fa-user-lock"></i></span>Product Offers</button>
+
+                                <button id="logout" class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
                                     </span> Logout</button>
                             </div>
                         </div>
@@ -249,6 +254,11 @@
         window.location.href = "/admin/salesReport"
 
     })
+    document.getElementById("productOffer-tab").addEventListener("click" , (event)=>{
+        window.location.href = "/admin/productOffers"
+
+    })
+
 </script>
 
 

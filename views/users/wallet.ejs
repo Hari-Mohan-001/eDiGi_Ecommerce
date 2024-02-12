@@ -1,0 +1,90 @@
+<%- include("../layouts/header.ejs") %>
+    <br><br>
+    <section class="fp__dashboard mt_120 xs_mt_90 mb_100 xs_mb_70">
+        <div class="container">
+            <div class="fp__dashboard_area">
+                <div class="row">
+                    <div class="" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                        <div class="fp_dashboard_body">
+                            <h3 style="justify-content: center;">Wallet</h3>
+                            <h4>Total Wallet Balance Rs: <%=totalWallet%>
+                            </h4>
+                            <br>
+                            <div class="fp_dashboard_order">
+                                <div class="table-responsive">
+                                    <table class="table" id="walletHis">
+                                      <thead>
+                                            <tr class="t_header">
+                                                <th>S.NO</th>
+                                                <th>Date</th>
+                                                <th>Description</th>
+                                                <th>Status</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                            <tbody>
+                                            <%walletHistory.forEach((history,index)=>{%>
+                                                <tr>
+                                                    <td>
+                                                        <h5>
+                                                            <%=index+1%>
+                                                        </h5>
+                                                    </td>
+
+                                                    <td>
+                                                        <h5>
+                                                            <%=history.walletDate%>
+                                                        </h5>
+                                                    </td>
+                                                    <td>
+                                                        <p>
+                                                            <%=history.description%>
+                                                        </p>
+                                                    </td>
+
+                                                    <td>
+                                                        <p>
+                                                            <%=history.status%>
+                                                        </p>
+                                                    </td>
+
+                                                    <td>
+                                                        <p>
+                                                            <%=history.amount%>
+                                                        </p>
+                                                    </td>
+
+
+                                                </tr>
+                                                <%})%>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/sp-2.1.2/datatables.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            $('#walletHis').DataTable();
+        });
+    </script>
+
+
+        
+    
+
+   
+
+        <!--=========================
+    DASHBOARD END 
+==========================-->

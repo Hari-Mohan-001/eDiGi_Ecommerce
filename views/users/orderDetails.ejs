@@ -45,8 +45,8 @@
                                                     <tbody>
                                                         <tr class="border_none">
                                                             
-                                                            <th class="package">item description</th>
-                                                            <th class="fp__pro_img">image</th>
+                                                            <th class="package">Item description</th>
+                                                            <th class="fp__pro_img">Image</th>
                                                             <th class="price">Price</th>
                                                             <th class="qnty">Quantity</th>
                                                             <th class="total">Total</th>
@@ -64,7 +64,7 @@
                                                                 <span class="coca_cola"></span>
                                                                 <span class="coca_cola2"></span>
                                                             </td>
-                                                            <td style="height: 120px ; width: 150px; margin-right: 30px;" class="fp__pro_img"><img src="/product-Images/<%=product.cartItems[0].image[0]%>" alt="product"
+                                                            <td style="height: 120px ; width: 150px; margin-right: 30px;" class="fp__pro_img"><img src="/cropped_images/<%=product.cartItems[0].image[0]%>" alt="product"
                                                                 class="img-fluid w-100">
                                                         </td>
                                                             <td class="price">
@@ -76,14 +76,22 @@
                                                             
                                                             <td class="total"> 
                                                                 
-                                                                    <b><%=productTotal[index].total%></b>
+                                                                    <b><%=product.cartItems[0].price*product.quantity%></b>
                                                                      
                                                             </td>
+                                                            <%if(order.orderStatus!='Cancelled' && order.orderStatus!='Delivered' && order.orderStatus!= 'Returned'){%>
                                                             <%orders.forEach(order =>{%>
-                                                                <%if(order.items.length>1) {%>
-                                                            <td><button onclick="confirmDelete('<%=product.cartItems[0]._id%>', '<%=productTotal[index]._id%>')" class="btn btn-primary">Delete</button></td>
-                                                            <%}%>
+                                                                <%if(order.items[index].Cancelled!=true) {%>
+                                                                   
+                                                            <td><button id="cancelEachbtn" onclick="cancelEachProduct('<%=product.cartItems[0]._id%>', '<%=productTotal[index]._id%>')" class="btn btn-primary">Cancel</button></td>
+                                                                        
+                                                            <%} else{%>
+                                                                <td><h5 id="cancelStatus" style="color: red;">Cancelled</h5></td>
+                                                                <%}%>
                                                             <%})%>
+                                                            <%} else{ %>
+                                                                <td><h5 id="cancelStatus" style="color: red;"></h5></td> 
+                                                                <%}%>
                                                         </tr>
                                                        <%})%>
                                                        <%})%>
@@ -141,7 +149,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td class="package" colspan="3">
-                                                                <b>Total Paid</b>
+                                                                <b>Final Total</b>
                                                             </td>
                                                             <td class="qnty">
                                                                 <b></b>
@@ -149,7 +157,7 @@
                                                            
                                                             
                                                             <td class="total">
-                                                                <b>Rs.<%=order.totalPrice%></b>
+                                                                <b id="newTotal">Rs.<%=order.totalPrice%></b>
                                                             </td>
                                                             <td class="qnty">
                                                                 <b></b>
@@ -160,8 +168,9 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <!-- <a class="print_btn common_btn" href="#"><i class="far fa-print"></i> print
-                                            PDF</a> -->
+                                        <a class="print_btn common_btn" href="#"><i class="far fa-print"></i> print
+                                            PDF</a>
+                                            <h5 id="hello">hello</h5>
 
                         </div>
                     </div>
@@ -172,19 +181,23 @@
 </section>
 
 <script>
-  confirmDelete = (id ,orderId)=>{
-const confirmed = confirm("Are you sure , you want to delete")
-      if(confirmed){
-        deleteOrder(id ,orderId)
-      }else{
-        return false
-      }
- }
+ 
 
-    function deleteOrder(id ,orderId){
+    function cancelEachProduct(id ,orderId){
         console.log(id);
         console.log(orderId);
-          fetch("/deleteInOrder" , {
+
+        Swal.fire({
+        title:'Are you sure you want to cancel order?',
+        icon:'warning',
+        showCancelButton:true,
+        confirmButtonColor:'#008000',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!',      
+      })
+      .then((result)=>{
+        if(result.isConfirmed){
+          fetch("/cancelEachOrder" , {
             method:"post",
                 headers:{
                     "Content-Type" :"application/json"
@@ -197,10 +210,20 @@ const confirmed = confirm("Are you sure , you want to delete")
                 })
               })
               
-              .then((res) => res.json)
-              .then((res) => window.location.reload())
+              .then((res) => res.json())
+              .then(data => {
+                if(data){
+                    console.log(data.total);
+                //   document.getElementById('newTotal').innerText = `Rs:${data.total}`
+                  window.location.reload()
+                  document.getElementById("cancelStatus").textContent = 'Cancelled'
+                 
+
+                }
+              })
               .catch((error)=>console.error(error))
-              
+            }   
+        })
     }
 </script>
 
@@ -277,7 +300,7 @@ const confirmed = confirm("Are you sure , you want to delete")
                .then((res)=> res.json())
                .then((data)=>{
                     console.log(data);
-                  
+                document.getElementById("cancelEachbtn").style.display = 'none'  
 
                   Swal.fire({
               title: 'Order Cancelled',
@@ -286,8 +309,8 @@ const confirmed = confirm("Are you sure , you want to delete")
               confirmButtonText: 'OK'
             })
             .then(()=>{
-                window.location.reload()
-                document.getElementById('returnButton').style.display='none'
+                // window.location.reload()
+                // document.getElementById('returnButton').style.display='none'
                 
             })
 
@@ -297,7 +320,21 @@ const confirmed = confirm("Are you sure , you want to delete")
             })
 
     }
+
+let order = '<%= JSON.stringify(orders) %>'
+
+    document.addEventListener("DOMContentLoaded",()=>{
+        console.log('dom load');
+       if(order.orderStatus==="Cancelled"){
+        document.getElementById('cancelEachbtn').style.display='none'
+
+       }
+       document.getElementById('hello').style.display = 'none'
+
+    })
 </script>
+
+
 <%- include("../layouts/footer.ejs") %>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>

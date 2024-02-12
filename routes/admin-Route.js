@@ -5,9 +5,11 @@ const { getAllUsers, getSingleUser, loadAdminLogin, verifyLogin, loadAdminDashbo
 const {tokenVerify,isLogout} =require("../middleware/adminAuth") 
 const upload = require("../middleware/multer")
 const { adminOrderList, updateOrderStatus, adminAllOrders } = require("../controller/order-Controller")
-const { loadEditCategory, editCategory, blockCategory } = require("../controller/category-Controller")
+const { loadEditCategory, editCategory, blockCategory, activateCategoryOffer, removeCategoryOffer } = require("../controller/category-Controller")
 const { deleteProductImage, blockProduct, productOffers, createProductOffer, deactivateProductOffer } = require("../controller/product-Controller")
 const { loadcouponList, loadAddCoupon, addCoupon, deleteCoupon } = require("../controller/coupon-Controller")
+const { laodBanners, loadAddBanner, addBanner, bannerManagement } = require("../controller/bannerController")
+const { uploadBanner } = require("../middleware/multerForBanner")
 const adminRoute = express.Router()
 
 adminRoute.use(express.static("public"))
@@ -32,6 +34,8 @@ adminRoute.post("/addCategory" ,tokenVerify, upload.single("image") , addNewCate
 adminRoute.get("/editCategory" ,tokenVerify, loadEditCategory)
 adminRoute.post("/editCategory" ,tokenVerify, upload.single("image"), editCategory)
 adminRoute.post("/blockCategory" ,tokenVerify, blockCategory)
+adminRoute.post("/createCategoryOffer" , tokenVerify, activateCategoryOffer)
+adminRoute.post("/deactivateCategoryOffer" , tokenVerify , removeCategoryOffer)
 
 adminRoute.get("/productList" ,tokenVerify, loadProductList)
 adminRoute.get("/addProduct" ,tokenVerify, loadAddProduct) 
@@ -55,6 +59,11 @@ adminRoute.post("/deleteCoupon" ,tokenVerify, deleteCoupon)
 
 adminRoute.get("/salesReport", tokenVerify,loadSalesReport)
 adminRoute.get("/charts" , tokenVerify ,chartData)
+
+adminRoute.get("/banner", tokenVerify , laodBanners)
+adminRoute.get("/addBanner" , tokenVerify , loadAddBanner)
+adminRoute.post("/addBanner" , tokenVerify, uploadBanner.single("bannerImage"),addBanner)
+adminRoute.post("/bannerManagement" , tokenVerify , bannerManagement)
 
 adminRoute.get("/logout" , adminLogout)
 

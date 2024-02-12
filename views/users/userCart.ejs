@@ -6,13 +6,15 @@
     ==============================-->
     <section class="fp__cart_view mt_125 xs_mt_95 mb_100 xs_mb_70">
         <div class="container">
+            <%if(products.length>0){%> 
             <div class="row">
-                <div class="col-lg-8 wow fadeInUp" data-wow-duration="1s">
+                <div class="col-lg-9 wow fadeInUp" data-wow-duration="1s">
                     <div class="fp__cart_list">
-                        <div class="table-responsive">   
+                        <div class="table-responsive">  
+                            
                             <table> 
                                 <tbody>   
-
+                                        
                                     <tr>
                                         <th class="fp__pro_img">
                                             Image
@@ -38,25 +40,27 @@
                                             <a class="clear_all" href="">clear all</a>
                                         </th>
                                     </tr>
+                                   
                                     <%if(products.length === 0) {%>
 
-                                        <td class="fp__pro_status">
+                                        
                                             <h6>Your Cart is empty</h6>
-                                        </td>
+                                       
                                         <%} else { %>
     
                                             <%products.forEach((product , index)=> {%>
                                    
-                                    <tr> 
-                                        <td class="fp__pro_img"><img src="/product-Images/<%=product.cartItems[0].image[0]%>" alt="product"
+                                    <tr data-id="<%=product.cartItems[0]._id%>"> 
+
+                                        <td class="fp__pro_img"><img src="/cropped_images/<%=product.cartItems[0].image[0]%>" alt="product"
                                                 class="img-fluid w-100">
                                         </td>
                                         
                                         <td class="fp__pro_name">
                                             <a href="#"><%=product.cartItems[0].productName%></a>
-                                            <span>medium</span>
+                                            
                                             <p><%=product.cartItems[0].categoryname.name%></p>
-                                            <p>Premium</p>
+                                           
                                         </td>
 
                                         <td class="fp__pro_status">
@@ -65,34 +69,36 @@
 
                                         <td class="fp__pro_select">
                                             <div class="quentity_btn">
-                                                <form action="/quantityUpdate" method="post">
+                                               
                                                 <input type="hidden" value="<%= product.cartItems[0]._id%>" name="productId">
                                                 <%if(product.quantity>1) {%>
-                                                <button class="btn btn-danger"><i class="fal fa-minus"></i></button>
+                                                <button reduceBtn-id="<%= product.cartItems[0]._id%>"  onclick="reduceQuantity('<%= product.cartItems[0]._id%>')" class="btn btn-danger"><i class="fal fa-minus"></i></button>
                                                 <%} else {%>
                                                     <button disabled class="btn btn-danger"><i class="fal fa-minus"></i></button>
                                                     <%}%>
-                                            </form>
-                                                <input type="text" placeholder="<%=product.quantity%>">
 
-                                                <form action="/addToCart" method="post">
+                                            
+                                                <input quantity-id="<%= product.cartItems[0]._id%>" type="text" placeholder="<%=product.quantity%>" value="<%=product.quantity%>">
+
+                                                
                                                     <input type="hidden" value="<%= product.cartItems[0]._id%>" name="productId">
                                                     <%if(product.quantity===product.cartItems[0].stock){%>
                                                 <button disabled class="btn btn-success"><i class="fal fa-plus"></i></button>
                                                     <%} else {%>
-                                                        <button  class="btn btn-success"><i class="fal fa-plus"></i></button>
+                                                        <button addToCartBtn-id="<%= product.cartItems[0]._id%>"  onclick="addToCart('<%= product.cartItems[0]._id%>')" class="btn btn-success"><i class="fal fa-plus"></i></button>
                                                         <%}%>
                                                 
-                                            </form>
+                                            
                                             </div>
                                         </td>
+                                        
                                       <%if(productTotal && productTotal.length>0) {%>
                                         <td class="fp__pro_tk">
-                                            <h6>Rs.<%=productTotal[index].total%></h6>
+                                            <h6 productTotal-id="<%= product.cartItems[0]._id%>">Rs.<%=productTotal[index].total%></h6>
                                         </td>
                                       <%}%>
                                         <td class="fp__pro_icon">
-                                            <a onclick="return confirm('Do you want to remove <%=product.cartItems[0].productName%> from the cart')" href="/removeItem?id=<%=product.cartItems[0]._id%>"><i class="far fa-times"></i></a>
+                                            <a onclick="removeItem('<%=product.cartItems[0]._id%>')"><i class="far fa-times"></i></a>
                                         </td>
                                     </tr>
                                     <%})%>
@@ -103,16 +109,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                <div class="col-lg-3 wow fadeInUp" data-wow-duration="1s">
                     <div class="fp__cart_list_footer_button">
                         <%if(cartTotal.length>0){%>
                         <h6>total cart</h6>
                         <%}%>
                         <%if(cartTotal && cartTotal.length>0) {%>
-                        <p>subtotal: <span>Rs.<%=cartTotal[0].total%></span></p>
+                        <p>subtotal: <span id="subTotal">Rs.<%=cartTotal[0].total%></span></p>
                         <p>delivery: <span>Rs.00.00</span></p>
                         <p>discount: <span>Rs.00.00</span></p>
-                        <p class="total"><span>total:</span> <span>Rs.<%=cartTotal[0].total%></span></p>
+                        <p class="total"><span>total:</span> <span id="cartTotal">Rs.<%=cartTotal[0].total%></span></p>
                         <%}%>
                         
                         <%if(cartTotal.length>0){%>
@@ -121,11 +127,18 @@
                     </div>
                 </div>
             </div>
+            <%} else{ %>
+                <h3>Your cart is empty!!!</h3>
+                <%}%>
         </div>
     </section>
     <!--============================
         CART VIEW END
     ==============================-->
+    
+    <script src="/js/users/cartManagement.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
 
     <%- include("../layouts/footer.ejs") %>
 

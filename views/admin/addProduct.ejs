@@ -76,7 +76,7 @@
                 <ul class="menu_icon d-flex flex-wrap">
                     
                     <li>
-                        <a href=""><i class="fas fa-user"></i></a>
+                        <a href="/admin/dashboard"><i class="fas fa-user"></i></a>
                     </li>
                     <li>
                         <a class="common_btn" href="/admin/logout" data-bs-toggle="modal"
@@ -87,302 +87,220 @@
         </div>
     </nav>
       <br><br>
-    <section class="fp__signin">
-        <div class="fp__signin_overlay pt_125 xs_pt_95 pb_100 xs_pb_70">
-            <div class="container">
-                <div class="row wow fadeInUp" data-wow-duration="1s">
-                    <div class="col-xxl-5 col-xl-6 col-md-9 col-lg-7 m-auto">
-                        <div class="fp__login_area">
-                            <h2>Add Product</h2>
-                            <p>Enter the credentials</p>
-                            <form action="/admin/addProduct" method="post" enctype="multipart/form-data" id="form">
-                                <div class="row">
-                                    <div class="col-xl-12">
-                                        <div class="fp__login_imput">
-                                            <label> Product Name</label>
-                                            <input type="name" placeholder="Product name" name="productName" id="productName" required>
-                                            <span style="color: red;" id="productNameError"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12">
-                                        <div class="fp__login_imput">
-                                            <label> Category Name</label>
-                                            <select name="categoryName" id="categoryName" required>
-                                            <option  value="selected">Select Category</option>
-                                            <% for(let i=0;i<categories.length;i++) {%>
-                                            <option  value="<%=categories[i]._id%>"><%=categories[i].name%></option>
-                                            
-                                            <%}%>
-                                        </select>
-                                            <!-- <input type="name" placeholder="Category name" name="categoryName" required> -->
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12">
-                                        <div class="fp__login_imput">
-                                            <label> Description</label>
-                                            <input type="text" placeholder="Description" name="description" id="productDescription" required>
-                                            <span style="color: red;"  id="productDescriptionError"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12">
-                                        <div class="fp__login_imput">
-                                            <label>Brand</label>
-                                            <input type="name" placeholder="Brand" name="brand" id="productBrand" required>
-                                            <span style="color: red;"  id="productBrandError"></span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-xl-12">
-                                        <div class="fp__login_imput">
-                                            <label>Images</label>
-                                            
-                                            <div id="imageView" style="max-width: 70%; height: auto; display: flex;flex-direction: row;"></div>
-                                           <br>
-                                            <input  type="file" placeholder="images" name="images" id="productImage" accept="image/*" required multiple>
-                                       <span style="color: red;"  id="productImageError"></span>
-                                        </div>
-                                    </div>
-                                      <input type="hidden" name="croppedImageData" id="croppedImageData">
-                                    <div class="col-xl-12 d-none" id="cropperContainer" >
-                                        
-                            
-                                        
-                                    </div>
-                                    
-                                    <div class="col-xl-12">
-                                        <div class="fp__login_imput">
-                                            <label> Price</label>
-                                            <input type="number" placeholder="Price" name="price" id="productPrice" required>
-                                            <span style="color: red;"  id="productPriceError"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12">
-                                        <div class="fp__login_imput">
-                                            <label> Stocks</label>
-                                            <input type="number" placeholder="Number of stock" name="stock" id="productStock" required>
-                                            <span style="color: red;"  id="productStockError"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12">
-                                        <div class="fp__login_imput fp__login_check_area">
-                                            <% if(typeof message !== "undefined") { %>
-                                                <p style="color: rgba(202, 14, 14, 0.774);"><%=message%></p>
-                                              <% } %>
 
-                                           
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12">
-                                        <div class="fp__login_imput">
-                                            <button type="submit" class="common_btn" id="addProduct">
-                                              Add</button>
-                                        </div>
+<section class="fp__signin">
+    <div class="fp__signin_overlay pt_125 xs_pt_95 pb_100 xs_pb_70">
+        <div class="container">
+            <div class="row wow fadeInUp" data-wow-duration="1s">
+                <div class="col-xxl-5 col-xl-6 col-md-9 col-lg-7 m-auto">
+                    <div class="fp__login_area">
+                        <h2>Add Product</h2>
+                        <p>Enter the credentials</p>
+                        <form action="/admin/addProduct" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="fp__login_imput">
+                                        <label> Product Name</label>
+                                        <input type="name" placeholder="Product name" name="productName" id="productName" required>
+                                        <span style="color: red;" id="productNameError"></span>
                                     </div>
                                 </div>
-                            </form>
-                            
-                            
-                        </div>
+                                <div class="col-xl-12">
+                                    <div class="fp__login_imput">
+                                        <label> Category Name</label>
+                                        <select required name="categoryName" id="">
+                                        <option value="selected">Select Category</option>
+                                        <% for(let i=0;i<categories.length;i++) {%>
+                                        <option value="<%=categories[i]._id%>"><%=categories[i].name%></option>
+                                        
+                                        <%}%>
+                                    </select>
+                                        <!-- <input type="name" placeholder="Category name" name="categoryName" required> -->
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="fp__login_imput">
+                                        <label> Description</label>
+                                        <!-- <input type="text" placeholder="Description" name="description" id="productDescription" required> -->
+                                        <textarea name="description" id="description" placeholder="Description" cols="30" rows="5" required></textarea>
+                                        <span style="color: red;"  id="productDescriptionError"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="fp__login_imput">
+                                        <label>Brand</label>
+                                        <input type="name" placeholder="Brand" name="brand" id="productBrand" required>
+                                        <span style="color: red;"  id="productBrandError"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-xl-12">
+                                    <div class="fp__login_imput">
+                                        <label>Images</label>
+                                        
+                                        <div id="imageView" style="max-width: 70%; height: auto; display: flex;flex-direction: row;"></div>
+                                       <br>
+                                        <input  type="file" placeholder="images" name="images" id="productImage" accept="image/*" required multiple>
+                                   <span style="color: red;"  id="productImageError"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="fp__login_imput">
+                                        <label> Price</label>
+                                        <input type="number" placeholder="Price" name="price" id="productPrice" required>
+                                        <span style="color: red;"  id="productPriceError"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="fp__login_imput">
+                                        <label> Stocks</label>
+                                        <input type="number" placeholder="Number of stock" name="stock" id="productStock" required>
+                                        <span style="color: red;"  id="productStockError"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="fp__login_imput fp__login_check_area">
+                                        <% if(typeof message !== "undefined") { %>
+                                            <p style="color: rgba(202, 14, 14, 0.774);"><%=message%></p>
+                                          <% } %>
+
+                                       
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="fp__login_imput">
+                                        <button type="submit" class="common_btn" id="addProduct">
+                                          Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-   
+  <script>
 
+    const productName = document.getElementById("productName")
+    const productImage = document.getElementById("productImage")
+    const productDescription = document.getElementById("productDescription")
+    const productBrand = document.getElementById("productBrand")
+    const productPrice = document.getElementById("productPrice")
+    const productStock = document.getElementById("productStock")
 
-      <script>
+    const viewImage = document.getElementById("imageView")
 
-        const productName = document.getElementById("productName")
-        const productImage = document.getElementById("productImage")
-        const productDescription = document.getElementById("productDescription")
-        const productBrand = document.getElementById("productBrand")
-        const productPrice = document.getElementById("productPrice")
-        const productStock = document.getElementById("productStock")
+    const productNameError = document.getElementById("productNameError")
+    const productImageError = document.getElementById("productImageError")
+    const productDescriptionError = document.getElementById("productDescriptionError")
+    const productBrandError = document.getElementById("productBrandError")
+    const productPriceError = document.getElementById("productPriceError")
+    const productStockError = document.getElementById("productStockError")
 
-        const viewImage = document.getElementById("imageView")
+    let imagesArray =[]
 
-        const productNameError = document.getElementById("productNameError")
-        const productImageError = document.getElementById("productImageError")
-        const productDescriptionError = document.getElementById("productDescriptionError")
-        const productBrandError = document.getElementById("productBrandError")
-        const productPriceError = document.getElementById("productPriceError")
-        const productStockError = document.getElementById("productStockError")
+    const productNamePattern = /^[A-Z}[a-z]+(\s[A-Z][a-z]{0,25}\d*){0,4}$/
+    const productPricePattern =/^[\d.]+$/
+    const productStockPattern = /^\d*$/
+    const productDescriptionPattern =  /^(.|\s)*[a-zA-Z]+(.|\s)*$/
 
-        let imagesArray =[]
-
-        const productNamePattern = /^[A-Z}[a-z]+(\s[A-Z][a-z]{0,25}\d*){0,4}$/
-        const productPricePattern =/^[\d.]+$/
-        const productStockPattern = /^\d*$/
-        const productDescriptionPattern =  /^(.|\s)*[a-zA-Z]+(.|\s)*$/
-
-        const productNameFunction =()=>{
-                 if(!productNamePattern.test(productName.value)){
-                    productNameError.textContent = "Inavlid Name"
-                    return false
-                 }else{
-                    productNameError.textContent = ""
-                    return true
-                 }
-        }
-
-        const productPriceFunction = ()=>{
-            if(!productPricePattern.test(productPrice.value)){
-                productPriceError.textContent = "Enter a valid price"
+    const productNameFunction =()=>{
+             if(!productNamePattern.test(productName.value)){
+                productNameError.textContent = "Inavlid Name"
                 return false
-            }else{
-                productPriceError.textContent = ""
+             }else{
+                productNameError.textContent = ""
                 return true
-            }
-        }
-
-        const productStockFunction =()=>{
-            if(!productStockPattern.test(productStock.value)){
-                productStockError.textContent = "Enter a valid stock"
-                return false
-            }else{
-                productStockError.textContent = ""
-                return true
-            }
-        }
-
-        productName.addEventListener("input" , productNameFunction)
-        productPrice.addEventListener("input" , productPriceFunction)
-        productStock.addEventListener("input" , productStockFunction)
-
-        let cropper
-
-        productImage.addEventListener("change" , ()=>{
-            
-            const imagefiles = productImage.files
-
-            if(!imagefiles || imagefiles.length<0){
-                productImageError.textContent = "Please Choose an Image file"
-                return false  
-            }
-            const firstFile = imagefiles[0]
-            if(!firstFile.type.startsWith("image/")){
-                console.log("changeing");
-                productImage.value = ""
-                productImageError.textContent = "Please Choose an Image file"
-                return false
-            }else{
-                
-                productImageError.textContent = ""
-                
-               const cropperContainer = document.getElementById("cropperContainer")
-               console.log(cropperContainer);
-              
-               cropperContainer.innerHTML = `<img id="cropperImage" src="${URL.createObjectURL(firstFile)}" alt="image">
-                                             <label>Image Crop</label>
-                                            <button type="button" class="common_btn" id="cropAndSubmit" >Crop and Submit</button>`;
-               const cropperImage = document.getElementById("cropperImage")
-                cropper = new Cropper(cropperImage,{
-                    aspectRatio:0,
-                    viewMode:1,
-                })
-                cropperContainer.classList.remove("d-none")
-                  console.log('to cprper');
-                
-                  
-                        // Function to handle cropping and displaying the cropped image
-    const handleCropAndDisplay = () => {
-        const croppedCanvas = cropper.getCroppedCanvas();
-        const croppedDataURL = croppedCanvas.toDataURL("image/jpeg");
-
-        // Display the cropped image
-        const croppedImage = document.createElement("img");
-        croppedImage.src = croppedDataURL;
-        document.getElementById("imageView").innerHTML = "";
-        document.getElementById("imageView").appendChild(croppedImage);
-       
-        imagesArray.pop(); // Remove the last original image
-        imagesArray.push(croppedDataURL);
-
-        // Add the cropped image to the form data
-        const cropBlob = dataURLtoBlob(croppedDataURL);
-        const formData = new FormData(document.getElementById("form"));
-        formData.append("croppedImage", cropBlob, "croppedImage.jpg");
-
-        // formData.delete("images");
-    };
-
-
-                document.getElementById("cropAndSubmit").addEventListener("click", ()=>{
-                   
-
-                    handleCropAndDisplay()
-                   const croppedDta = 
-                    cropper.destroy();
-                    cropper = null;
-                    cropperContainer.classList.add("d-none");
-                  })
-
-                for(let i =0;i<imagefiles.length;i++){
-                    imagesArray.push(imagefiles[i])
-                    displayImages()
-
-                }
-            }
-        })
-
-        displayImages = ()=>{
-            let images =""
-            imagesArray.forEach((image ,index)=>{
-                images += ` <div class="image">
-                    <img src="${URL.createObjectURL(image)}" alt ="image">
-                    <i onclick ="deleteImage(${index})" class="fa fa-trash" aria-hidden="true"></i>
-                    </div>`
-            })
-               viewImage.innerHTML = images
-        }
-
-        deleteImage = (index)=>{
-            imagesArray.splice(index ,1)
-            displayImages()
-        }
-
-        let isFormValid = false
-        const formFunctions =[productNameFunction,productPriceFunction,productStockFunction]
-        const form = document.getElementById("form")
-        document.getElementById("addProduct").addEventListener("click" , (event)=>{
-            if(formFunctions.every((fun)=>fun())){
-                isFormValid = true
-            }
-            if(isFormValid === false){
-                event.preventDefault()
-                alert("Enter all cerdentials")
-            }else{
-                form.submit()
-            }
-        })
-
-        function dataURLtoBlob(dataURL) {
-        // Split the Data URL to obtain the data part
-        const parts = dataURL.split(',');
-        const data = parts[1];
-
-        // Get the MIME type from the first part of the Data URL
-        const mimeString = parts[0].split(':')[1].split(';')[0];
-
-        // Convert the base64-encoded data to a Blob
-        const byteString = atob(data);
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-              console.log('inblob');
-        return new Blob([ab], { type: mimeString });
+             }
     }
 
-      </script> 
-      
-      <script defer src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    const productPriceFunction = ()=>{
+        if(!productPricePattern.test(productPrice.value)){
+            productPriceError.textContent = "Enter a valid price"
+            return false
+        }else{
+            productPriceError.textContent = ""
+            return true
+        }
+    }
+
+    const productStockFunction =()=>{
+        if(!productStockPattern.test(productStock.value)){
+            productStockError.textContent = "Enter a valid stock"
+            return false
+        }else{
+            productStockError.textContent = ""
+            return true
+        }
+    }
+
+    productName.addEventListener("input" , productNameFunction)
+    productPrice.addEventListener("input" , productPriceFunction)
+    productStock.addEventListener("input" , productStockFunction)
+
+    productImage.addEventListener("change" , ()=>{
         
-</body>
+        const imagefiles = productImage.files
+
+        if(!imagefiles || imagefiles.length<0){
+            productImageError.textContent = "Please Choose an Image file"
+            return false  
+        }
+        const firstFile = imagefiles[0]
+        if(!firstFile.type.startsWith("image/")){
+            console.log("changeing");
+            productImage.value = ""
+            productImageError.textContent = "Please Choose an Image file"
+            return false
+        }else{
+            
+            productImageError.textContent = ""
+            for(let i =0;i<imagefiles.length;i++){
+                imagesArray.push(imagefiles[i])
+                displayImages()
+
+            }
+        }
+    })
+
+    displayImages = ()=>{
+        let images =""
+        imagesArray.forEach((image ,index)=>{
+            images += ` <div class="image">
+                <img src="${URL.createObjectURL(image)}" alt ="image">
+                <i onclick ="deleteImage(${index})" class="fa fa-trash" aria-hidden="true"></i>
+                </div>`
+        })
+           viewImage.innerHTML = images
+    }
+
+    deleteImage = (index)=>{
+        imagesArray.splice(index ,1)
+
+        displayImages()
+    }
+
+    let isFormValid = false
+    const formFunctions =[productNameFunction,productPriceFunction,productStockFunction]
+    document.getElementById("addProduct").addEventListener("click" , (event)=>{
+        if(formFunctions.every((fun)=>fun())){
+            isFormValid = true
+        }
+        if(isFormValid === false){
+            event.preventDefault()
+            alert("Enter all cerdentials")
+        }else{
+            form.submit()
+        }
+    })
+
     
-        
- 
+
+  </script>    
+    
+</body>

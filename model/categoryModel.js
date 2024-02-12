@@ -14,6 +14,10 @@ const categorySchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    isOfferApplied:{
+        type:Boolean,
+        default:false
+    },
     
 })
 

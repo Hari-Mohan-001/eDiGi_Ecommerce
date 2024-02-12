@@ -140,8 +140,13 @@
                                     aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span>Sales Report</button>
 
-                                <button class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
-                                    </span> Logout</button>
+                                            <button class="nav-link" id="productOffer-tab" data-bs-toggle="pill"
+                                                      type="button" role="tab"
+                                    aria-controls="v-pills-settings" aria-selected="false"><span><i
+                                            class="fas fa-user-lock"></i></span>Product Offers</button>
+
+                                <button id="banner-tab" class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
+                                    </span> Banner Mangement</button>
                             </div>
                         </div>
                     </div>
@@ -237,13 +242,20 @@
     })
     document.getElementById("coupon-tab").addEventListener("click" , (event)=>{
         window.location.href = "/admin/couponList"
-
     })
     document.getElementById("coupon-tab").addEventListener("click" , (event)=>{
         window.location.href = "/admin/couponList"})
 
         document.getElementById("sales-tab").addEventListener("click" , (event)=>{
         window.location.href = "/admin/salesReport"})
+
+        document.getElementById("productOffer-tab").addEventListener("click" , (event)=>{
+        window.location.href = "/admin/productOffers"})
+
+        document.getElementById("banner-tab").addEventListener("click" , (event)=>{
+        window.location.href = "/admin/banner"})
+
+        
     
 </script>
 

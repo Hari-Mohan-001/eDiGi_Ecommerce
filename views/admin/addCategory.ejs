@@ -110,9 +110,9 @@
                                     <div class="col-xl-12" >
                                         <div class="fp__login_imput">
                                             <label>Image</label>
-                                            <div class="img" style="display: none;">
-                                                <img style="max-width: 100%; height: auto;" class="img-fluid w-100" src="" id="imageView" alt="Selected Image">
-                                                <button class="common_btn" id="cropButton" >crop</button>
+                                            <div class="img">
+                                                <img style="max-width: 50%; height: auto;" class="img-fluid w-100" src="" id="imageView" alt="Selected Image">
+                                                
                                                 </div>
             
                                                 <input type="file" placeholder="Password" name="image" id="categoryImage" accept="image/*" required>
@@ -175,20 +175,11 @@
                 return false
             }else{
                 categoryImageError.textContent = ""
-               console.log('before crop');
+               
                document.getElementById("imageView").onload =()=>{
-                    console.log('in crop');
-                    const cropper = new Cropper(newImage, {
-                                     aspectRatio: 0,
-                                     viewMode:0,
-                                    crop(event) {
-                                   console.log(event.detail.x);
-   
-                                  },
-                               });
-                               cropButton.addEventListener("click" , ()=>{
-                    let newCroppedImage = cropper.getCroppedCanvas().todataURL()
-                  })      
+                   
+                    
+                                    
                                
                          }
                         

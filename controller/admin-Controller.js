@@ -4,6 +4,9 @@ const product = require("../model/productModel");
 const adminJwt = require("jsonwebtoken");
 const order = require("../model/orderModel");
 const moment = require("moment");
+const fs = require("fs")
+const path = require("path")
+const sharp = require("sharp")
 
 const adminEmail = process.env.ADMIN_EMAIL;
 const adminPassword = process.env.ADMIN_PASSWORD;
@@ -36,9 +39,10 @@ const verifyLogin = async (req, res) => {
       const token = createToken(email);
       res.cookie("adminjwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
 
-      res.redirect("/admin/dashboard");
+      res.json({success:true})
     } else {
-      res.render("adminLogin", { message: "Invalid Credentials" });
+      res.json({success:false , message:'Invalid Credentials'})
+
     }
   } catch (error) {
     console.log(error.message);
@@ -177,9 +181,27 @@ const addNewProduct = async (req, res) => {
         message: "Price & stock should be greater than zero",
       });
     } else {
-      const images = req.files.map((file)=>{
-        return file.filename
-      })
+
+      const processedImages = await Promise.all(req.files.map(async(file)=>{
+        const originalFileName = file.originalname;
+        const croppedImageBuffer = await sharp(file.path)
+        .resize({ width: 300, height: 250 }) // Resize the image
+               
+                .toBuffer(); // Convert to buffer
+
+                const filename = path.basename(originalFileName);
+
+                // Save the cropped image to a directory
+        const croppedImagePath = path.join(__dirname, '../public/cropped_images', filename);
+        fs.writeFileSync(croppedImagePath, croppedImageBuffer);
+
+        // Return the path of the cropped image
+        return filename;
+      }))
+
+      // const images = req.files.map((file)=>{
+      //   return file.filename
+      // })
 
       // const files = req.files;
 
@@ -193,7 +215,7 @@ const addNewProduct = async (req, res) => {
         categoryname: req.body.categoryName,
         description: req.body.description,
         brand: req.body.brand,
-        image:images,
+        image:processedImages,
         price: newprice,
         stock: req.body.stock,
       });
@@ -223,9 +245,26 @@ const loadUpdateProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const images = req.files.map((file) => {
-      return file.filename;
-    });
+    // const images = req.files.map((file) => {
+    //   return file.filename;
+    // });
+
+    const images = await Promise.all(req.files.map(async(file)=>{
+      const originalFileName = file.originalname;
+      const croppedImageBuffer = await sharp(file.path)
+      .resize({ width: 300, height: 250 }) // Resize the image
+             
+              .toBuffer(); // Convert to buffer
+
+              const filename = path.basename(originalFileName);
+
+              // Save the cropped image to a directory
+      const croppedImagePath = path.join(__dirname, '../public/cropped_images', filename);
+      fs.writeFileSync(croppedImagePath, croppedImageBuffer);
+
+      // Return the path of the cropped image
+      return filename;
+    }))
 
     const dataUpdate = {
       $set: {
@@ -260,7 +299,7 @@ const loadAdminDashboard = async (req, res) => {
       {
         $match: {
           orderStatus: {
-            $in: ["Delivered" , "Placed"],
+            $in: ["Delivered"],
           },
         },
       },
@@ -451,7 +490,9 @@ const loadSalesReport = async (req, res) => {
       console.log(req.query.startDate);
       const startDate = new Date(req.query.startDate);
       const endDate = new Date(req.query.endDate);
+      endDate.setHours(23, 59, 59, 999);
       console.log(startDate);
+      console.log(endDate);
 
       Order = await order
         .find({
@@ -459,6 +500,7 @@ const loadSalesReport = async (req, res) => {
           orderStatus: { $in: ["Shipped", "Delivered"] },
         })
         .populate("costumer");
+        console.log(Order);
     } else {
       Order = await order
         .find({ orderStatus: { $in: ["Shipped", "Delivered"] } })

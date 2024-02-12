@@ -139,33 +139,36 @@
                                                         required>
                                                 </div>
 
-                                                <% if(typeof message !=="undefined" ) { %>
-                                                    <p style="color: rgba(238, 16, 35, 0.336);">
-                                                        <%=message%>
-                                                    </p>
-                                                    <% } %>
+                                    
+                                                    <br><br>
+                                                    <div>
+                                                        <button style="margin-top: 9rem;" type="submit" id="orderButton">Place Order</button>
+                                                    </div>
                                             </div>
-
-                                            <button id="orderButton" style="margin-top: 100px;" type="submit"
-                                                class="common_btn">Place Order</button>
+                                             
                                             </form>
+                                            <br><br>
+                                            <%if(!findCart.isCouponApplied) {%>
+                                            <div style="margin-top: 0px; display: flex; flex-direction: row;">
 
-                                            <div style="margin-top: 40px; display: flex;">
-
-                                                <%if(!findCart.isCouponApplied) {%>
-                                                    <input style="margin-top: 40px;" type="text"
+                                                    <div style="display: flex;justify-content: space-between;align-items: center;">
+                                                    <input style="margin-top: 0px;" type="text"
                                                         placeholder="Coupon Code" id="couponCode">
-                                                    <button style="margin-top: 177px; position: fixed;"
-                                                        onclick="applyCoupon('<%=findCart._id%>')">Apply</button>
+                                                    <button style="margin-top: 13rem; "
+                                                        onclick="applyCoupon('<%=findCart._id%>')">Apply Coupon</button>
+                                                    </div>
                                                     <%} else {%>
-                                                        <input style="margin-top: 90px;" type="text"
+                                                        <div style="display: flex; justify-content:space-between;align-items: center;">
+                                                            <div>
+                                                                <span style="color: green;"> Coupon Applied</span>
+                                                            </div>
+                                                            <input itemid="input" class="cpnapplied" style="margin-bottom:0px;"  type="text"
                                                             placeholder="Coupon Code" id="couponCode">
-                                                        <button style="margin-top: 193px;"
+                                                        <button style="margin-top: 12.5rem;"
                                                             onclick="removeCoupon('<%=findCart._id%>')">Remove</button>
-                                            </div>
-                                            <div>
-                                                <span style="color: green;"> Coupon Applied</span>
-                                            </div>
+                                                        </div>
+                                             </div>
+                                            
                                             <%}%>
 
                     </div>
@@ -212,6 +215,9 @@
         const applyCoupon = (cartid) => {
             const couponCode = document.getElementById("couponCode").value
             const total = document.getElementById("totalValue").textContent
+            const input = document.getElementsByClassName('cpnapplied').value = couponCode
+            
+        
 
             console.log(total);
             fetch("/applyCoupon", {
@@ -273,6 +279,7 @@
         const removeCoupon = (cartid) => {
             console.log('remove copn');
             const total = document.getElementById("totalValue").textContent
+            const input = document.getElementsByClassName('cpnapplied').value = ""
             fetch("/removeCoupon", {
                 method: "post",
                 headers: {
@@ -485,6 +492,6 @@
         }
 
     </script>
-
+<br><br><br><br>
     <%- include("../layouts/footer.ejs") %>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.3/dist/sweetalert2.all.min.js"></script>

@@ -47,6 +47,7 @@ const orderDetails = async(req,res)=>{
             ...orders.toObject(),
             orderDate:moment(orders.orderedAt).format('DD/MM/YYYY')
        }))
+      
         
         res.render("orderDetails",{orders:orderDetails, moment , productTotal ,findProducts, count})
     } catch (error) {
@@ -113,20 +114,21 @@ const updateOrderStatus = async(req,res)=>{
 
 const cancelOrder = async(req,res)=>{ 
     try {
+        console.log('cancelrote');
         const userId = decode(req.cookies.jwt).id
         const{orderId , orderValue} = req.body
         console.log(orderId);
         const cancelledOrder = await order.findOneAndUpdate({_id:orderId},
             {
                $set:{
-                orderStatus:"Cancelled"
+                orderStatus:"Cancelled" 
                } 
             },
             {new:true} 
             )
 
             if(cancelledOrder){
-                res.json(cancelledOrder)
+                res.json(cancelledOrder)  
                 const orderItems = cancelledOrder.items
                 console.log(orderItems);
                 orderItems.forEach(async(item)=>{
@@ -142,15 +144,30 @@ const cancelOrder = async(req,res)=>{
                         )
                 })
 
-                if(cancelledOrder.payment !== 'Cash on delivery'){
+                if(cancelledOrder.payment != 'Cash on delivery'){
+                    console.log('wkltrefil');
                     await user.updateOne({_id:userId},
                         {
                             $inc:{
                                 wallet:orderValue
                             }
                         },
-                        {new:true},
+                        {new:true}, 
                         )
+
+                        const history = {amount:orderValue,
+                            description: 'Amount from order cancel',
+                            status:'Credit',
+                            date: new Date()          
+           }
+
+                        const walletHistory = await user.findByIdAndUpdate({_id:userId},
+                            {
+                                $addToSet:{
+                                    walletHistory:history
+                                }
+                            }
+                            )
                 }
             }else{
                 res.json("Cancelled Failed")
@@ -196,10 +213,109 @@ const deleteInOrder = async(req,res)=>{
     }
 }
 
+const cancelEachProductInOrder = async(req,res)=>{
+    try {
+        const{proId , orderId} = req.body
+        console.log(proId ,orderId);
+        
+        const userId = decode(req.cookies.jwt).id 
+
+        const cancelOrder = await order.findOneAndUpdate(
+            { _id: new ObjectId(orderId), 'items.Product': new ObjectId(proId) },
+            {
+              $set: {
+                'items.$.Cancelled': true,
+              },
+            },
+            { new: true }
+          );
+
+          if(cancelOrder){
+        
+          
+          const cancelOrderAggregate = await order.aggregate([
+            {
+              $match: { _id: new ObjectId(orderId) },
+            },
+            {
+              $unwind: '$items',
+            },
+            {
+              $match: { 'items.Cancelled': { $ne: true } },
+            },
+            {
+              $unwind: '$items.cartItems',
+            },
+            {
+              $group: {
+                _id: '$_id',
+                items: { $push: '$items' },
+                totalPrice: { $sum: { $multiply: ['$items.quantity', '$items.cartItems.price'] } },
+              },
+            },
+          ]).exec();
+
+        console.log('total'+cancelOrderAggregate[0].totalPrice);   
+        console.log(cancelOrderAggregate[0]);
+
+        let newTotal = cancelOrderAggregate[0].totalPrice
+        let parsedNewTotal = parseInt(newTotal)
+        const amountToReturned = cancelOrder.totalPrice - newTotal
+        console.log('new'+newTotal , 'retun'+amountToReturned);
+       const updateOrder = await order.findByIdAndUpdate({_id:orderId},
+        {
+            $set:{
+                totalPrice:newTotal
+            }
+        },
+        {new:true}
+        )
+               
+        res.json({total:parsedNewTotal})
+           
+        const cancelledItem = cancelOrder.items.find((item)=> item.Product.toString()===proId)
+        const updateProductQuantity = await product.findByIdAndUpdate({_id:proId},
+            {
+                $inc:{
+                    stock:cancelledItem.quantity
+                }
+            }
+            )
+              
+            const history = {amount:amountToReturned,
+                             description: 'Amount from order cancel',
+                             status:'Credit',
+                             date: new Date()          
+            }
+            console.log('before waltupdate');
+            const updateWallet = await user.findByIdAndUpdate({_id:userId},
+                {
+                    $inc:{
+                         wallet:amountToReturned
+                    },     
+                }
+                )
+
+                const walletHistory = await user.findByIdAndUpdate({_id:userId},
+                    {
+                        $addToSet:{
+                            walletHistory:history
+                        }
+                    }
+                    )
+            }else{
+                res.json("failed")
+            }    
+
+    } catch (error) {
+        console.log(error.message); 
+    }
+}
+
 const returnOrder = async(req,res)=>{
     try {
         console.log('return');
-        const userId = decode(req.cookies.jwt).id
+        const userId = decode(req.cookies.jwt).id 
         const{orderId , orderValue} = req.body
         console.log(orderValue);
         const orderReturn = await order.findByIdAndUpdate({_id:orderId},
@@ -232,9 +348,24 @@ const returnOrder = async(req,res)=>{
                     {
                         $inc:{
                             wallet:orderValue
-                        }
+                        },
+
                     }
                     )
+
+                    const history = {amount:orderValue,
+                        description: 'Amount from order return',
+                        status:'Credit',
+                        date: new Date()          
+       }
+
+       const walletHistory = await user.findByIdAndUpdate({_id:userId},
+        {
+            $addToSet:{
+                walletHistory:history
+            }
+        }
+        )
             }else{
                 res.json("Not returned")
             }
@@ -242,6 +373,8 @@ const returnOrder = async(req,res)=>{
         console.log(error.message);
     }
 }
+
+
  
 module.exports ={
     viewOrders,
@@ -251,5 +384,6 @@ module.exports ={
     adminOrderList,
     updateOrderStatus, 
     deleteInOrder,
-    adminAllOrders
+    adminAllOrders,
+    cancelEachProductInOrder
 }

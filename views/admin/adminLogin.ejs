@@ -88,34 +88,28 @@
                   <div class="col-xxl-5 col-xl-6 col-md-9 col-lg-7 m-auto">
                       <div class="fp__login_area">
                           <h2>Welcome Admin</h2>
-                          <% if(typeof message !== "undefined") { %>
-                            <p style="color: rgb(224, 15, 15);"><%=message%></p>
-                          <% } %>
+                          
                           <p>sign in to continue</p>
-                          <form action="/admin/login" method="post">
+                          <form id="loginForm">
                               <div class="row">
                                   <div class="col-xl-12">
                                       <div class="fp__login_imput">
                                           <label>Email</label>
-                                          <input type="email" placeholder="Email" name="email" required>
+                                          <input id="email" type="email" placeholder="Email" name="email" required>
+                                          <div style="color: red;" id="emailError"></div>
                                       </div>
+                                      
                                   </div>
                                   <div class="col-xl-12">
                                       <div class="fp__login_imput">
                                           <label>Password</label>
-                                          <input type="password" placeholder="Password" name="password" required>
+                                          <input id="password" type="password" placeholder="Password" name="password" required>
                                       </div>
                                   </div>
-                                  <div class="col-xl-12">
-                                      <div class="fp__login_imput fp__login_check_area">
-                                          
-                                          <a href="">Forgot Password ?</a>
-                                      </div>
-                                  </div>
+                                  <div id="errorMessage" style="color: red;"></div>
                                   <div class="col-xl-12">
                                       <div class="fp__login_imput">
-                                          <button type="submit" class="common_btn">
-                                            Login</button>
+                                          <button onclick="submitLogin()" type="submit" class="common_btn">Login</button>
                                       </div>
                                   </div>
                               </div>
@@ -130,5 +124,9 @@
   <!--=========================
       SIGNIN END
   ==========================-->
+
+  <script src="/js/admin/adminLogin.js"></script>
+    
+  </body>
 
   <%- include("../layouts/footer.ejs") %>

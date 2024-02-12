@@ -5,6 +5,7 @@ const { tokenVerify } = require("../middleware/authMiddleware")
 const { decode } = require("jsonwebtoken")
 const mongoose = require("mongoose")
 const{ObjectId} = mongoose.Types
+const productHelpers = require("../helpers/productHelpers")
 
 const laodCart = async(req,res)=>{
     try {
@@ -89,7 +90,7 @@ const addToCart = async(req,res)=>{
         if(findProduct.stock>0){
             if(!findCart){ 
                 console.log("stock");
-                const newCart = new cart({  
+                const newCart = new cart({   
                     userid:userId,
                     products:[ 
                         {
@@ -99,8 +100,12 @@ const addToCart = async(req,res)=>{
                     ]
                 })
  
-                await newCart.save()
-                res.redirect("/myCart")         
+               const savedCart=  await newCart.save()
+               if(savedCart){
+                console.log('json');
+                 return res.json({'success':true , 'message':"Product added"})  
+               }
+                    
             }
             const existProduct = findCart.products.find(
                 (findProduct)=>findProduct.productId.toString() === productId
@@ -108,14 +113,15 @@ const addToCart = async(req,res)=>{
             
 
             if(existProduct && existProduct.quantity < findProduct.stock){
-                console.log(existProduct);
+                console.log('update qty');
                 await cart.updateOne(
-                    { userid: userId, "products.productId": productId },
+                    { userid: userId, "products.productId": productId },    
                     { $inc: { "products.$.quantity": 1 } }
                 );
+                let stock = findProduct.stock
+                const price = Math.round(findProduct.price)
+                return res.json({'success':true , 'message':'quantity Updated' , 'stock':stock , 'price':price})
                 
-                res.redirect("/myCart")
-                // res.status(200).send("Product already exist in cart")
             }
             else if(findProduct.stock>1 && !existProduct){
                 findCart.products.push({
@@ -126,6 +132,8 @@ const addToCart = async(req,res)=>{
                 res.redirect("/myCart")
             }
 
+        }else{
+            return res.json({'success':false, 'message':'Product Out Of stock'})
         }  
            
 
@@ -138,7 +146,8 @@ const quantityUpdation = async(req,res)=>{
     try {
         const userId = decode(req.cookies.jwt).id
         console.log("cart route");
-        const productId = req.body.productId
+        // const productId = req.body.productId
+        const{productId} = req.body
 
         const findProduct = await product.findOne({_id:productId})
         const findCart = await cart.findOne({userid:userId}) 
@@ -170,12 +179,12 @@ const quantityUpdation = async(req,res)=>{
                 await cart.updateOne(
                     { userid: userId, "products.productId": productId },
                     { $inc: { "products.$.quantity": -1 } }
-                );
+                );   
                 
-                res.redirect("/myCart")
-                // res.status(200).send("Product already exist in cart")
+                const price = findProduct.price
+              return res.json({'success':true, 'message':"reduced the quantity" , 'price':price})
             }
-            else if(findProduct.stock>1 && !existProduct){
+            else if(findProduct.stock>1 && !existProduct){ 
                 findCart.products.push({
                     productId:productId,
                     quantity:1
@@ -193,9 +202,11 @@ const quantityUpdation = async(req,res)=>{
 
 const removeCartItem = async(req,res)=>{
     try {
-        const productid = req.query.id
+        console.log('removing');
+        const {productid} = req.body
+               console.log('remove');
         const userId = decode(req.cookies.jwt).id
-        const Cart = await cart.findOne({userid:userId})
+        const Cart = await cart.findOne({userid:userId})  
         console.log(Cart);
         if(Cart){
             const remove = await cart.updateOne({userid:userId},
@@ -203,18 +214,47 @@ const removeCartItem = async(req,res)=>{
                     $pull:{products:{productId:productid}}
                 }
                 )
-                res.redirect("/myCart")
+               res.json({'success':true , 'message':'item removed'})
         }else{
-            res.send("not removed")
+            res.json({'success':false})
         }
 
     } catch (error) {
         console.log(error.message); 
     }
 }
+
+const getCartTotal = async(req,res,next)=>{  
+    try {
+        let userId = decode(req.cookies.jwt).id
+        const userCart = await cart.findOne({userid:userId})
+        console.log(userCart);
+        if(userCart.products.length>0){
+            console.log('in cart tot');
+        
+        const {cartTotal , productTotal} =await productHelpers.totalPrice(req ,userId)
+        const total = Math.round(cartTotal[0].total)
+        console.log(cartTotal);
+        if(cartTotal){
+            console.log('incarttotal');
+            return res.json({'success':true, 'message':`${total}` })              
+        }else{
+            console.log('no total');
+            return res.json({'success':false , 'message':'failed to get total'})       
+        }        
+    }else{
+         console.log('no cert');
+        return res.json({'success':false})
+    }
+
+    } catch (error) {
+        next(error)
+    }
+}
 module.exports ={
     laodCart, 
     addToCart,
     quantityUpdation,
-    removeCartItem
+    removeCartItem,
+    getCartTotal
 }

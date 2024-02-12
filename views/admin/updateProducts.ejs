@@ -139,7 +139,7 @@
                                                 <%for(let i=0;i<products.image.length;i++){%>
                                                     
                                                     <i onclick ="deleteImages('<%= products._id%>', '<%= products.image[i]%>')" style="flex-direction: column; color: red; cursor: pointer;"  class="fa fa-trash" aria-hidden="true"></i>
-                                                <img style="max-width: 35%; height: auto; " src="/product-Images/<%= products.image[i]%>" alt="">
+                                                <img style="max-width: 35%; height: auto; " src="/cropped_images/<%= products.image[i]%>" alt="">
                                                 
                                                 <%}%>
                                             </div>

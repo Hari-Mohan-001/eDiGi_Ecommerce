@@ -8,7 +8,7 @@ const loadCategories = async (req, res) => {
     let count = null
       
     if(req.cookies.jwt){
-     count = await  cartCount(decode(req.cookies.jwt).id)
+     count = await  cartCount(decode(req.cookies.jwt).id) 
     }
     console.log(count);
 
@@ -20,7 +20,7 @@ const loadCategories = async (req, res) => {
   }
 };
 
-const loadProducts = async (req, res) => {
+const loadProducts = async (req, res , next) => {
   try {
     let count = null
       
@@ -29,16 +29,17 @@ const loadProducts = async (req, res) => {
     }
     const id = req.query.id
     const Category = await category.findOne({_id:id ,isBlocked:false})
-    console.log(Category);
+    console.log('in prodruote');
     const Product = await product.find({categoryname:id, isBlocked:false})
     res.render("userProducts", { categories: Category, products: Product , count});
   } catch (error) {
-    console.log(error.messsage);
+    next(error)
+    
   }
 };
 
 
- const loadSingleProduct = async (req,res)=>{
+ const loadSingleProduct = async (req,res, next)=>{
     try {
       let count = null
       
@@ -51,7 +52,7 @@ const loadProducts = async (req, res) => {
         console.log(Product);
         res.render("singleProduct",{products:Product , count})
     } catch (error) {
-        console.log(error.message);
+      next(error)
     }
 }
 
@@ -107,14 +108,7 @@ const blockProduct = async(req,res)=>{
   }
 }
 
-const home = async (req, res) => {
-  let count = null  
-  if(req.cookies.jwt){
-   count = await  cartCount(decode(req.cookies.jwt).id)
-  }
-  const Product = await product.find({isBlocked:false});
-  res.render("home" ,{products:Product , count});
-};
+
 
 const productOffers = async(req,res)=>{
   try {
@@ -139,7 +133,8 @@ const createProductOffer = async(req,res)=>{
         $set:{
           price:newPrice,
           oldPrice:oldPrice,
-          isOfferApplied:true
+          isOfferApplied:true,
+          offerType:'Product Offer'
         }
       },
       {new:true},
@@ -163,7 +158,9 @@ const deactivateProductOffer = async(req,res)=>{
       {
         $set:{
           price:oldPrice,
-          isOfferApplied:false
+          isOfferApplied:false,
+          oldPrice:null,
+          offerType:null,
         }
       },
       {new:true},
@@ -177,6 +174,67 @@ const deactivateProductOffer = async(req,res)=>{
   }
 }
 
+const getAllProducts = async(req,res)=>{
+  try {
+    let count = null  
+  if(req.cookies.jwt){
+   count = await  cartCount(decode(req.cookies.jwt).id)
+  }
+  const categories = await category.find({isBlocked:false})
+  const products = await product.find({isBlocked:false})
+
+  let search =''
+  if(req.query.search){
+    search = req.query.search.trim()
+  }
+
+  const categoryId = req.query.category
+  const brand = req.query.brand
+  
+  const sortBy = req.query.sortBy
+  let sortQuery ={}
+
+  if(sortBy){
+    if(sortBy==='lowPrice'){
+      sortQuery = {price:1}
+    }else if(sortBy ==='highPrice'){
+      sortQuery ={price:-1}
+    }
+  }
+
+  let filterQuery ={}
+
+  if(search){
+    filterQuery.productName = {$regex:search ,$options:"i"}
+  }
+
+  if(categoryId){
+    filterQuery.categoryname = categoryId
+    console.log('fillenter');
+  }else{
+    filterQuery.categoryname = {
+      $nin: await product.find({isBlocked:true})
+    }
+  }
+
+  if(brand){
+    filterQuery.brand = {$regex:brand , $options:"i"}
+  }
+
+const productBrand = await product.find().distinct('brand')
+console.log(productBrand);
+  
+  const filteredProducts = await product.find(filterQuery).sort(sortQuery).exec() 
+ 
+ 
+  const productCount = await product.find(filterQuery).countDocuments()
+
+    res.render("allProducts" ,{count , categories, products:filteredProducts, sortBy, categoryId , productBrand})
+  } catch (error) {
+    console.log(error.message); 
+  }
+}
+
 module.exports = {
   loadCategories,
   loadProducts,
@@ -186,5 +244,6 @@ module.exports = {
   productOffers,
   createProductOffer,
   deactivateProductOffer,
-   home
+  getAllProducts,
+   
 };

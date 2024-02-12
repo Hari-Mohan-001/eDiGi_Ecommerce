@@ -157,8 +157,8 @@
                                             class="fas fa-user-lock"></i></span>Product Offers</button>
                                             
 
-                                <button class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
-                                    </span> Logout</button>
+                                <button id="banner-tab" class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
+                                    </span>Banner Management</button>
                             </div>
                         </div>
                     </div>
@@ -293,6 +293,9 @@
         })
         document.getElementById("productOffers-tab").addEventListener("click", (event) => {
             window.location.href = "/admin/productOffers"
+        })
+        document.getElementById("banner-tab").addEventListener("click", (event) => {
+            window.location.href = "/admin/banner"
         })
 
 

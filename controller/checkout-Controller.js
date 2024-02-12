@@ -127,6 +127,20 @@ const createOrder = async (req, res) => {
                 }
                 )
 
+                const history = {amount:walletAmountUsed,
+                  description: 'Amount used for order purchase',
+                  status:'debit',
+                  date: new Date()          
+             }
+
+             const walletHistory = await user.findByIdAndUpdate({_id:userId},
+              {
+                  $addToSet:{
+                      walletHistory:history
+                  }
+              }
+              )
+
              }else{
 
               newOrder = await new order({ 
@@ -137,7 +151,7 @@ const createOrder = async (req, res) => {
                 discount: discount,
                 balanceAmount:balanceAmount,
                 isWalletApplied:true,
-                payment: req.body.payment,
+                payment: "Wallet",
                 orderedAt: new Date(),
                 isCouponApplied: true,
                 couponId: findCart.couponId,
@@ -151,6 +165,20 @@ const createOrder = async (req, res) => {
                   }
                 }
                 )
+
+                const history = {amount:walletAmountUsed,
+                  description: 'Amount used for order purchase',
+                  status:'debit',
+                  date: new Date()          
+             }
+
+             const walletHistory = await user.findByIdAndUpdate({_id:userId},
+              {
+                  $addToSet:{
+                      walletHistory:history
+                  }
+              }
+              )
 
              }
            }else{
@@ -176,7 +204,7 @@ const createOrder = async (req, res) => {
         for (let i = 0; i < findProducts.length; i++) {
           const productId = findProducts[i].Product;
           const quantityPurchased = findProducts[i].quantity;
-          const updateProduct = product.findOne(
+          const updateProduct = await product.findByIdAndUpdate(
             { _id: productId },
             {
               $inc: {
@@ -188,7 +216,7 @@ const createOrder = async (req, res) => {
       }
 
         const deleteCart = await cart.findOneAndDelete({ userid: userId });
-        if (createOrder.payment === "Cash on delivery" || createOrder.payment ==='wallet') {
+        if (createOrder.payment === "Cash on delivery" || createOrder.payment ==='Wallet') {
          return res.redirect("/orderSuccess");
         }else{
             console.log("cop online");
@@ -237,6 +265,20 @@ const createOrder = async (req, res) => {
            }
            )
 
+           const history = {amount:walletAmountUsed,
+            description: 'Amount used for order purchase',
+            status:'debit',
+            date: new Date()          
+       }
+
+       const walletHistory = await user.findByIdAndUpdate({_id:userId},
+        {
+            $addToSet:{
+                walletHistory:history
+            }
+        }
+        )
+
         }else{
 
          newOrder = await new order({ 
@@ -246,7 +288,7 @@ const createOrder = async (req, res) => {
            totalPrice:cartTotal[0].total,
            balanceAmount:balanceAmount,
            isWalletApplied:true,
-           payment: req.body.payment,
+           payment: 'Wallet',
            orderedAt: new Date(),
            isCouponApplied: false,
            
@@ -260,6 +302,20 @@ const createOrder = async (req, res) => {
              }
            }
            )
+
+           const history = {amount:walletAmountUsed,
+            description: 'Amount used for order purchase',
+            status:'debit',
+            date: new Date()          
+       }
+
+       const walletHistory = await user.findByIdAndUpdate({_id:userId},
+        {
+            $addToSet:{
+                walletHistory:history
+            }
+        }
+        )
 
         }
       }else{
@@ -282,9 +338,10 @@ const createOrder = async (req, res) => {
  console.log(createOrder);
  if (createOrder) {
    for (let i = 0; i < findProducts.length; i++) {
+    console.log('qty');
      const productId = findProducts[i].Product;
      const quantityPurchased = findProducts[i].quantity;
-     const updateProduct = product.findOne(
+     const updateProduct = await product.findByIdAndUpdate(
        { _id: productId },
        {
          $inc: {
@@ -292,11 +349,13 @@ const createOrder = async (req, res) => {
          },
        }
      );
+     console.log();
    }
  }
 
+
    const deleteCart = await cart.findOneAndDelete({ userid: userId });
-   if (createOrder.payment === "Cash on delivery" || createOrder.payment ==='wallet') {
+   if (createOrder.payment === "Cash on delivery" || createOrder.payment ==='Wallet') {
     return res.redirect("/orderSuccess");
    }else{
        console.log("cop online");

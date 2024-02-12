@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/productPopup.css">
     <!-- <link rel="stylesheet" href="css/rtl.css"> -->
 </head>
 
@@ -164,6 +165,8 @@
                             <th>Status</th>
                             <th>Update</th>
                             <th>Action</th>
+                            <th>Is offer Active</th>
+                            <th>Action</th>
                         </tr>
                         <%
                         if(categories.length>0){
@@ -191,8 +194,15 @@
                             <td><a class="view_invoice" onclick="block('<%=categories[i]._id%>')" >Unblock</a></td>
                             <%}else{%>
                                 <td><a class="view_invoice" onclick="block('<%=categories[i]._id%>')" >Block</a></td>
-                                <%}%>  
-                        </tr>
+                                <%}%>
+                                <%if(categories[i].isOfferApplied === true) {%> 
+                                <td><span class="complete" style="color: green;">Acive</span></td> 
+                                <td><a class="view_invoice" onclick="deactivateCategoryOffer('<%=categories[i]._id%>')" >Deactivate</a></td>
+                                <%} else{%>
+                                    <td><span class="complete" style="background-color: rgb(236, 13, 43);">Not Acive</span></td> 
+                                    <td><a class="view_invoice" onclick="openOfferForm('<%=categories[i]._id%>')" >Activate</a></td>
+                                         <%}%>
+                                </tr>
                         <%
                       }
                    }
@@ -218,6 +228,24 @@
 </div>
 </div>
 </section>
+
+<div id="popupForm" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closeOfferform()">&times;</span>
+        <h2>Create Category Offer</h2>
+       
+        
+            <!-- Offer form fields -->
+            <label for="productName">Category Id:</label>
+            <input type="text" id="offerProductId" name="productId" required>
+
+            <label for="discount">Discount (%):</label>
+            <input type="number" id="productDiscount" name="discount" required>
+
+            <button onclick="createOffer()" class="btn btn-primary" type="submit">Create Offer</button>
+        
+    </div>
+</div>
      
 
 
@@ -268,5 +296,8 @@
     })
 
  </script>   
+
+ <script src="/js/admin/categoryOffer.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
         
 </body>

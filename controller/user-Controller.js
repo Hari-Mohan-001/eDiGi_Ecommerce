@@ -5,6 +5,9 @@ const mailer = require("../helpers/mailer");
 const { decode } = require("jsonwebtoken")
 const userHelper = require("../helpers/userHelper") 
 const randomString = require("randomstring")
+const product = require("../model/productModel")
+const banner = require("../model/bannerModel")
+const moment = require("moment")
 
 let savedOtp, enteredName, enteredEmail, enteredMobile, enteredPassword, confirmPassword;
 
@@ -21,6 +24,16 @@ const generateOtp = () => {
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: maxAge });
+};
+
+const home = async (req, res) => {
+  let count = null  
+  if(req.cookies.jwt){
+   count = await  cartCount(decode(req.cookies.jwt).id)
+  }
+  const banners = await banner.find({isActive:true})
+  const Product = await product.find({isBlocked:false});
+  res.render("home" ,{products:Product , count , banners});
 };
 
 
@@ -291,10 +304,11 @@ const loadUserDashboard = async(req,res)=>{
     if(req.cookies.jwt){
      count = await  cartCount(decode(req.cookies.jwt).id)
     }
+  
     const userId = decode(req.cookies.jwt).id
     const User = await user.findById({_id:userId})
    
-     res.render("userDashboard",{users:User , count})
+     res.render("userDashboard",{users:User , count , })
   } catch (error) {
     console.log(error.message);
   }
@@ -438,10 +452,50 @@ const editProfile = async(req,res)=>{
     console.log(error.message);
   }
 }
+
+const userWallet = async(req,res)=>{
+  try {
+
+    let count = null  
+    if(req.cookies.jwt){
+     count = await  cartCount(decode(req.cookies.jwt).id)
+    }
+
+  
+
+    const userId = decode(req.cookies.jwt).id
+    const User = await user.findById({_id:userId})
+    
+    const totalWallet = User.wallet
+    let walletHistory = User.walletHistory
+    walletHistory = walletHistory.map(walletHistory=>({
+      ...walletHistory,
+      walletDate:moment(walletHistory.date).format("DD/MM/YYYY")
+    }))
+     
+
+    res.render("wallet" ,{totalWallet , walletHistory,moment, count})
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const loadContacPage = async(req,res, next)=>{
+  try {
+    let count = null  
+    if(req.cookies.jwt){
+     count = await  cartCount(decode(req.cookies.jwt).id)
+    }
+
+    res.render("contactUs", {count})
+  } catch (error) {
+    next(error)
+  }
+}
  
 module.exports = {
   
-  loadRegister, sendOTP, verifyOtp,resendOtp,
+ home,loadRegister, sendOTP, verifyOtp,resendOtp,
   createUser,loginUser,
   loadLogin,logout,
   loadUserDashboard,
@@ -451,6 +505,7 @@ module.exports = {
   loadAddress,
   loadAddNewAddress,addNewAddress,
    loadEditAddress, editAddress,deleteAddress,
-   loadEditProfile,editProfile,
+   loadEditProfile,editProfile,userWallet,
+   loadContacPage,
   notFound
 };

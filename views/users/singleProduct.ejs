@@ -9,23 +9,22 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-5 col-md-9 wow fadeInUp" data-wow-duration="1s">
-                    <div class="exzoom hidden" id="exzoom">
-                        <div class="exzoom_img_box fp__menu_details_images">
-                            <ul class='exzoom_img_ul'>
+                    <div class="" id="">
+                        <div class="">
+                            <ul class='product-images'>
                                 <%products.forEach(product =>{%>
-                                    <%for(let i=0;i<product.image.length;i++) {%>
-                                <li><img class="zoom ing-fluid w-100" src="/product-Images/<%=product.image[i]%>" alt="product"></li>
-                                
-                                <%}%>
+                                    
+                                <li>
+                                    <img id="largeImg" data-zoom-image="" class="zoom ing-fluid w-100" src="/cropped_images/<%= product.image[0] %>" alt="product">
+                                </li>
                             </ul>
                         </div>
-                        <div class="exzoom_nav"></div>
-                        <p class="exzoom_btn">
-                            <a href="javascript:void(0);" class="exzoom_prev_btn"> <i class="far fa-chevron-left"></i>
-                            </a>
-                            <a href="javascript:void(0);" class="exzoom_next_btn"> <i class="far fa-chevron-right"></i>
-                            </a>
-                        </p>
+                        <div class="thumbnail-images" >
+                            <%for(let i=0;i<product.image.length;i++) {%>
+                            <img  class="thumbnail-img"   style="max-width: 100px;height: 100px;" src="/cropped_images/<%=product.image[i]%>" alt="">
+                            <%}%>
+                        </div>
+                        
                     </div>
                 </div>
                 <div class="col-lg-7 wow fadeInUp" data-wow-duration="1s">
@@ -89,7 +88,7 @@
                             </div>
                         </div> -->
 
-                        <div class="details_quentity">
+                        <!-- <div class="details_quentity">
                             <h5>select quantity</h5>
                             <div class="quentity_btn_area d-flex flex-wrapa align-items-center">
                                 <div class="quentity_btn">
@@ -99,16 +98,16 @@
                                 </div>
                                 <h3></h3>
                             </div>
-                        </div>
+                        </div> -->
                         <ul class="details_button_area d-flex flex-wrap">
-                            <form action="/addToCart" method="post">
+                            
                             <input type="hidden" value="<%= product._id%>" name="productId">
-                            <%if(product.stock<=0){%> 
-                            <button disabled><a class="common_btn">add to cart</a></button>
+                            <%if(product.stock>0){%> 
+                            <button onclick="addToCart('<%= product._id%>')" ><a class="common_btn">add to cart</a></button>
                             <%} else {%>
-                            <button><a class="common_btn">add to cart</a></button>
+                            <button  disabled><a style="background-color: red;" class="common_btn">Out Of Stock</a></button>
                             <%}%>
-                        </form>
+                        
                             <li><a class="wishlist" href="#"><i class="far fa-heart"></i></a></li>
                         </ul>
                       
@@ -255,4 +254,74 @@
         </div>
     </section>
 
-    <%- include("../layouts/footer.ejs") %>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+
+    <script>
+        const addToCart= (id)=>{
+            const productid = id
+            fetch("/addToCart", {
+                method:'post',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    productid
+                })
+            })
+            .then((res)=>res.json())
+            .then(data=>{
+                if(data.success){
+                    console.log('succes');
+                    window.location.href = "/myCart"
+                }
+            })
+            .catch((error)=>console.log(error))
+        }
+    </script>
+
+
+
+<script>
+$(document).ready(function() {
+    // Initialize ElevateZoom on the main product image
+    $('#largeImg').elevateZoom({
+       
+        zoomType: "window", // Set zoom type to window
+        cursor: "crosshair",
+        scrollZoom: true,
+        zoomWindowWidth: 300, // Adjust width of zoom window
+        zoomWindowHeight: 300, // Adjust height of zoom window
+        responsive: true // Enable responsive mode
+    });
+
+    // Handle thumbnail clicks to change the main image
+    $('.thumbnail-images .thumbnail-img').on('click', function() {
+        var zoomImage = $(this).attr('src');
+        var zoomImageLarge = $(this).attr('data-zoom-image');
+        
+        // Update main product image source and data-zoom-image attribute
+        $('#largeImg').attr('src', zoomImage).attr('data-zoom-image', zoomImageLarge);
+
+         // Destroy the existing ElevateZoom instance
+         $('.zoomContainer').remove();
+         $('#largeImg').removeData('elevateZoom');
+
+        // Refresh ElevateZoom after updating the image
+        $('#largeImg').elevateZoom({
+            zoomType: "window", // Set zoom type to window
+        cursor: "crosshair",
+        scrollZoom: true,
+        zoomWindowWidth: 300, // Adjust width of zoom window
+        zoomWindowHeight: 300, // Adjust height of zoom window
+        responsive: true // Enable responsive mode"
+        });
+    });
+});
+
+</script>
+
+
+
+
+   
