@@ -20,40 +20,40 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <%orders.forEach(order=> {%>
+                                            <%for(let i=0;i<orders.length;i++){%>
                                                 <tr>
                                                     <td>
                                                         <h5>
-                                                            <%=order._id%>
+                                                            <%=orders[i]._id%>
                                                         </h5>
                                                     </td>
                                                     <td>
                                                         <p>
-                                                            <%=order.orderDate%>
+                                                            <%=orders[i].orderDate%>
                                                         </p>
                                                     </td>
-                                                    <%if(order.orderStatus==='Cancelled' ) {%>
+                                                    <%if(orders[i].orderStatus==='Cancelled' ) {%>
                                                         <td>
                                                             <span class="complete" style="color: red;">
-                                                                <%=order.orderStatus%>
+                                                                <%=orders[i].orderStatus%>
                                                             </span>
                                                         </td>
                                                         <%} else {%>
                                                             <td>
                                                                 <span class="complete">
-                                                                    <%=order.orderStatus%>
+                                                                    <%=orders[i].orderStatus%>
                                                                 </span>
                                                             </td>
                                                             <%}%>
 
                                                                 <td>
-                                                                    <h5>Rs.<%=order.totalPrice%>
+                                                                    <h5>Rs.<%=orders[i].totalPrice%>
                                                                     </h5>
                                                                 </td>
-                                                                <td><a href="/orderDetails?id=<%=order._id%>">View
+                                                                <td><a href="/orderDetails?id=<%=orders[i]._id%>">View
                                                                         Details</a></td>
                                                 </tr>
-                                                <%})%>
+                                                <%}%>
 
 
                                         </tbody>
@@ -72,6 +72,7 @@
     <script>
         $(document).ready(function () {
             $('#orderTable').DataTable();
+            "orders": [] // Disable initial sorting
         });
     </script>
 

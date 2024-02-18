@@ -6,6 +6,7 @@ const { decode } = require("jsonwebtoken")
 const productHelpers = require("../helpers/productHelpers")
 const moment = require("moment")
 const mongoose = require("mongoose")
+const pdf = require("pdfkit")
 const{ObjectId} = mongoose.Types
 
 
@@ -15,15 +16,22 @@ const viewOrders = async(req,res)=>{
      if(req.cookies.jwt){
      count = await  cartCount(decode(req.cookies.jwt).id)
     }
-        const userId = decode(req.cookies.jwt).id
-        let findOrder = await order.find({costumer:userId}).sort({_id:-1})
-            findOrder = findOrder.map(orders =>({
-                ...orders.toObject(),
-                orderDate:moment(orders.orderedAt).format('DD/MM/YYYY')
-            }))
+        const userId = decode(req.cookies.jwt).id  
+        let findOrder = await order.find({costumer:userId}).sort({orderedAt:-1})
+        console.log(findOrder);
+       
+            // findOrder = findOrder.map(orders =>({
+            //     ...orders.toObject(),
+            //     orderDate:moment(orders.orderedAt).format('DD/MM/YYYY')
+            // }))
 
-            console.log(findOrder);
-        res.render("viewOrders", {orders:findOrder, count})
+            findOrder.forEach(order => {
+                order.orderDate = moment(order.orderedAt).format('DD/MM/YYYY');
+            });
+            
+             
+            console.log('sort'+findOrder);
+        res.render("viewOrders", {orders:findOrder, count , moment})
     } catch (error) {
         console.log(error.message); 
     }
@@ -37,7 +45,7 @@ const orderDetails = async(req,res)=>{
     }
         const orderId = req.query.id
         const {productTotal, findProducts}= await productHelpers.orderPipeline(req,orderId )
-        console.log("drddetails");
+       
         console.log(productTotal);
         
         
@@ -86,7 +94,7 @@ const adminAllOrders = async(req,res)=>{
             }))
             console.log(orders);
 
-        res.render("listAllOrders" , {orders ,moment, productTotal ,findProducts})
+        res.render("listOrderDetails" , {orders ,moment, productTotal ,findProducts})
 
     } catch (error) {
         console.log(error.message);
@@ -374,6 +382,71 @@ const returnOrder = async(req,res)=>{
     }
 }
 
+const downloadInvoice = async(req,res,next)=>{
+    try {
+        const orderId = req.query.id
+
+        const Order = await order.findOne({_id:orderId});
+    
+        if(!Order){
+          res.status(404).send('Order not found');
+        }
+        //create new pdf document
+        const doc = new pdf({font:'Times-Roman'});
+    
+        //set the response header for downloading
+        res.setHeader('Content-Type','application/pdf');
+        res.setHeader('Content-Disposition',`attachement;filename="invoice-${Order._id}.pdf"`);
+        doc.pipe(res);
+    
+        //add the order details to the pdf
+        doc.fontSize(18).text(`eDiGi INVOICE`,{ align: 'center' })
+        doc.moveDown();
+        doc.moveDown();
+        doc.fontSize(16).text(`Order Summary - Order ID: ${Order._id}`, { align: 'center' });
+        doc.moveDown();
+        doc.fontSize(12).text('Product Name', { width: 200, continued: true });
+        doc.fontSize(12).text('Price', { width: 100, align: 'center', continued: true });
+        doc.fontSize(12).text('Qty', { width: 50, align: 'right' });
+        doc.moveDown();
+    
+        let totalPrice = 0;
+        Order.items.forEach((items, index) => {
+          doc.fontSize(12).text(`${index + 1}. ${items.cartItems[0].productName}`, { width: 200, continued: true });
+          const totalCost = items.cartItems[0].price * items.quantity;
+          doc.fontSize(12).text(`${totalCost}`, { width: 100, align: 'center', continued: true });
+        
+          doc.fontSize(12).text(`${items.quantity}`, { width: 50, align: 'right' });
+          doc.moveDown();
+          totalPrice += totalCost;
+        });
+    
+        doc.moveDown();
+        doc.fontSize(12).text(`Subtotal: ${totalPrice}`, { align: 'right' });
+        doc.moveDown();
+        doc.fontSize(12).text(`Total Amount with discount: ${Order.totalPrice}`, { align: 'right' });
+        doc.moveDown();
+        doc.fontSize(12).text(`Ordered Date: ${Order.orderedAt}`);
+        doc.moveDown();
+        doc.fontSize(12).text(`Payment Method: ${Order.payment === 'Cash on delivery' ? 'Cash on Delivery' : Order.payment === 'Wallet' ? 'Wallet' : 'Razor Pay'}`);
+        doc.moveDown();
+        doc.fontSize(12).text(`Shipping Address: ${Order.address.replace(/[\r]+/g, '')}`)
+        doc.moveDown();
+        //doc.fontSize(12).text(`Order Status: ${order.orderStatus}`);
+    
+        // Add a "Thank you" message at the end of the invoice
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.fontSize(14).text('Thank you for shopping with us!', { align: 'center' });
+    
+        // End the PDF document
+        doc.end();
+    } catch (error) {
+        next(error)
+    }
+}
+
 
  
 module.exports ={
@@ -385,5 +458,6 @@ module.exports ={
     updateOrderStatus, 
     deleteInOrder,
     adminAllOrders,
-    cancelEachProductInOrder
+    cancelEachProductInOrder,  
+    downloadInvoice
 }

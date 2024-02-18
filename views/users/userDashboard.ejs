@@ -15,9 +15,13 @@
                         <div class="fp__dashboard_menu">
                             <div class="dasboard_header">
                                 <div class="dasboard_header_img">
-                                    <img src="images/comment_img_2.png" alt="user" class="img-fluid w-100">
-                                    <label for="upload"><i class="far fa-camera"></i></label>
-                                    <input type="file" id="upload" hidden>
+                                    <%if(!users.profileImage){%>
+                                    <img src="images/proPic.png" alt="user" id="imgView" class="img-fluid w-100">
+                                    <%} else {%>
+                                        <img src="/profileImages/<%=users.profileImage%>" alt="user" id="imgView" class="img-fluid w-100">   
+                                   <%}%>
+                                        <label for="upload"><i class="far fa-camera"></i></label>
+                                    <input type="file" id="upload" hidden >
                                 </div>
                                 <h2><%=users.name%></h2>
                             </div>
@@ -172,6 +176,43 @@
     })
 
     
+</script>
+
+<script>
+  const uploadInput = document.getElementById("upload")   
+  const imageView = document.getElementById("imgView")
+  console.log('change');
+
+  uploadInput.addEventListener("change" , (event)=>{
+    console.log('upload');
+    const file = event.target.files[0]
+    const reader = new FileReader()
+
+    reader.onload = function(e){
+        console.log('imgsrc');
+imageView.src = e.target.result
+    }
+
+    if(file){
+        reader.readAsDataURL(file);
+        const formData = new FormData()
+        formData.append('image', file)
+
+        fetch("/uploadProfileImage", {
+            method:'post',
+            body:formData
+
+        })
+        .then((res)=> res.json())
+        .then(data=>{
+            if(data.success){
+                console.log('changed');
+            }
+        })
+        .catch((error)=>console.log(error))
+    }
+    
+  })
 </script>
    
       

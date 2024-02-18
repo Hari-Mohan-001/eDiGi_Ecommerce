@@ -37,7 +37,7 @@
                                         </th>
 
                                         <th class="fp__pro_icon">
-                                            <a class="clear_all" href="">clear all</a>
+                                            <a class="clear_all">Delete</a>
                                         </th>
                                     </tr>
                                    
@@ -57,14 +57,14 @@
                                         </td>
                                         
                                         <td class="fp__pro_name">
-                                            <a href="#"><%=product.cartItems[0].productName%></a>
+                                            <a ><%=product.cartItems[0].productName%></a>
                                             
                                             <p><%=product.cartItems[0].categoryname.name%></p>
                                            
                                         </td>
 
                                         <td class="fp__pro_status">
-                                            <h6>Rs.<%=product.cartItems[0].price%></h6>
+                                            <h6> &#x20b9; <%=product.cartItems[0].price%></h6>
                                         </td>
 
                                         <td class="fp__pro_select">
@@ -74,7 +74,7 @@
                                                 <%if(product.quantity>1) {%>
                                                 <button reduceBtn-id="<%= product.cartItems[0]._id%>"  onclick="reduceQuantity('<%= product.cartItems[0]._id%>')" class="btn btn-danger"><i class="fal fa-minus"></i></button>
                                                 <%} else {%>
-                                                    <button disabled class="btn btn-danger"><i class="fal fa-minus"></i></button>
+                                                    <button reduceBtn-id="<%= product.cartItems[0]._id%>"  onclick="reduceQuantity('<%= product.cartItems[0]._id%>')"  disabled class="btn btn-danger"><i class="fal fa-minus"></i></button>
                                                     <%}%>
 
                                             
@@ -83,7 +83,7 @@
                                                 
                                                     <input type="hidden" value="<%= product.cartItems[0]._id%>" name="productId">
                                                     <%if(product.quantity===product.cartItems[0].stock){%>
-                                                <button disabled class="btn btn-success"><i class="fal fa-plus"></i></button>
+                                                <button    addToCartBtn-id="<%= product.cartItems[0]._id%>"  onclick="addToCart('<%= product.cartItems[0]._id%>')"   disabled class="btn btn-success"><i class="fal fa-plus"></i></button>
                                                     <%} else {%>
                                                         <button addToCartBtn-id="<%= product.cartItems[0]._id%>"  onclick="addToCart('<%= product.cartItems[0]._id%>')" class="btn btn-success"><i class="fal fa-plus"></i></button>
                                                         <%}%>
@@ -94,7 +94,7 @@
                                         
                                       <%if(productTotal && productTotal.length>0) {%>
                                         <td class="fp__pro_tk">
-                                            <h6 productTotal-id="<%= product.cartItems[0]._id%>">Rs.<%=productTotal[index].total%></h6>
+                                            <h6 productTotal-id="<%= product.cartItems[0]._id%>">&#x20b9; <%=productTotal[index].total%></h6>
                                         </td>
                                       <%}%>
                                         <td class="fp__pro_icon">

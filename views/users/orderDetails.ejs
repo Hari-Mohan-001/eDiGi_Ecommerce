@@ -7,7 +7,7 @@
                             <div class="" id="v-pills-profile" role="tabpanel"
                                 aria-labelledby="v-pills-profile-tab">
                                 <div class="fp_dashboard_body">
-                                    <h3 style="justify-content: center; margin-top: 10px;">order list</h3>
+                                    <h3 style="justify-content: center; margin-top: 10px;">Order Details</h3>
                                     <%orders.forEach(order =>{%>
                                         <div class="fp__invoice_header">
                                             
@@ -168,9 +168,12 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <a class="print_btn common_btn" href="#"><i class="far fa-print"></i> print
+                                        <%orders.forEach(order =>{%>
+                                        <%if(order.orderStatus==='Delivered') {%>
+                                        <a  class="print_btn common_btn" href="/downloadInvoice?id=<%=order._id%>"><i class="far fa-print"></i>Download
                                             PDF</a>
-                                            <h5 id="hello">hello</h5>
+                                           <%}%>
+                                           <%})%>
 
                         </div>
                     </div>

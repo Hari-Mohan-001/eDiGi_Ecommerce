@@ -37,22 +37,23 @@
 
                                     <%}%>
 
-                                    <%if(productBrand && productBrand.length>0){%>
+                                        <%if(productBrand && productBrand.length>0){%>
 
-                                        <select name="brand" id="brand" style="padding: 8px;width: 165px; ">
-                                            <option value="" <%if(productBrand){%> selected <%}%> disabled >Select brand
-                                            </option>
-                                            <%for(let i=0;i<productBrand.length;i++){%>
-                                                <option value="<%=productBrand[i]%>">
-                                                        <%=productBrand[i]%>
+                                            <select name="brand" id="brand" style="padding: 8px;width: 165px; ">
+                                                <option value="" <%if(productBrand){%> selected <%}%> disabled >Select
+                                                        brand
                                                 </option>
-                                                <%}%>
-                                        </select>
-    
-                                        <%}%>
+                                                <%for(let i=0;i<productBrand.length;i++){%>
+                                                    <option value="<%=productBrand[i]%>">
+                                                        <%=productBrand[i]%>
+                                                    </option>
+                                                    <%}%>
+                                            </select>
+
+                                            <%}%>
 
 
-                                        
+
                             </div>
                         </div>
                     </div>
@@ -67,7 +68,7 @@
 
                                         <div style="display: flex;">
                                             <form action="" id="searchForm">
-                                                <input id="search" placeholder="Search Products" type="search"
+                                                <input name="search" id="search" placeholder="Search Products" type="search"
                                                     style="width: 15rem;">
                                                 <button id="searchSubmit" class="btn btn-primary" type="submit"
                                                     style="width: 100px; height:40px; border-radius: 15px;">search</button>
@@ -75,6 +76,7 @@
                                         </div>
                                         <div class="container">
                                             <div class="row">
+                                                <%if(products.length>0) {%>
                                                 <% for(let i=0; i<products.length;i++) {%>
                                                     <div class="col-xl-3 col-sm-6 col-lg-4 burger pizza wow fadeInUp"
                                                         data-wow-duration="1s">
@@ -122,6 +124,11 @@
                                                         </div>
                                                     </div>
                                                     <%}%>
+                                                    <%} else {%>
+                                                        
+                                                        <h4 style="margin-top: 30px;">No such product found</h4>
+                                                        <%}%>
+                                                   
 
                                             </div>
                                         </div>
@@ -135,6 +142,54 @@
 
                 </div>
             </div>
+
+            <div class="fp__pagination mt_35">
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="...">
+                            <ul class="pagination">
+                                <li class="page-item">
+                                     <%if(currentPage>1) {%>   
+                                        <a class="page-link"  href="/allProducts?category=<%=categoryId%>&sortBy=<%=sortBy%>&search=<%=search%>&brand=<%=brand%>&page=<%=previous%>">
+                                    <i class="fas fa-long-arrow-alt-left"></i>
+                                    <%}%>
+                                   </a>
+                                </li>
+                                 
+                            <%for(let i=1;i<=totalPages;i++) {%>
+                                <%if(i== currentPage){%>
+
+                                <li class="page-item"><a class="page-link" href="#"><%=i%></a></li>
+
+                                <%} else {%>
+
+                                    <li class="page-item"><a class="page-link" href="/allProducts?category=<%=categoryId%>&sortBy=<%=sortBy%>&search=<%=search%>&brand=<%=brand%>&page=<%=i%>"><%=i%></a></li>
+                                    <%}%>
+                                    <%}%>
+
+                            
+                                <li class="page-item">
+                                  <%if(currentPage<totalPages){%>
+                                    <a class="page-link" href="/allProducts?category=<%=categoryId%>&sortBy=<%=sortBy%>&search=<%=search%>&brand=<%=brand%>&page=<%=next%>">
+                                        <i class="fas fa-long-arrow-alt-right"></i>
+                                        <%}%>
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                            <div  style="float: right; display: flex; margin-left: 150px;">
+                                <h5>Page<%=currentPage%> out of <%=totalPages%></h5>
+                            </div>
+                        
+                        </nav>
+                        
+                    </div>
+                    
+                </div>
+                
+            </div>
+
+
         </div>
     </section>
 

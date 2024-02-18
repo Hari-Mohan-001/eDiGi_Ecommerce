@@ -55,7 +55,7 @@ const addCoupon = async(req,res)=>{
             })
             
                 await newCoupon.save()
-            console.log("copnnetntdt");
+            
             if(newCoupon){
                 res.redirect("/admin/couponList")
             }else{

@@ -10,6 +10,12 @@ const createOffer = ()=>{
     console.log('create ofr');
    let productId = document.getElementById("offerProductId").value
    let discount = document.getElementById("productDiscount").value
+   let discountError = document.getElementById("discountError")
+   if(discount>99){
+        discountError.textContent = "Percentage should be less than 99"
+        return false
+        
+   }
     fetch("/admin/createProductOffer" , {
         method:"post",
         headers:{

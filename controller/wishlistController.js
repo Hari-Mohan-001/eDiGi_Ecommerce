@@ -35,8 +35,9 @@ const addToWishlist = async(req,res)=>{
             },
             {new:true}
             )
-            if(updateUser){  
-                res.json('success')
+            if(updateUser){ 
+                console.log('wishlst'); 
+               return res.json({'success':true})
             }else{
                 res.status(500)
             }

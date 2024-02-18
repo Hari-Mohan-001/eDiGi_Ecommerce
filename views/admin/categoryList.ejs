@@ -139,8 +139,11 @@
                                     aria-controls="v-pills-settings" aria-selected="false"><span><i
                                             class="fas fa-user-lock"></i></span>Sales Report</button>
 
-                                <button class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
-                                    </span> Logout</button>
+                                <button id="productOffer-tab" class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
+                                    </span>Product Offer</button>
+
+                                    <button id="banner-tab" class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
+                                    </span>Banner Management</button>
                             </div>
                         </div>
                     </div>
@@ -231,7 +234,7 @@
 
 <div id="popupForm" class="popup">
     <div class="popup-content">
-        <span class="close" onclick="closeOfferform()">&times;</span>
+        <span style="font-size: xx-large;" class="close" onclick="closeOfferform()">&times;</span>
         <h2>Create Category Offer</h2>
        
         
@@ -241,6 +244,7 @@
 
             <label for="discount">Discount (%):</label>
             <input type="number" id="productDiscount" name="discount" required>
+            <p id="discountError" style="color: red;"></p>
 
             <button onclick="createOffer()" class="btn btn-primary" type="submit">Create Offer</button>
         
@@ -292,6 +296,14 @@
     })
     document.getElementById("sales-tab").addEventListener("click" , (event)=>{
         window.location.href = "/admin/salesReport"
+
+    })
+    document.getElementById("productOffer-tab").addEventListener("click" , (event)=>{
+        window.location.href = "/admin/productOffers"
+
+    })
+    document.getElementById("banner-tab").addEventListener("click" , (event)=>{
+        window.location.href = "/admin/banner"
 
     })
 

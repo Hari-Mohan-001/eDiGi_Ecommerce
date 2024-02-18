@@ -89,12 +89,12 @@ const addToCart = async(req,res)=>{
 
         if(findProduct.stock>0){
             if(!findCart){ 
-               
+               console.log('new cart'); 
                 const newCart = new cart({   
                     userid:userId,
                     products:[ 
                         {
-                         productId:productId,
+                         productId:productId,  
                         quantity:1
                         }
                     ]
@@ -129,7 +129,7 @@ const addToCart = async(req,res)=>{
                     quantity:1
                 })
                 await findCart.save()
-                res.redirect("/myCart")
+                return res.json({'success':true})
             }
 
         }else{
@@ -182,7 +182,8 @@ const quantityUpdation = async(req,res)=>{
                 );   
                 
                 const price = findProduct.price
-              return res.json({'success':true, 'message':"reduced the quantity" , 'price':price})
+                let stock = findProduct.stock
+              return res.json({'success':true, 'message':"reduced the quantity" , 'price':price , 'stock':stock })
             }
             else if(findProduct.stock>1 && !existProduct){ 
                 findCart.products.push({

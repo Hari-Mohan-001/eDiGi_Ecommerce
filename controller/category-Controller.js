@@ -122,7 +122,10 @@ const activateCategoryOffer = async(req,res)=>{
                 {
                     $set: {
                         oldPrice:'$price',
-                        price: '$discountedPrice',
+                        price:{
+                            $round: ['$discountedPrice']
+                        },
+                       
                         isOfferApplied: true,
                         offerType: 'Category Offer',
 
@@ -131,6 +134,7 @@ const activateCategoryOffer = async(req,res)=>{
             ]
             
             )
+           
             
             if(products){
                 res.json("success")

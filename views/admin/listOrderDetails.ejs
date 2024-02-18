@@ -90,7 +90,7 @@
                             <div class="" id="v-pills-profile" role="tabpanel"
                                 aria-labelledby="v-pills-profile-tab">
                                 <div class="fp_dashboard_body">
-                                    <h3 style="justify-content: center; margin-top: 10px;">order list</h3>
+                                    <h3 style="justify-content: center; margin-top: 10px;">Order Details</h3>
                                     <%orders.forEach(order =>{%>
                                         <div class="fp__invoice_header">
                                             
@@ -99,11 +99,7 @@
                                                 <h4>invoice to</h4>
                                                 <p>Address : <%=order.address%></p>
                                                 <p>Payment Method :<%=order.payment%> </p>
-                                                <%if(order.orderStatus === 'Cancelled') {%>
-                                                    <button disabled class="btn btn-danger">Cancel Order</button>
-                                                <%} else {%>
-                                               <a href="/cancelOrder?id=<%=order._id%>"><button onclick="return confirm('Are you sure you want to cancel the order')" class="btn btn-danger">Cancel Order</button></a>
-                                                 <%}%>
+                                                <h4>Order Status: <%=order.orderStatus%></h4>
                                             </div>
                                             <div class="header_address">
                                                 <p><b>invoice no: </b><span>001</span></p>
@@ -151,11 +147,13 @@
                                                                     <b><%=productTotal[index].total%></b>
                                                                      
                                                             </td>
+                                                            <td>
                                                             <%orders.forEach(order =>{%>
-                                                                <%if(order.items.length>1) {%>
-                                                            <td><button onclick="deleteOrder('<%=product.cartItems[0]._id%>', '<%=productTotal[index]._id%>')" class="btn btn-primary">Delete</button></td>
+                                                                <%if((order.items[index].Cancelled===true)) {%>
+                                                                  <p style="color: red;">Cancelled</p>
                                                             <%}%>
                                                             <%})%>
+                                                        </td>
                                                         </tr>
                                                        <%})%>
                                                        <%})%>

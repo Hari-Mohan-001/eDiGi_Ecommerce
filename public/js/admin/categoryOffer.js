@@ -10,6 +10,11 @@ const createOffer = ()=>{
     console.log('create ofr');
    let categoryId = document.getElementById("offerProductId").value
    let discount = document.getElementById("productDiscount").value
+   let discountError = document.getElementById("discountError")
+   if(discount>99){
+    discountError.textContent = "Discount should be less than 100"
+    return false
+   }
     fetch("/admin/createCategoryOffer" , {
         method:"post",
         headers:{

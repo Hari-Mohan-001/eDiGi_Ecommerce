@@ -29,7 +29,7 @@ const loadProducts = async (req, res , next) => {
     }
     const id = req.query.id
     const Category = await category.findOne({_id:id ,isBlocked:false})
-    console.log('in prodruote');
+   
     const Product = await product.find({categoryname:id, isBlocked:false})
     res.render("userProducts", { categories: Category, products: Product , count});
   } catch (error) {
@@ -47,10 +47,19 @@ const loadProducts = async (req, res , next) => {
      count = await  cartCount(decode(req.cookies.jwt).id)
     }
         const id = req.query.id
-        const Category = await category.find()
+        
         const Product = await product.find({_id:id})
-        console.log(Product);
-        res.render("singleProduct",{products:Product , count})
+       
+        const Category = await category.findOne({_id:Product[0].categoryname})
+       
+        const relatedProducts = await product.find({categoryname:Category._id}).populate("categoryname");
+        const index = relatedProducts.findIndex((Product)=> Product._id.toString()===req.query.id)
+        if(index!== -1){
+          relatedProducts.splice(index ,1)
+        }
+
+       
+        res.render("singleProduct",{products:Product , count , relatedProducts})
     } catch (error) {
       next(error)
     }
@@ -59,10 +68,7 @@ const loadProducts = async (req, res , next) => {
 const deleteProductImage = async(req,res)=>{
   try {
     const { ObjectId ,imageId} = req.body 
-    
-    
-    console.log(ObjectId);
-    console.log(imageId);
+  
     const findProduct = await product.findByIdAndUpdate({_id:ObjectId}, 
       { 
           $pull:{
@@ -188,6 +194,14 @@ const getAllProducts = async(req,res)=>{
     search = req.query.search.trim()
   }
 
+  let page = 1
+  if(req.query.page){
+    page = req.query.page
+  }
+  let limit = 4
+
+
+
   const categoryId = req.query.category
   const brand = req.query.brand
   
@@ -224,12 +238,29 @@ const getAllProducts = async(req,res)=>{
 const productBrand = await product.find().distinct('brand')
 console.log(productBrand);
   
-  const filteredProducts = await product.find(filterQuery).sort(sortQuery).exec() 
+  const filteredProducts = await product.find(filterQuery)
+                                        .sort(sortQuery)
+                                        .skip((page-1)*limit)
+                                        .limit(limit*1)
+                                        .exec() 
  
  
   const productCount = await product.find(filterQuery).countDocuments()
 
-    res.render("allProducts" ,{count , categories, products:filteredProducts, sortBy, categoryId , productBrand})
+    res.render("allProducts" ,{count ,
+       categories,
+        products:filteredProducts, 
+        sortBy, 
+        categoryId , 
+        productBrand,
+        brand, 
+        search,
+        totalPages:Math.ceil(productCount/limit),
+        currentPage:page,
+        previous:Number(page)-1,
+        next:Number(page)+1,
+        limit
+      })
   } catch (error) {
     console.log(error.message); 
   }

@@ -65,11 +65,14 @@ const userShema = new mongoose.Schema({
             default:""
         },  
         wallet:{
-           type:Number,
+           type:Number,    
            default:0,
            
         },
-        walletHistory:[{}]
+        walletHistory:[{}],
+        profileImage:{
+            type:String
+        }
 },
 {
     timestamps:true,

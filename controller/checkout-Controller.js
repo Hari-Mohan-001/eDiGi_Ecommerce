@@ -85,9 +85,9 @@ const createOrder = async (req, res) => {
       .populate("couponId");
     const { cartTotal, productTotal, findProducts } =
       await productHelpers.totalPrice(req);
-    console.log("checkout");
+    
     const{payment} = req.body
-    console.log(req.body.payment);
+    
   
     if (findCart.isCouponApplied) {
       let discount = (cartTotal[0].total * findCart.couponId.percentage) / 100;
@@ -106,7 +106,7 @@ const createOrder = async (req, res) => {
               
               newOrder = await new order({ 
                 costumer: userId,
-                address: req.body.selectedAddress||req.body.address,
+                address: req.body.address,
                 items: findProducts,
                 totalPrice: totalAfterDiscount,
                 discount: discount,
@@ -245,7 +245,7 @@ const createOrder = async (req, res) => {
          
          newOrder = await new order({ 
            costumer: userId,
-           address: req.body.selectedAddress||req.body.address,
+           address: req.body.address,
            items: findProducts,
            totalPrice: cartTotal[0].total ,
            balanceAmount:balanceAmount,
@@ -280,10 +280,12 @@ const createOrder = async (req, res) => {
         )
 
         }else{
+          const {address} = req.body
+          console.log(address);
 
          newOrder = await new order({ 
            costumer: userId,
-           address: req.body.selectedAddress||req.body.address,
+           address: req.body.address.replace(/[\r]+/g, ''),
            items: findProducts,
            totalPrice:cartTotal[0].total,
            balanceAmount:balanceAmount,

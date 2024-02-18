@@ -308,9 +308,14 @@
             const startDate = document.getElementById("startDate").value
             const endDate = document.getElementById("endDate").value
             if (startDate >= endDate) {
-                document.getElementById("dateError").textContent = "Start date should be greater than end date"
+                
+                document.getElementById("dateError").textContent = "Start date should not  be greater than end date"
                 document.getElementById("endDate").value = ""
-            } else {
+            } else if(new Date(endDate)> new Date()){
+                document.getElementById("dateError").textContent = "End date should be greater than today"
+                document.getElementById("endDate").value = ""
+            }
+            else {
                 document.getElementById("dateError").textContent = ""
             }
         }

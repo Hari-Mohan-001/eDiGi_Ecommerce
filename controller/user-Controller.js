@@ -138,7 +138,7 @@ const loadLogin = async (req, res) => {
   try {
     console.log("login");
 
-    res.render("login");
+   return res.render("login");
   } catch (error) {
     console.log(error.message);
   }
@@ -155,7 +155,7 @@ const loginUser = async (req, res) => {
       const token = createToken(finduser._id);
       res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
      
-      res.redirect("/categories");
+      res.redirect("/userDashboard");
     } else { 
       res.render("login", { message: "inavlid details" });  
     }
@@ -163,6 +163,22 @@ const loginUser = async (req, res) => {
     console.log(error.message);
   }
 };
+
+const uploadProfileimage = async(req,res ,next)=>{
+  try {
+    const userId = decode(req.cookies.jwt).id
+    const findUser = await user.findById({_id:userId})
+    const file = req.file
+    findUser.profileImage = file.filename
+  const updatedUser =   await findUser.save()
+  if(updatedUser){
+    return res.json({'success':true})
+  }
+
+  } catch (error) {
+    next(error)
+  }
+}
 
 const loadChangePassword = async(req,res)=>{
   try {
@@ -501,6 +517,7 @@ module.exports = {
   loadLogin,logout,
   loadUserDashboard,
   loadChangePassword, changePassword,
+  uploadProfileimage,
   loadforgetPassword,sendPasswordResetMail,
   loadResetPassword,resetPassword,
   loadAddress,

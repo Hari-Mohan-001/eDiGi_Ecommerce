@@ -8,7 +8,8 @@ const { home,createUser,  loginUser,loadLogin, loadRegister, sendOTP, logout, lo
   verifyOtp,
   resendOtp,
   userWallet,
-  loadContacPage} = require("../controller/user-Controller")
+  loadContacPage,
+  uploadProfileimage} = require("../controller/user-Controller")
 
 const {loadProducts, loadCategories, loadSingleProduct ,getAllProducts}= require("../controller/product-Controller")
 
@@ -20,12 +21,13 @@ const { laodCart, addToCart, removeCartItem, quantityUpdation, getCartTotal } = 
 
 const { loadCheckout, createOrder, orderSuccess } = require("../controller/checkout-Controller")
 
-const{viewOrders, orderDetails, cancelOrder, deleteInOrder, returnOrder, cancelEachProductInOrder} =require("../controller/order-Controller")
+const{viewOrders, orderDetails, cancelOrder, deleteInOrder, returnOrder, cancelEachProductInOrder, downloadInvoice} =require("../controller/order-Controller")
 
 const { applyCoupon, removeCoupon } = require("../controller/coupon-Controller")
 
 const { generateRazorpay, razorpayVerifyOrder, sample } = require("../helpers/razorpay")
 const { addToWishlist, loadWishlist, removeFromWishlist } = require("../controller/wishlistController")
+const { uploadProfileImage } = require("../middleware/multerForProfileimage")
 
 const userRoute = express.Router()
 
@@ -48,6 +50,7 @@ userRoute.get("/login",isLogout,loadLogin )
 userRoute.get("/logout" , logout)
 userRoute.get("/changePassword" , tokenVerify ,isBlocked, loadChangePassword)
 userRoute.post("/changePassword" ,tokenVerify, changePassword) 
+userRoute.post("/uploadProfileImage", tokenVerify , isBlocked , uploadProfileImage.single('image'), uploadProfileimage)
 
 userRoute.get("/forgetPassword" ,isLogout, loadforgetPassword)
 userRoute.post("/forgetPassword" ,isLogout, sendPasswordResetMail)
@@ -79,9 +82,9 @@ userRoute.post("/addToWishlist", addToWishlist)
 userRoute.post("/removeFromWishlist", tokenVerify,removeFromWishlist)
 
 userRoute.get("/myCart",tokenVerify,isBlocked, laodCart)
-userRoute.post("/addToCart",tokenVerify ,addToCart)
-userRoute.post("/quantityUpdate" , quantityUpdation) 
-userRoute.post("/removeItem" , removeCartItem)
+userRoute.post("/addToCart",tokenVerify, isBlocked ,addToCart)
+userRoute.post("/quantityUpdate" , tokenVerify,isBlocked, quantityUpdation) 
+userRoute.post("/removeItem" , tokenVerify,isBlocked, removeCartItem)
 userRoute.get("/getCartTotal", tokenVerify , isBlocked , getCartTotal)     
 
 userRoute.get("/checkout" ,tokenVerify,isBlocked, loadCheckout)
@@ -90,10 +93,11 @@ userRoute.get("/orderSuccess" ,tokenVerify,isBlocked, orderSuccess)
 
 userRoute.get("/orders" , tokenVerify,isBlocked,viewOrders)
 userRoute.get("/orderDetails" ,tokenVerify,isBlocked, orderDetails)
-userRoute.post("/cancelOrder" , cancelOrder)
+userRoute.post("/cancelOrder" , tokenVerify,isBlocked, cancelOrder)
 userRoute.post("/returnOrder", tokenVerify, returnOrder)
 userRoute.post("/deleteInOrder" , deleteInOrder)
 userRoute.post("/cancelEachOrder" , tokenVerify , cancelEachProductInOrder)
+userRoute.get("/downloadInvoice" , tokenVerify, isBlocked , downloadInvoice)
 
 userRoute.post("/applyCoupon" ,tokenVerify, applyCoupon)
 userRoute.post("/removeCoupon" , tokenVerify, removeCoupon)

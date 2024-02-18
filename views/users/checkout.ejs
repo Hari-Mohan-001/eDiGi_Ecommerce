@@ -21,18 +21,18 @@
 
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="selectedAddress" id="selectedAddress" value="<%=address[i].fullName%>,
-                                                <%=address[i].house%>,
-                                                <%=address[i].city%>,
-                                                <%=address[i].state%>,
+                                                            name="address" id="selectedAddress" 
+                                        value="<%=address[i].fullName.trim()%>,
+                                                House No: <%=address[i].house.trim()%>,
+                                                <%=address[i].city.trim()%>,
+                                                <%=address[i].state.trim()%>,
                                                 <%=address[i].number%>,
-                                                <%=address[i].pincode%>"  <% if(i === 0) { %>checked<% } %>                      
-                                                required>
+                                                <%=address[i].pincode%>" <% if(i === 0) { %>checked<% } %>  required>
                                                         <label class="form-check-label" for="home">
                                                             <span class="icon"><i class="fas fa-home"></i>Address :
                                                                 <%=i+1%></span>
                                                             <span class="address">
-                                                                <%=address[i].fullName%>
+                                                                <%=address[i].fullName%></span>
                                                                     <span>House No:<%=address[i].house%></span>
                                                                     <span class="address">City:<%=address[i].city%>
                                                                             </span>
@@ -40,7 +40,7 @@
                                                                     <span class="address">Mobile:<%=address[i].number%>
                                                                             </span>
                                                                     <span>PIN:<%=address[i].pincode%></span>
-                                                            </span>
+                                                           
                                                         </label>
                                                     </div>
                                                 </div>
@@ -164,7 +164,7 @@
                                                             </div>
                                                             <input itemid="input" class="cpnapplied" style="margin-bottom:0px;"  type="text"
                                                             placeholder="Coupon Code" id="couponCode">
-                                                        <button style="margin-top: 12.5rem;"
+                                                        <button style="margin-top: 12.5rem; background-color: brown;"
                                                             onclick="removeCoupon('<%=findCart._id%>')">Remove</button>
                                                         </div>
                                              </div>
@@ -174,34 +174,36 @@
                     </div>
 
                 </div>
-            </div>
-            <div>
-                <table class="table table-success table-striped col-lg-4" style="width: 358px; float: right; ">
-                    <thead>
-                        <th>Name</th>
-                        <th>Percentage Discount</th>
-                        <th>Minimum Purchase</th>
-                        <th>Expiry Date</th>
-                    </thead>
-                    <%coupons.forEach(coupon=> {%>
-                        <tbody>
-                            <td>
-                                <%=coupon.name%>
-                            </td>
-                            <td>
-                                <%=coupon.percentage%>
-                            </td>
-                            <td>
-                                <%=coupon.minimum%>
-                            </td>
-                            <td>
-                                <%=coupon.expiryDate%>
-                            </td>
-                        </tbody>
-                        <%})%>
-                </table>
-            </div>
+                
+            </div>    
 
+        </div>
+        <div style="width: 358px; height: 350px;overflow-y: auto; " >
+            <h4>Coupon List</h4>
+            <table class="table table-success table-striped col-lg-4" >
+                <thead>
+                    <th>Name</th>
+                    <th>Percentage Discount</th>
+                    <th>Minimum Purchase</th>
+                    <th>Expiry Date</th>
+                </thead>
+                <%coupons.forEach(coupon=> {%>
+                    <tbody>
+                        <td>
+                            <%=coupon.name%>
+                        </td>
+                        <td>
+                            <%=coupon.percentage%>
+                        </td>
+                        <td>
+                            <%=coupon.minimum%>
+                        </td>
+                        <td>
+                            <%=coupon.expiryDate%>
+                        </td>
+                    </tbody>
+                    <%})%>
+            </table>
         </div>
     </section>
 
@@ -315,7 +317,7 @@
 
         function updateTotal(){
             const totalPrice = parseFloat(totalInput.value)
-            console.log('infunctot'+totalPrice);
+            
             if(walletAmount>=totalPrice){
                 totalvalue.innerText= 'Rs:0'
                 totalInput.value = 0
@@ -371,7 +373,7 @@
             radioButton.addEventListener("change", (event) => {
                 if (event.target.value === "Cash on delivery") {
                     orderId = null
-                    console.log("cashon");
+                    
                 } else {
                     if (event.target.value === "online") {
 
@@ -417,7 +419,7 @@
                                         },
                                         data: JSON.stringify({ response }),
                                     };
-                                    console.log("before ajasx");
+                                   
                                     console.log(response);
                                     $.ajax(settings).done(function (response) {
                                         console.log('afterajx');
@@ -450,7 +452,7 @@
             let cashOnDelivery = document.getElementById("cod")
             let onlinePayment = document.getElementById("online")
             let checkboxInput = walletCheckboxInput.value
-            console.log(checkboxInput);
+           
 
             let selectedPayment
             if (cashOnDelivery.checked) {
@@ -459,7 +461,7 @@
                 selectedPayment = onlinePayment.value
             }
             console.log(selectedPayment);
-            let addressRadio = document.getElementsByName("selectedAddress")
+            let addressRadio = document.getElementsByName("address")
             let newSelectedAddress = ""
             for (let i = 0; i < addressRadio.length; i++) {
                 if (addressRadio[i].checked) {
@@ -467,6 +469,8 @@
                     break;
                 }
             }
+            console.log(newSelectedAddress);
+            console.log('addres');
 
             fetch("/checkout", {
                 method: "post",
