@@ -33,28 +33,31 @@
                                    <button class="nav-link" id="address-tab" data-bs-toggle="pill"
                                     data-bs-target="#v-pills-address" type="button" role="tab"
                                     aria-controls="v-pills-address" aria-selected="true"><span><i
-                                            class="fas fa-user"></i></span> Personal address info</button>
+                                            class="fa fa-address-card-o"></i></span> Personal address info</button>
 
                                          <button id="orders-tab" type="button" role="tab"
                                     aria-controls="v-pills-profile" aria-selected="false"><span><i
-                                            class="fas fa-bags-shopping"></i></span> View your Orders Here</button>
+                                            class="fa fa-shopping-basket"></i></span> View your Orders Here</button>
+
+                                            <button id="cart-tab" type="button" role="tab"
+                                    aria-controls="v-pills-profile" aria-selected="false"><span><i
+                                            class="fa fa-shopping-cart"></i></span>Cart View</button>
 
                                             <button class="nav-link" id="wishlist-tab" data-bs-toggle="pill"
                                                 data-bs-target="#v-pills-address" type="button" role="tab"
                                                 aria-controls="v-pills-address" aria-selected="true"><span><i
-                                                        class="fas fa-user"></i></span>Wishlist</button>
+                                                        class="fa fa-heart"></i></span>Wishlist</button>
 
                                 <button id="wallet" type="button" role="tab"
                                     aria-controls="v-pills-messages" aria-selected="false"><span><i
-                                            class="fas fa-star"></i></span>Wallet</button>
+                                            class="fa fa-money"></i></span>Wallet</button>
 
                               <button  class="nav-link" id="changePassword-tab" data-bs-toggle="pill"
                                     data-bs-target="#v-pills-settings" type="button" role="tab"
                                     aria-controls="v-pills-settings" aria-selected="false"><span><i
-                                            class="fas fa-user-lock" ></i></span> Change your Password </button>
+                                            class="fa fa-key" ></i></span> Change your Password </button>
 
-                                <button class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
-                                    </span> Logout</button>
+                                
                             </div>
                         </div>
                     </div>
@@ -154,66 +157,9 @@
             </div>
         </div>
     </section>
-<script>
-    document.getElementById("wishlist-tab").addEventListener("click", (event)=>{
-        window.location.href = "/wishlist"
-    })
 
-    document.getElementById("wallet").addEventListener("click" , (event)=>{
-        window.location.href = "/wallet"
-    })
 
-    document.getElementById("orders-tab").addEventListener("click", (event)=>{
-        window.location.href = "/orders"
-    })
-
-    document.getElementById("address-tab").addEventListener("click" , (event)=>{
-        window.location.href = "/address"
-    })
-
-    document.getElementById("changePassword-tab").addEventListener("click" , (event)=>{
-        window.location.href = "/address"
-    })
-
-    
-</script>
-
-<script>
-  const uploadInput = document.getElementById("upload")   
-  const imageView = document.getElementById("imgView")
-  console.log('change');
-
-  uploadInput.addEventListener("change" , (event)=>{
-    console.log('upload');
-    const file = event.target.files[0]
-    const reader = new FileReader()
-
-    reader.onload = function(e){
-        console.log('imgsrc');
-imageView.src = e.target.result
-    }
-
-    if(file){
-        reader.readAsDataURL(file);
-        const formData = new FormData()
-        formData.append('image', file)
-
-        fetch("/uploadProfileImage", {
-            method:'post',
-            body:formData
-
-        })
-        .then((res)=> res.json())
-        .then(data=>{
-            if(data.success){
-                console.log('changed');
-            }
-        })
-        .catch((error)=>console.log(error))
-    }
-    
-  })
-</script>
+<script src="/js/users/userDashboard.js"></script>
    
       
 

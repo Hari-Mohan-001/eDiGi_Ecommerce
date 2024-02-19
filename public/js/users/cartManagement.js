@@ -61,6 +61,7 @@ const reduceQuantity = async(id)=>{
 
 
 const addToCart =async(id)=>{
+    
     const productid = id
     const quantity = document.querySelector(`[quantity-id="${id}"]`).value
     fetch("/addToCart", {

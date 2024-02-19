@@ -80,7 +80,7 @@
                                                 <div>
                                                     <input type="hidden" value="<%= product._id%>" name="productId">
                                                     <%if(product.stock>0){%>
-                                                        <button onclick="addToCart('<%= product._id%>')"><a
+                                                        <button onclick="addToCart('<%= product._id%>' , '<%=count%>')"><a
                                                                 class="btn btn-primary">Add To Cart</a></button>
                                                         <%} else {%>
                                                             <button disabled><a style="background-color: red;"
@@ -88,7 +88,7 @@
                                                             <%}%>
 
                                                                 <a class="heartbtn"
-                                                                    onclick="addTowishlist('<%= product._id%>')"><i
+                                                                    onclick="addTowishlist('<%= product._id%>', '<%=count%>')"><i
                                                                         style="color: red; font-size: 30px; padding-left: 20px; box-shadow: inset;"
                                                                         class="fa fa-heart"></i></a>
 

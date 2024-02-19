@@ -138,7 +138,7 @@ const loadLogin = async (req, res) => {
   try {
     console.log("login");
 
-   return res.render("login");
+    res.render("login");
   } catch (error) {
     console.log(error.message);
   }

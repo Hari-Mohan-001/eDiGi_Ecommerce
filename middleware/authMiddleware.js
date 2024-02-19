@@ -11,7 +11,7 @@ const tokenVerify = async(req,res,next)=>{
                     console.log(err);
                     res.redirect("/login")
                 }else{
-                    console.log(decodedToken);
+                    
                     return next()
                 }
             })                       

@@ -80,6 +80,7 @@ const createOrder = async (req, res) => {
     let newOrder , createOrder
     const userId = new ObjectId(decode(req.cookies.jwt).id);
     const User = await user.findById({ _id: userId });
+   
     const findCart = await cart
       .findOne({ userid: userId })
       .populate("couponId");
@@ -92,7 +93,7 @@ const createOrder = async (req, res) => {
     if (findCart.isCouponApplied) {
       let discount = (cartTotal[0].total * findCart.couponId.percentage) / 100;
       const totalAfterDiscount = cartTotal[0].total - discount;
-       console.log('copnapplied');
+       
       const walletCheckbox = req.body.walletCheckbox   
       console.log(walletCheckbox);
       const walletAmount = User.wallet
@@ -101,7 +102,7 @@ const createOrder = async (req, res) => {
            balanceAmount = totalAfterDiscount-walletAmountUsed
 
            if(walletCheckbox==='1'){   
-            console.log('wal1');
+           
              if(balanceAmount){
               
               newOrder = await new order({ 

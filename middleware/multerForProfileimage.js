@@ -3,14 +3,14 @@ const path = require('path');
 const multer = require('multer');
 console.log('enter ');
 const imageTypes = /^(image\/(jpeg|png|svg|jpg|webp))$/i;
-console.log('nextenter');
+
 
 
 
 const storage = multer.diskStorage({
 
     destination: function (req, file, cb) {
-        console.log('multer');
+       
         cb(null, path.join(__dirname, '../public/profileImages'));
 
     },

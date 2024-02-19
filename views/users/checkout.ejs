@@ -106,7 +106,10 @@
                                                       <input type="hidden" id="walletCheckbox" name="walletCheckbox" value="0">
                                                    <input type="hidden" id="wallet-amount" name="walletAmount" value="<%=User.wallet%>">
                                                    
-                                                   <%}%>
+                                                   <%} else {%>
+                                                    <input type="hidden" id="walletCheckbox" name="walletCheckbox" value="0">
+                                                    <h5>Wallet:Rs. <%=User.wallet%></h5>
+                                                    <%}%>
                                               </div>
                                               <div id="walletApplyContainer" style="display: none;">
                                                 <p style="color: green;">Wallet Applied</p>
@@ -449,16 +452,24 @@
         });
 
         const placeOrder = async (orderId) => {
+            
+            
             let cashOnDelivery = document.getElementById("cod")
+            
             let onlinePayment = document.getElementById("online")
+
             let checkboxInput = walletCheckboxInput.value
+          
+            
            
 
             let selectedPayment
             if (cashOnDelivery.checked) {
                 selectedPayment = cashOnDelivery.value
             } else if (onlinePayment.checked) {
+                console.log('online');
                 selectedPayment = onlinePayment.value
+                console.log(selectedPayment);
             }
             console.log(selectedPayment);
             let addressRadio = document.getElementsByName("address")

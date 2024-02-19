@@ -1,6 +1,10 @@
-const addToCart= (id)=>{
+const addToCart= (id , count)=>{
     const productid = id
-    console.log('enter adrt');
+   
+   
+    if(count=== ''){
+        window.location.href ="/login"
+    }
    
     fetch("/addToCart", {
         method:'post',

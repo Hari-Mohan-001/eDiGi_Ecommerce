@@ -136,12 +136,12 @@ const cancelOrder = async(req,res)=>{
             )
 
             if(cancelledOrder){
-                res.json(cancelledOrder)  
+                  
                 const orderItems = cancelledOrder.items
                 console.log(orderItems);
                 orderItems.forEach(async(item)=>{
                     const{Product:Product , quantity} = item
-                    console.log('cancel');
+                    
                     await product.updateOne({_id:Product},
                         {
                             $inc:{
@@ -153,7 +153,7 @@ const cancelOrder = async(req,res)=>{
                 })
 
                 if(cancelledOrder.payment != 'Cash on delivery'){
-                    console.log('wkltrefil');
+                    
                     await user.updateOne({_id:userId},
                         {
                             $inc:{
@@ -177,6 +177,8 @@ const cancelOrder = async(req,res)=>{
                             }
                             )
                 }
+
+                res.json({'data':cancelledOrder})
             }else{
                 res.json("Cancelled Failed")
             }
@@ -279,7 +281,7 @@ const cancelEachProductInOrder = async(req,res)=>{
         {new:true}
         )
                
-        res.json({total:parsedNewTotal})
+        res.json({'total':parsedNewTotal})
            
         const cancelledItem = cancelOrder.items.find((item)=> item.Product.toString()===proId)
         const updateProductQuantity = await product.findByIdAndUpdate({_id:proId},
@@ -295,7 +297,7 @@ const cancelEachProductInOrder = async(req,res)=>{
                              status:'Credit',
                              date: new Date()          
             }
-            console.log('before waltupdate');
+           
             const updateWallet = await user.findByIdAndUpdate({_id:userId},
                 {
                     $inc:{

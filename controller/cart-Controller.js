@@ -79,6 +79,7 @@ const addToCart = async(req,res)=>{
     try {
         const userId = decode(req.cookies.jwt).id
         
+        
         const{productid} = req.body
         const productIds = req.body.productId
         const productId = productIds||productid
@@ -89,7 +90,7 @@ const addToCart = async(req,res)=>{
 
         if(findProduct.stock>0){
             if(!findCart){ 
-               console.log('new cart'); 
+               
                 const newCart = new cart({   
                     userid:userId,
                     products:[ 
@@ -113,7 +114,7 @@ const addToCart = async(req,res)=>{
             
 
             if(existProduct && existProduct.quantity < findProduct.stock){
-                console.log('update qty');
+               
                 await cart.updateOne(
                     { userid: userId, "products.productId": productId },    
                     { $inc: { "products.$.quantity": 1 } }
@@ -123,7 +124,8 @@ const addToCart = async(req,res)=>{
                 return res.json({'success':true , 'message':'quantity Updated' , 'stock':stock , 'price':price})
                 
             }
-            else if(findProduct.stock>1 && !existProduct){
+            else if(findProduct.stock>=1 && !existProduct){
+                
                 findCart.products.push({
                     productId:productId,
                     quantity:1
