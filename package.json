@@ -4,8 +4,9 @@
   "description": "E-commerce",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app"
-  },
+    "dev": "nodemon app",
+    "start": "node index.js"
+  }, 
   "author": "",
   "license": "ISC",
   "dependencies": {

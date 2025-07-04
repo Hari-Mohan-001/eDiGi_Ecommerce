@@ -150,7 +150,7 @@ const createOrder = async (req, res) => {
                 items: findProducts,
                 totalPrice: totalAfterDiscount,
                 discount: discount,
-                balanceAmount:balanceAmount,
+                balanceAmount:balanceAmount, 
                 isWalletApplied:true,
                 payment: "Wallet",
                 orderedAt: new Date(),
@@ -220,7 +220,7 @@ const createOrder = async (req, res) => {
         if (createOrder.payment === "Cash on delivery" || createOrder.payment ==='Wallet') {
          return res.redirect("/orderSuccess");
         }else{
-            console.log("cop online");
+           
             const upadteStatus = await order.findOneAndUpdate({_id:createOrder._id},
               {
                 $set:{
@@ -240,7 +240,7 @@ const createOrder = async (req, res) => {
       console.log(walletAmount);
       const walletAmountUsed = Math.min(cartTotal[0].total , walletAmount)
       balanceAmount = cartTotal[0].total - walletAmountUsed
-            console.log('nocpnaplied');
+            
       if(walletCheckbox==='1'){
         if(balanceAmount){
          
@@ -282,7 +282,7 @@ const createOrder = async (req, res) => {
 
         }else{
           const {address} = req.body
-          console.log(address);
+         
 
          newOrder = await new order({ 
            costumer: userId,
@@ -341,7 +341,7 @@ const createOrder = async (req, res) => {
  console.log(createOrder);
  if (createOrder) {
    for (let i = 0; i < findProducts.length; i++) {
-    console.log('qty');
+   
      const productId = findProducts[i].Product;
      const quantityPurchased = findProducts[i].quantity;
      const updateProduct = await product.findByIdAndUpdate(
@@ -352,7 +352,7 @@ const createOrder = async (req, res) => {
          },
        }
      );
-     console.log();
+     
    }
  }
 

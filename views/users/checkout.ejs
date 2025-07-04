@@ -340,13 +340,13 @@
               if(walletCheckbox.checked){
                 document.getElementById('walletApplyContainer').style.display=""
              walletCheckboxInput.value ='1'
-             console.log(walletCheckboxInput.value);
+           
              updateTotal()
              updatedTotalAmount = parseFloat(totalInput.value)
              walletCheckboxValue = walletCheckboxInput.value
              let radio = document.getElementsByName("payment");
              for(let i = 0; i < radio.length; i++){
-                console.log('infor check');
+                
                      radio[i].checked = false;
                     }
          }else{ 
@@ -412,7 +412,7 @@
                                 image: "",
                                 order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                                 handler: function (response) {
-                                    console.log("handler");
+                                    
                                     var settings = {
                                         url: "/api/payment/verify",
                                         method: "POST",
@@ -480,8 +480,8 @@
                     break;
                 }
             }
-            console.log(newSelectedAddress);
-            console.log('addres');
+            
+            
 
             fetch("/checkout", {
                 method: "post",
@@ -503,7 +503,7 @@
                     window.location.href = "/orderSuccess"
 
                 })
-                .catch((error) => console.log('hioo' + error))
+                .catch((error) => console.log(error))
         }
 
     </script>

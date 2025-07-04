@@ -73,7 +73,7 @@ const adminOrderList = async(req,res)=>{
                 orderDate:moment(orders.orderedAt).format('DD/MM/YYYY') 
             }))
 
-        res.render("listOrders" , {orders , moment})
+        res.render("listOrders" , {orders , moment}) 
     } catch (error) {
         console.log(error.message);
     }
@@ -82,10 +82,10 @@ const adminOrderList = async(req,res)=>{
 const adminAllOrders = async(req,res)=>{
     try {
         const orderId = req.query.id
-        console.log("one"+orderId);
+        console.log("oned"+orderId);
         const {productTotal, findProducts}= await productHelpers.orderPipeline(req,orderId )
-        console.log(productTotal);
-        console.log(orderId);
+        console.log('tot'+productTotal);
+        console.log("nxt"+orderId);
         let orders = await order.find({_id:orderId}) 
             console.log(orders);
             orders = orders.map(orders =>({
@@ -434,13 +434,13 @@ const downloadInvoice = async(req,res,next)=>{
         doc.moveDown();
         doc.fontSize(12).text(`Shipping Address: ${Order.address.replace(/[\r]+/g, '')}`)
         doc.moveDown();
-        //doc.fontSize(12).text(`Order Status: ${order.orderStatus}`);
+       
     
         // Add a "Thank you" message at the end of the invoice
         doc.moveDown();
         doc.moveDown();
         doc.moveDown();
-        doc.fontSize(14).text('Thank you for shopping with us!', { align: 'center' });
+        doc.fontSize(14).text('Thank you for shopping with us! eDiGi', { align: 'center' });
     
         // End the PDF document
         doc.end();
